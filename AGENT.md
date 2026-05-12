@@ -9,7 +9,7 @@ Zero-dependency Thai QR Payment / EMVCo MPM toolkit. Monorepo with **7 packages*
 ```bash
 pnpm install
 pnpm build         # 7 packages, ~3 s with cache
-pnpm test          # 479 vitest assertions across 12 turbo tasks
+pnpm test          # 489 vitest assertions across 12 turbo tasks
 pnpm check-types
 pnpm exec oxlint packages/*/src
 pnpm size          # bundle-size budgets via size-limit
@@ -31,7 +31,6 @@ packages/
 scripts/
   build-assets.sh        vtracer + potrace + svgo pipeline (regen logos)
   build-svg-module.mjs   Inline every SVG into a TS module
-  build-umbrella.mjs     tsc-based umbrella build (preserves re-exports)
   compress-dist.mjs      brotli + gzip every dist/*.js (post-build)
   patch-package-meta.mjs Regenerate package.json metadata across workspace
 ```
@@ -74,9 +73,11 @@ Each `packages/*/` has its own `rspack.config.ts`, `tsconfig.json`, `vitest.conf
 `pnpm build` runs turbo with the following per-package pipeline:
 
 - `payload`, `qr`, `render`, `assets`, `cli`, `react` → `rspack build && tsc -p tsconfig.json --emitDeclarationOnly`
-- `thai-qr-payment` (umbrella) → `node ../../scripts/build-umbrella.mjs` (tsc-direct, NOT rspack — rspack drops `export *` from externals)
+- `thai-qr-payment` (umbrella) → same rspack pipeline, but its source imports siblings via **relative paths** (`../../payload/src/index.js`) rather than `@thai-qr-payment/payload`. That way rspack bundles every sibling's source inline, the published tarball has `dependencies: {}`, and npm shows "0 Dependencies". The workspace siblings stay in `devDependencies` for build-time symlink resolution only.
 
 Then a single `node scripts/compress-dist.mjs` precompresses every `dist/*.{js,cjs,d.ts}` with brotli (q=11) + gzip (level 9) so CDNs and self-hosters can serve the smaller variant without runtime work.
+
+**Earlier attempt** (commit `7d2938b`) tried `node scripts/build-umbrella.mjs` (tsc-direct) because rspack-with-externals dropped `export *` from external modules. After removing externals (commit `2d1ed7c`), the rspack pipeline works again with inlined source. Don't reintroduce tsc-direct — it can't bundle.
 
 Output per scoped package:
 
@@ -93,16 +94,17 @@ Umbrella adds sub-path entries: `payload.js`, `qr.js`, `render.js`, `assets.js`,
 
 ## Testing
 
-**Total: 479 vitest assertions** across 12 turbo tasks. Coverage focuses on:
+**Total: 489 vitest assertions** across 12 turbo tasks. Coverage focuses on:
 
 - **Best-path**: builder fluent surface, round-trip parser, EMVCo wire format, real Thai QR Payment payloads
 - **Worst-path**: truncated TLV, tampered CRC, over-cap amounts, NaN/Infinity inputs, XSS in `merchantName`, v40-size matrices
 - **Properties**: RS linearity (`enc(a) ⊕ enc(b) = enc(a ⊕ b)`), GF distributivity, CRC determinism
 - **Fuzz**: 200 random CRC inputs, 30+30+50 random RS/GF triples, 30 random PromptPay sweeps
+- **Spec table pinning**: alignment-pattern centres for v2/3/4/5/6/7/10/14/20/40 match ISO/IEC 18004 Annex E exactly (added after the v0.1.0 scanner-rejection bug)
 
 Per-package counts:
 
-- payload 171 · qr 138 · render 49 · cli 48 · assets 28 · react 19 · umbrella 26
+- payload 171 · qr 148 · render 49 · cli 48 · assets 28 · react 19 · umbrella 26
 
 Add tests as `packages/*/src/*.test.ts(x)`. Vitest globs auto-discover them.
 
@@ -110,17 +112,20 @@ Add tests as `packages/*/src/*.test.ts(x)`. Vitest globs auto-discover them.
 
 ## Bundle-size budgets (`.size-limit.json`)
 
-| Entry                                         | Budget | Actual (brotli) |
-| --------------------------------------------- | -----: | --------------: |
-| `thai-qr-payment` (full)                      |  25 KB |     **13.6 KB** |
-| `thai-qr-payment` (renderThaiQrPayment)       |  25 KB |         13.4 KB |
-| `thai-qr-payment` (payload only — tree-shake) |  10 KB |     **2.98 KB** |
-| `@thai-qr-payment/payload` (full)             |   5 KB |         3.09 KB |
-| `@thai-qr-payment/payload` (payloadFor only)  |   4 KB |         2.98 KB |
-| `@thai-qr-payment/qr`                         |   6 KB |         4.75 KB |
-| `@thai-qr-payment/render`                     |   2 KB |         1.24 KB |
-| `@thai-qr-payment/react`                      |   1 KB |           256 B |
-| `@thai-qr-payment/assets`                     |  20 KB |         4.83 KB |
+| Entry                                        | Budget | Actual (brotli) |
+| -------------------------------------------- | -----: | --------------: |
+| `thai-qr-payment` (full)                     |  25 KB |     **13.7 KB** |
+| `thai-qr-payment` (renderThaiQrPayment)      |  25 KB |         13.6 KB |
+| `thai-qr-payment/payload` sub-path           |   5 KB |         3.09 KB |
+| `thai-qr-payment/qr` sub-path                |   6 KB |         4.74 KB |
+| `@thai-qr-payment/payload` (full)            |   5 KB |         3.09 KB |
+| `@thai-qr-payment/payload` (payloadFor only) |   4 KB |         2.98 KB |
+| `@thai-qr-payment/qr`                        |   6 KB |         4.75 KB |
+| `@thai-qr-payment/render`                    |   2 KB |         1.24 KB |
+| `@thai-qr-payment/react`                     |   1 KB |           256 B |
+| `@thai-qr-payment/assets`                    |  20 KB |         4.83 KB |
+
+Note: After umbrella inlined siblings, tree-shaking a single helper from `thai-qr-payment` no longer beats the sub-path entry. For consumers who only want one slice, point them at `thai-qr-payment/payload` (or the scoped package directly).
 
 CI runs `andresz1/size-limit-action@v1` on every PR + comments size delta. Keep budgets tight — bumping them needs a one-line justification in the commit.
 
@@ -147,7 +152,7 @@ Examples from repo history:
 - `perf(assets): vectorize logos via vtracer — umbrella 202 KB → 18.5 KB`
 - `chore(deps): blanket bump every major to latest`
 
-## GitHub Actions (15 workflows)
+## GitHub Actions (13 workflows)
 
 | Workflow                    | Triggers                                                              |
 | --------------------------- | --------------------------------------------------------------------- |
@@ -163,9 +168,12 @@ Examples from repo history:
 | `bench.yml`                 | weekly + dispatch — vitest bench                                      |
 | `lockfile-lint.yml`         | PR — pnpm-lock.yaml integrity                                         |
 | `smoke-published.yml`       | release + dispatch — install from npm + smoke                         |
-| `pkg-pr-new.yml`            | PR + push — preview release via pkg-pr-new.com                        |
 | `labeler.yml`               | PR — auto-label by changed paths                                      |
-| `typedoc.yml`               | push main — publish API docs to GitHub Pages                          |
+
+**Dropped (commit `5c9b2db`):**
+
+- `pkg-pr-new.yml` — needs the `pkg-pr-new` GitHub App installed on the repo; re-enable by installing <https://github.com/apps/pkg-pr-new> + restoring the workflow.
+- `typedoc.yml` — typedoc CLI didn't produce a `docs-site/` artifact under our config + GitHub Pages wasn't enabled. Re-wire when you actually want hosted API docs.
 
 ## Brand asset policy
 
@@ -193,9 +201,27 @@ Pre-compressed `.br` + `.gz` ship inside every published package's `dist/`. CDNs
 </script>
 ```
 
+## Live deploys
+
+| Where   | What                         | Version                        |
+| ------- | ---------------------------- | ------------------------------ |
+| npm     | `thai-qr-payment` (umbrella) | 0.1.1                          |
+| npm     | `@thai-qr-payment/payload`   | 0.1.1                          |
+| npm     | `@thai-qr-payment/qr`        | 0.1.1                          |
+| npm     | `@thai-qr-payment/render`    | 0.1.1                          |
+| npm     | `@thai-qr-payment/assets`    | 0.1.1                          |
+| npm     | `@thai-qr-payment/react`     | 0.1.1                          |
+| npm     | `@thai-qr-payment/cli`       | 0.1.1                          |
+| GitHub  | `uunw/thai-qr-payment`       | public, default branch `main`  |
+| npm org | `thai-qr-payment`            | free tier (created 2026-05-12) |
+
+All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagged in git as `<pkg>@<version>` by changesets/action on each release.
+
 ## Migration history (what's been bumped)
 
-Most recent (commit `80fe990`): Rspack 1→2, Vitest 3→4, TS 5→6, React 18→19, @types/node 22→25, @changesets/changelog-github 0.5→0.7, oxlint 1.0→1.63, turbo 2.5→2.9. Each major was cross-checked against its Context7 migration guide before applying.
+- **Commit `e4af92f` → published v0.1.1** (2026-05-12): Critical fix — `alignmentCentres()` for QR v2-v40 was returning wrong positions, every scanner rejected the output as "invalid QR". The published v0.1.0 had this bug. Verified post-fix by round-tripping every (version, ECC, mask) combo through `jsQR`.
+- **Commit `2d1ed7c` → still v0.1.1** (2026-05-12): Inlined scoped siblings into the umbrella. npm UI now correctly shows "0 Dependencies" instead of "5 Dependencies". Moved deps → devDeps in umbrella's `package.json`.
+- **Commit `80fe990`** (2026-05-11): Rspack 1→2, Vitest 3→4, TS 5→6, React 18→19, @types/node 22→25, @changesets/changelog-github 0.5→0.7, oxlint 1.0→1.63, turbo 2.5→2.9. Each major was cross-checked against its Context7 migration guide before applying.
 
 **Known gotchas from those bumps:**
 
@@ -203,7 +229,19 @@ Most recent (commit `80fe990`): Rspack 1→2, Vitest 3→4, TS 5→6, React 18�
 - **Vitest 4**: removed `poolMatchGlobs`, `environmentMatchGlobs`, `coverage.all`, `coverage.extensions`, `workspace` → `projects`. Options-before-callback in `test()` signature.
 - **TS 6**: deprecates `baseUrl`, `outFile`, `module=AMD`, `moduleResolution=classic`, `target=ES5`. Add `ignoreDeprecations: "6.0"` to silence if needed. We don't use any.
 - **React 19**: removed string refs, `propTypes`/`defaultProps` for function components, legacy context API. JSX namespace — type return as `ReactElement` (not `JSX.Element`).
-- **pnpm**: stays at 10.33.4. pnpm 11's `verify-deps-before-run` + stricter `onlyBuiltDependencies` default blocks dev when esbuild's post-install isn't whitelisted.
+- **pnpm**: stays at 10.33.4. pnpm 11's `verify-deps-before-run` + stricter `onlyBuiltDependencies` default blocks dev when esbuild's post-install isn't whitelisted. `.npmrc` carries `verify-deps-before-run=false` and `manage-package-manager-versions=false` as a hedge for future pnpm 11 trial.
+
+## Known landmines (npm + release)
+
+- **npm scope needs an org pre-created.** First publish of `@thai-qr-payment/*` fails with `404 Scope not found` until <https://www.npmjs.com/org/create> is used to make the org. Free tier is fine. The unscoped `thai-qr-payment` umbrella publishes regardless.
+- **`npm token create` CLI is broken on npm 11.** It demands a `--description=<name>` flag that older docs don't mention; you'll get `400 Bad Request — Token name is required` otherwise. Easiest workaround: generate a **Granular Access Token via the npm web UI** at <https://www.npmjs.com/settings/<user>/tokens>. Set bypass-2FA on the token + scope it to the packages.
+- **`.gitignore` must NOT exclude `.changeset/*.md`.** A previous version of this repo's `.gitignore` had a "Changesets temporary" rule that ignored every changeset markdown — but changesets/action expects those committed. Removed in commit `4083ec5`; don't reintroduce.
+- **Dependabot `@dependabot rebase` comments sometimes silently no-op** when there are many outstanding rebases. If a PR still shows stale CI 30 min after the rebase comment, just close it + let dependabot recreate against fresh main.
+- **Author email must be `<id>+<username>@users.noreply.github.com`.** Bare `noreply@users.noreply.github.com` (without the GitHub user ID prefix) leaves commits unlinked to your profile on GitHub. Get the ID via `gh api user --jq .id`. Set per-repo via `git config user.email "<id>+<user>@users.noreply.github.com"`.
+- **Vitest 4 `--coverage` flag needs an explicit provider package.** `@vitest/coverage-v8` is a devDep here; `vitest.config.ts` declares `coverage.provider: 'v8'`. Without the package, `pnpm test:coverage` errors with `Module not found`.
+- **`packages/assets/src/generated.ts` flip-flops between `JSON.stringify`'s double-quote style and oxfmt's single-quote style** every build. Added to `.oxfmtrc.json` `ignorePatterns` to prevent diff churn; if you add another generated file, ignore it too.
+- **The PR title check rejects uppercase first word** by default in `amannn/action-semantic-pull-request@v5`. Dependabot uses `"Bump …"` (capital B), so we removed `subjectPattern` from `pr-title.yml` to accept both.
+- **`.tmp-test-modules/` and similar scratch dirs** can sneak into commits if you `cp -r node_modules` for local smoke tests. Listed in `.gitignore`; if you do this trick elsewhere, add the path explicitly.
 
 ## Adding a new package
 
@@ -231,7 +269,7 @@ You don't release directly. When PRs with changeset markdown files land on `main
 
 - `oxfmt` is preview but already shipped (v0.48). If oxfmt regresses, fall back to prettier via `oxfmt --migrate=prettier`; do NOT reintroduce biome (commit `1c5c24e` removed it for a reason — overlapping with oxlint/oxfmt).
 - `vtracer` install is `cargo install vtracer` (Rust). Brew has no formula yet. Script falls back to `$HOME/.cargo/bin/vtracer`.
-- `pnpm dlx pkg-pr-new` is what `pkg-pr-new.yml` uses for PR preview builds. No login needed; comments build URLs back on the PR.
+- `pkg-pr-new` workflow was removed (needs GitHub App install). To re-enable: install <https://github.com/apps/pkg-pr-new> on the repo + restore the workflow file from git history.
 
 ## Quick reference
 
