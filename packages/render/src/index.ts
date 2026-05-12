@@ -36,9 +36,12 @@ export function renderThaiQrPayment(input: RenderInput & Omit<CardOptions, never
     type: input.recipientType,
     fromSatang: input.fromSatang,
   });
-  const matrix = encodeQR(wire, {
-    errorCorrectionLevel: input.errorCorrectionLevel ?? 'M',
-  });
+  // The default card layout overlays the Thai QR Payment icon on the
+  // QR centre, which obscures ~3 % of the modules. Default ECC up to
+  // 'H' so scanners can recover the lost data; callers can still
+  // explicitly pass a weaker level.
+  const ecc = input.errorCorrectionLevel ?? 'H';
+  const matrix = encodeQR(wire, { errorCorrectionLevel: ecc });
   return renderCard(matrix, input);
 }
 

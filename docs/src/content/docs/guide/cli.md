@@ -45,20 +45,20 @@ Raw EMVCo wire string. Useful for piping into another tool.
 
 ## Flags
 
-| Flag | Short | Notes |
-|---|---|---|
-| `--recipient <id>` | `-r` | phone, nationalId, eWallet |
-| `--amount <thb>` | `-a` | omit for static QR |
-| `--satang` | — | treat `--amount` as integer satang |
-| `--type <kind>` | — | `mobile` / `nationalId` / `eWallet` — overrides auto-detect |
-| `--ecc <level>` | — | `L` / `M` / `Q` / `H` (default `M`) |
-| `--format <kind>` | `-f` | `card` (default) / `matrix` / `payload` |
-| `--theme <kind>` | — | `color` (default) / `silhouette` |
-| `--merchant <name>` | `-m` | rendered above the QR (card mode) |
-| `--size <px>` | — | matrix mode output size |
-| `--output <path>` | `-o` | write to file (default stdout) |
-| `--help` | `-h` | show help |
-| `--version` | `-v` | show CLI version |
+| Flag                | Short | Notes                                                       |
+| ------------------- | ----- | ----------------------------------------------------------- |
+| `--recipient <id>`  | `-r`  | phone, nationalId, eWallet                                  |
+| `--amount <thb>`    | `-a`  | omit for static QR                                          |
+| `--satang`          | —     | treat `--amount` as integer satang                          |
+| `--type <kind>`     | —     | `mobile` / `nationalId` / `eWallet` — overrides auto-detect |
+| `--ecc <level>`     | —     | `L` / `M` / `Q` / `H` (default `M`)                         |
+| `--format <kind>`   | `-f`  | `card` (default) / `matrix` / `payload`                     |
+| `--theme <kind>`    | —     | `color` (default) / `silhouette`                            |
+| `--merchant <name>` | `-m`  | rendered above the QR (card mode)                           |
+| `--size <px>`       | —     | matrix mode output size                                     |
+| `--output <path>`   | `-o`  | write to file (default stdout)                              |
+| `--help`            | `-h`  | show help                                                   |
+| `--version`         | `-v`  | show CLI version                                            |
 
 ## Examples
 

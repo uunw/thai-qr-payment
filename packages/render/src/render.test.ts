@@ -158,10 +158,23 @@ describe('renderCard', () => {
     expect(svg).toMatch(/<symbol[^>]*id="tqp-header"[^>]*>[\s\S]*?<path/);
   });
 
-  it('emits a 1000 × 1280 canvas', () => {
+  it('emits a 600 × 700 canvas matching the brand-guide proportions', () => {
     const matrix = encodeQR('HELLO');
     const svg = renderCard(matrix);
-    expect(svg).toContain('viewBox="0 0 1000 1280"');
+    expect(svg).toContain('viewBox="0 0 600 700"');
+  });
+
+  it('embeds a centre-overlay tqp-header-icon when theme = color', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix, { theme: 'color' });
+    expect(svg).toContain('symbol id="tqp-header-icon"');
+    expect(svg).toContain('href="#tqp-header-icon"');
+  });
+
+  it('skips the centre overlay when theme = silhouette', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix, { theme: 'silhouette' });
+    expect(svg.match(/href="#tqp-header-icon"/g)).toBeNull();
   });
 
   it('honours custom background', () => {

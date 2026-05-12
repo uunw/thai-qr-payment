@@ -29,17 +29,18 @@ const wire = new ThaiQrPaymentBuilder()
 ```
 
 Terminal methods:
+
 - `.build()` — wire string with CRC appended
 - `.buildWithChecksum()` — `{ body, checksum, payload }`
 - `.toBytes()` — `Uint8Array` for hashing / transport
 
 ## Recipient types
 
-| Input length (digits) | Default type | Wire sub-tag |
-|---|---|---|
-| 9-12 | `mobile` (formatted to `0066xxxxxxxxxx`) | `01` |
-| 13 | `nationalId` (passed verbatim) | `02` |
-| 15 | `eWallet` (passed verbatim) | `03` |
+| Input length (digits) | Default type                             | Wire sub-tag |
+| --------------------- | ---------------------------------------- | ------------ |
+| 9-12                  | `mobile` (formatted to `0066xxxxxxxxxx`) | `01`         |
+| 13                    | `nationalId` (passed verbatim)           | `02`         |
+| 15                    | `eWallet` (passed verbatim)              | `03`         |
 
 Override the inference explicitly:
 

@@ -7,10 +7,10 @@ description: Thai QR Payment + PromptPay SVG marks in color + silhouette flavors
 
 ## Available marks
 
-| Name | Color | Silhouette |
-|---|---|---|
-| `Thai_QR_Payment_Logo-01` | ✓ | ✓ |
-| `PromptPay1` | ✓ | ✓ |
+| Name                      | Color | Silhouette |
+| ------------------------- | ----- | ---------- |
+| `Thai_QR_Payment_Logo-01` | ✓     | ✓          |
+| `PromptPay1`              | ✓     | ✓          |
 
 Only the canonical layouts ship to keep the bundle small (~5 KB brotli). Alternative orientations (`-02` through `-06`, `PromptPay2`) were dropped in commit `bdadef3`. Need a different layout? Re-trace via `scripts/build-assets.sh` and drop the result into `packages/assets/src/svg/`.
 

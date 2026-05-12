@@ -27,19 +27,19 @@ The output is a pure data structure. Pair with `@thai-qr-payment/render` for SVG
 
 ### `encodeQR(text, options?)`
 
-| Option | Default | Notes |
-|---|---|---|
-| `errorCorrectionLevel` | `'M'` | `'L'` / `'M'` / `'Q'` / `'H'` |
-| `minVersion` | `1` | floor for version selection |
-| `maxVersion` | `40` | ceiling — throws if input doesn't fit |
-| `forceMask` | auto | `0..7` — auto-selected by penalty score otherwise |
+| Option                 | Default | Notes                                             |
+| ---------------------- | ------- | ------------------------------------------------- |
+| `errorCorrectionLevel` | `'M'`   | `'L'` / `'M'` / `'Q'` / `'H'`                     |
+| `minVersion`           | `1`     | floor for version selection                       |
+| `maxVersion`           | `40`    | ceiling — throws if input doesn't fit             |
+| `forceMask`            | auto    | `0..7` — auto-selected by penalty score otherwise |
 
 ### `detectMode(text)`
 
 ```ts
-detectMode('1234567890')    // 'numeric'
-detectMode('HELLO WORLD')   // 'alphanumeric'
-detectMode('สวัสดี')        // 'byte' (UTF-8 fallback)
+detectMode('1234567890'); // 'numeric'
+detectMode('HELLO WORLD'); // 'alphanumeric'
+detectMode('สวัสดี'); // 'byte' (UTF-8 fallback)
 ```
 
 EMVCo payloads always fit in `alphanumeric` mode (`[0-9A-Z $%*+-./:]`).
@@ -55,11 +55,11 @@ EMVCo payloads always fit in `alphanumeric` mode (`[0-9A-Z $%*+-./:]`).
 
 ## Property tests
 
-| Invariant | Status |
-|---|---|
-| RS linearity: `enc(a) ⊕ enc(b) === enc(a ⊕ b)` | ✓ verified |
-| GF(2^8) distributivity: `a · (b ⊕ c) === (a·b) ⊕ (a·c)` | ✓ verified |
-| CRC-16/CCITT-FALSE determinism over 200 random inputs | ✓ |
+| Invariant                                                            | Status               |
+| -------------------------------------------------------------------- | -------------------- |
+| RS linearity: `enc(a) ⊕ enc(b) === enc(a ⊕ b)`                       | ✓ verified           |
+| GF(2^8) distributivity: `a · (b ⊕ c) === (a·b) ⊕ (a·c)`              | ✓ verified           |
+| CRC-16/CCITT-FALSE determinism over 200 random inputs                | ✓                    |
 | Alignment-pattern centres pinned to ISO/IEC 18004 Annex E for v2-v40 | ✓ 10 pinned versions |
 
 ## v0.1.0 → v0.1.1 fix

@@ -7,18 +7,18 @@ Every published `dist/*.js` ships pre-compressed `.br` + `.gz` siblings, and CI 
 
 ## Current sizes (brotli + minified)
 
-| Entry | Budget | Actual |
-|---|---:|---:|
-| `thai-qr-payment` (full umbrella) | 25 KB | **13.7 KB** |
-| `thai-qr-payment` (`renderThaiQrPayment` only) | 25 KB | 13.6 KB |
-| `thai-qr-payment/payload` sub-path | 5 KB | 3.09 KB |
-| `thai-qr-payment/qr` sub-path | 6 KB | 4.74 KB |
-| `@thai-qr-payment/payload` (full) | 5 KB | 3.09 KB |
-| `@thai-qr-payment/payload` (`payloadFor` only) | 4 KB | 2.98 KB |
-| `@thai-qr-payment/qr` | 6 KB | 4.75 KB |
-| `@thai-qr-payment/render` | 2 KB | 1.24 KB |
-| `@thai-qr-payment/react` | 1 KB | 256 B |
-| `@thai-qr-payment/assets` | 20 KB | 4.83 KB |
+| Entry                                          | Budget |      Actual |
+| ---------------------------------------------- | -----: | ----------: |
+| `thai-qr-payment` (full umbrella)              |  25 KB | **13.7 KB** |
+| `thai-qr-payment` (`renderThaiQrPayment` only) |  25 KB |     13.6 KB |
+| `thai-qr-payment/payload` sub-path             |   5 KB |     3.09 KB |
+| `thai-qr-payment/qr` sub-path                  |   6 KB |     4.74 KB |
+| `@thai-qr-payment/payload` (full)              |   5 KB |     3.09 KB |
+| `@thai-qr-payment/payload` (`payloadFor` only) |   4 KB |     2.98 KB |
+| `@thai-qr-payment/qr`                          |   6 KB |     4.75 KB |
+| `@thai-qr-payment/render`                      |   2 KB |     1.24 KB |
+| `@thai-qr-payment/react`                       |   1 KB |       256 B |
+| `@thai-qr-payment/assets`                      |  20 KB |     4.83 KB |
 
 ## How we got here
 
@@ -33,12 +33,12 @@ Total: **15× shrink** from the original raster-embedded build.
 
 All published JS bundles compress well — typical brotli ratio is 35-45%:
 
-| File | Raw | Brotli | Gzip |
-|---|---:|---:|---:|
+| File                    |    Raw |  Brotli |   Gzip |
+| ----------------------- | -----: | ------: | -----: |
 | `payload/dist/index.js` | 8.3 KB | 2.98 KB | 3.5 KB |
-| `qr/dist/index.js` | 13 KB | 4.5 KB | 5.2 KB |
-| `render/dist/index.js` | 3.5 KB | 1.5 KB | 1.7 KB |
-| `react/dist/index.js` | 1.2 KB | 449 B | 522 B |
+| `qr/dist/index.js`      |  13 KB |  4.5 KB | 5.2 KB |
+| `render/dist/index.js`  | 3.5 KB |  1.5 KB | 1.7 KB |
+| `react/dist/index.js`   | 1.2 KB |   449 B |  522 B |
 
 ## CI enforcement
 

@@ -50,11 +50,11 @@ The umbrella's sub-path exports (`payload`, `qr`, `render`, `assets`) work too:
 
 If you self-host, serve the variants directly with the right `Content-Encoding` header:
 
-| File | Content-Encoding |
-|---|---|
-| `dist/index.js` | identity |
-| `dist/index.js.br` | `br` |
-| `dist/index.js.gz` | `gzip` |
+| File               | Content-Encoding |
+| ------------------ | ---------------- |
+| `dist/index.js`    | identity         |
+| `dist/index.js.br` | `br`             |
+| `dist/index.js.gz` | `gzip`           |
 
 A typical nginx config:
 

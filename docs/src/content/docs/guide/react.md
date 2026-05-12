@@ -43,7 +43,7 @@ import { ThaiQrPaymentMatrix } from '@thai-qr-payment/react';
   size={256}
   quietZone={4}
   className="border rounded"
-/>
+/>;
 ```
 
 ## SSR
@@ -67,17 +67,17 @@ The wrapper carries `role="img"` and a generated `aria-label` (`"Thai QR Payment
 
 ## All props
 
-| Prop | Type | Notes |
-|---|---|---|
-| `recipient` | `string` | phone / nationalId / eWallet — required |
-| `amount` | `number` | THB, omit for static QR |
-| `recipientType` | `'mobile' \| 'nationalId' \| 'eWallet'` | override auto-detection |
-| `fromSatang` | `boolean` | treat `amount` as integer satang |
-| `errorCorrectionLevel` | `'L' \| 'M' \| 'Q' \| 'H'` | default `'M'` |
-| `merchantName` | `string` | rendered above the QR (card mode only) |
-| `amountLabel` | `string` | rendered below the QR (card mode only) |
-| `theme` | `'color' \| 'silhouette'` | brand artwork flavor |
-| `className`, `style`, `ariaLabel` | DOM pass-through | |
+| Prop                              | Type                                    | Notes                                   |
+| --------------------------------- | --------------------------------------- | --------------------------------------- |
+| `recipient`                       | `string`                                | phone / nationalId / eWallet — required |
+| `amount`                          | `number`                                | THB, omit for static QR                 |
+| `recipientType`                   | `'mobile' \| 'nationalId' \| 'eWallet'` | override auto-detection                 |
+| `fromSatang`                      | `boolean`                               | treat `amount` as integer satang        |
+| `errorCorrectionLevel`            | `'L' \| 'M' \| 'Q' \| 'H'`              | default `'M'`                           |
+| `merchantName`                    | `string`                                | rendered above the QR (card mode only)  |
+| `amountLabel`                     | `string`                                | rendered below the QR (card mode only)  |
+| `theme`                           | `'color' \| 'silhouette'`               | brand artwork flavor                    |
+| `className`, `style`, `ariaLabel` | DOM pass-through                        |                                         |
 
 ## React 19 ready
 

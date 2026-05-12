@@ -38,15 +38,15 @@ const svg = renderThaiQrPaymentMatrix({
 
 ## Card options
 
-| Option | Default | Notes |
-|---|---|---|
-| `theme` | `color` | `'silhouette'` swaps brand artwork to monochrome paths |
-| `merchantName` | — | rendered above the QR |
-| `amountLabel` | — | rendered below the QR |
-| `background` | `#fff` | card backdrop |
-| `accent` | `#0a2540` | text + silhouette fill colour |
-| `headerLogo` | `Thai_QR_Payment_Logo-01` | override via `@thai-qr-payment/assets` registry name |
-| `promptpayLogo` | `PromptPay1` | override |
+| Option          | Default                   | Notes                                                  |
+| --------------- | ------------------------- | ------------------------------------------------------ |
+| `theme`         | `color`                   | `'silhouette'` swaps brand artwork to monochrome paths |
+| `merchantName`  | —                         | rendered above the QR                                  |
+| `amountLabel`   | —                         | rendered below the QR                                  |
+| `background`    | `#fff`                    | card backdrop                                          |
+| `accent`        | `#0a2540`                 | text + silhouette fill colour                          |
+| `headerLogo`    | `Thai_QR_Payment_Logo-01` | override via `@thai-qr-payment/assets` registry name   |
+| `promptpayLogo` | `PromptPay1`              | override                                               |
 
 ## Low-level building blocks
 

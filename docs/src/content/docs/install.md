@@ -21,14 +21,14 @@ That's it — no peer dependencies, no transitive packages, no install scripts. 
 
 For consumers who want only one slice (e.g. payload-only on edge runtimes):
 
-| Need | Install |
-|---|---|
-| Wire payload builder + parser | `@thai-qr-payment/payload` |
-| QR Code encoder | `@thai-qr-payment/qr` |
-| SVG renderer | `@thai-qr-payment/render` |
-| Thai QR Payment + PromptPay SVGs | `@thai-qr-payment/assets` |
-| CLI only | `@thai-qr-payment/cli` |
-| React component (peer-dep React) | `@thai-qr-payment/react` |
+| Need                             | Install                    |
+| -------------------------------- | -------------------------- |
+| Wire payload builder + parser    | `@thai-qr-payment/payload` |
+| QR Code encoder                  | `@thai-qr-payment/qr`      |
+| SVG renderer                     | `@thai-qr-payment/render`  |
+| Thai QR Payment + PromptPay SVGs | `@thai-qr-payment/assets`  |
+| CLI only                         | `@thai-qr-payment/cli`     |
+| React component (peer-dep React) | `@thai-qr-payment/react`   |
 
 Or import from the umbrella sub-paths — same bytes, same tree-shake:
 
@@ -56,12 +56,12 @@ Every published `dist/*.js` ships pre-compressed `.br` + `.gz` siblings, so CDNs
 
 ## Engine requirements
 
-| Runtime | Minimum |
-|---|---|
-| Node | ≥ 18 |
-| pnpm | ≥ 8 (10.x recommended) |
-| Browser | any module-supporting browser (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) |
-| Edge runtimes | tested on Cloudflare Workers, Vercel Edge |
+| Runtime       | Minimum                                                                       |
+| ------------- | ----------------------------------------------------------------------------- |
+| Node          | ≥ 18                                                                          |
+| pnpm          | ≥ 8 (10.x recommended)                                                        |
+| Browser       | any module-supporting browser (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) |
+| Edge runtimes | tested on Cloudflare Workers, Vercel Edge                                     |
 
 ## Verify the install
 
@@ -73,7 +73,7 @@ console.log(wire);
 // 00020101021229370016A00000067701011101130066812345678530376454...
 
 const parsed = parsePayload(wire);
-console.log(parsed.amount);  // 50
+console.log(parsed.amount); // 50
 console.log(parsed.merchant); // { kind: 'promptpay', recipientType: 'mobile', recipient: '0812345678' }
 ```
 
