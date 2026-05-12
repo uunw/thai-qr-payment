@@ -95,7 +95,7 @@
     "@thai-qr-payment/render": "workspace:^"
   },
   "devDependencies": {
-    "@types/node": "^25.6.2"
+    "@types/node": "^25.7.0"
   },
   "engines": {
     "node": ">=18",
