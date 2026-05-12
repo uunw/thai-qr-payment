@@ -1,9 +1,37 @@
 # thai-qr-payment
 
+<!-- npm -->
+
+[![npm version](https://img.shields.io/npm/v/thai-qr-payment?logo=npm&label=npm)](https://www.npmjs.com/package/thai-qr-payment)
+[![npm downloads](https://img.shields.io/npm/dm/thai-qr-payment?label=downloads)](https://www.npmjs.com/package/thai-qr-payment)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/thai-qr-payment?label=brotli)](https://bundlephobia.com/package/thai-qr-payment)
+[![types](https://img.shields.io/npm/types/thai-qr-payment)](https://www.npmjs.com/package/thai-qr-payment)
+[![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen?logo=npm)](https://www.npmjs.com/package/thai-qr-payment?activeTab=dependencies)
+[![provenance](https://img.shields.io/badge/provenance-signed-blue?logo=sigstore)](https://www.npmjs.com/package/thai-qr-payment)
+
+<!-- repo -->
+
 [![CI](https://github.com/uunw/thai-qr-payment/actions/workflows/ci.yml/badge.svg)](https://github.com/uunw/thai-qr-payment/actions/workflows/ci.yml)
-[![npm thai-qr-payment](https://img.shields.io/npm/v/thai-qr-payment?label=thai-qr-payment)](https://www.npmjs.com/package/thai-qr-payment)
-[![npm @thai-qr-payment/payload](https://img.shields.io/npm/v/@thai-qr-payment/payload?label=%40thai-qr-payment%2Fpayload)](https://www.npmjs.com/package/@thai-qr-payment/payload)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![release](https://github.com/uunw/thai-qr-payment/actions/workflows/release.yml/badge.svg)](https://github.com/uunw/thai-qr-payment/actions/workflows/release.yml)
+[![CodeQL](https://github.com/uunw/thai-qr-payment/actions/workflows/codeql.yml/badge.svg)](https://github.com/uunw/thai-qr-payment/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/github/license/uunw/thai-qr-payment?color=blue)](./LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/uunw/thai-qr-payment?logo=github)](https://github.com/uunw/thai-qr-payment/stargazers)
+
+<!-- tech -->
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![rspack](https://img.shields.io/badge/rspack-2.0-fb6b00?logo=rspack&logoColor=white)](https://rspack.dev)
+[![vitest](https://img.shields.io/badge/vitest-4.x-6e9f18?logo=vitest&logoColor=white)](https://vitest.dev)
+[![oxc](https://img.shields.io/badge/oxlint%20%2B%20oxfmt-1.x-000?logo=oxc&logoColor=white)](https://oxc.rs)
+
+<!-- scoped packages -->
+
+[![@thai-qr-payment/payload](https://img.shields.io/npm/v/@thai-qr-payment/payload?label=%40thai-qr-payment%2Fpayload)](https://www.npmjs.com/package/@thai-qr-payment/payload)
+[![@thai-qr-payment/qr](https://img.shields.io/npm/v/@thai-qr-payment/qr?label=%40thai-qr-payment%2Fqr)](https://www.npmjs.com/package/@thai-qr-payment/qr)
+[![@thai-qr-payment/render](https://img.shields.io/npm/v/@thai-qr-payment/render?label=%40thai-qr-payment%2Frender)](https://www.npmjs.com/package/@thai-qr-payment/render)
+[![@thai-qr-payment/assets](https://img.shields.io/npm/v/@thai-qr-payment/assets?label=%40thai-qr-payment%2Fassets)](https://www.npmjs.com/package/@thai-qr-payment/assets)
+[![@thai-qr-payment/react](https://img.shields.io/npm/v/@thai-qr-payment/react?label=%40thai-qr-payment%2Freact)](https://www.npmjs.com/package/@thai-qr-payment/react)
+[![@thai-qr-payment/cli](https://img.shields.io/npm/v/@thai-qr-payment/cli?label=%40thai-qr-payment%2Fcli)](https://www.npmjs.com/package/@thai-qr-payment/cli)
 
 A zero-dependency, browser + Node + edge-runtime-compatible toolkit for **Thai QR Payment** (PromptPay, BillPayment, KShop). Builds the EMVCo Merchant-Presented-Mode wire payload, encodes it as a QR Code (no `qrcode` peer dep), renders the official Thai QR Payment SVG card, and ships a CLI.
 
