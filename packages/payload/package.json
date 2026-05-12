@@ -1,6 +1,6 @@
 {
   "name": "@thai-qr-payment/payload",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Zero-dependency EMVCo Merchant-Presented-Mode QR payload builder + parser for Thai QR Payment (PromptPay, BillPayment, KShop)",
   "keywords": [
     "billpayment",
