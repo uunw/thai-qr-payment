@@ -1,0 +1,65 @@
+---
+title: thai-qr-payment
+description: Zero-dependency Thai QR Payment (EMVCo MPM) toolkit — payload builder, QR encoder, SVG card renderer, brand assets, React bindings, CLI.
+template: splash
+hero:
+  tagline: |
+    Zero-dependency, browser + Node + edge-runtime-compatible toolkit for **Thai QR Payment** (PromptPay, BillPayment, KShop). Builds the EMVCo Merchant-Presented-Mode wire payload, encodes it as a QR Code (no `qrcode` peer dep), renders the official SVG card, and ships a CLI.
+  actions:
+    - text: Install
+      link: /thai-qr-payment/install/
+      icon: download
+      variant: primary
+    - text: Live demo
+      link: /thai-qr-payment/demo/
+      icon: rocket
+    - text: GitHub
+      link: https://github.com/uunw/thai-qr-payment
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, Code } from '@astrojs/starlight/components';
+
+## Why this exists
+
+Every other Thai QR library on npm wraps the [`qrcode`](https://www.npmjs.com/package/qrcode) package, ties you to Node-only APIs, or ships a 30 KB blob. This one is in-house TypeScript end-to-end:
+
+<CardGrid>
+  <Card title="Zero runtime deps" icon="seti:typescript">
+    No `qrcode`, no `canvas`, no `crc16`. `npm install thai-qr-payment` pulls **one** tarball.
+  </Card>
+  <Card title="Universal" icon="open-book">
+    Browsers, Node ≥ 18, Bun, Deno, Cloudflare Workers, Vercel Edge — same bundle.
+  </Card>
+  <Card title="Tiny" icon="rocket">
+    Full bundle 13.6 KB brotli. Payload-only sub-path 3 KB.
+  </Card>
+  <Card title="Spec-faithful" icon="approve-check">
+    EMVCo MPM 1.1 + Bank of Thailand supplement, ISO/IEC 18004 QR Model 2, 489 vitest assertions.
+  </Card>
+  <Card title="React-ready" icon="seti:react">
+    `<ThaiQrPayment />` and `<ThaiQrPaymentMatrix />` SSR-safe, peer-dep React.
+  </Card>
+  <Card title="CLI included" icon="seti:shell">
+    `npx thai-qr-payment 0812345678 --amount 50 -o qr.svg`
+  </Card>
+</CardGrid>
+
+## Quickstart
+
+<Code
+  code={`import { renderThaiQrPayment } from 'thai-qr-payment';
+
+const svg = renderThaiQrPayment({
+  recipient: '0812345678',
+  amount: 50,
+  merchantName: 'Acme Coffee',
+  amountLabel: '฿ 50.00',
+  errorCorrectionLevel: 'H',
+});`}
+  lang="ts"
+  title="example.ts"
+/>
+
+[→ Try it without installing](/thai-qr-payment/demo/)

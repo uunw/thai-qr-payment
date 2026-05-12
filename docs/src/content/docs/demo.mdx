@@ -1,0 +1,24 @@
+---
+title: Live demo
+description: Try thai-qr-payment in the browser — type a recipient + amount, get a scannable Thai QR Payment SVG.
+---
+
+import { QrDemo } from '../../components/QrDemo.tsx';
+
+The demo below imports `thai-qr-payment` straight from this site's bundle and renders the SVG on every keystroke. Drop a PromptPay phone number into the form, set an amount, and **scan with your banking app**.
+
+<QrDemo client:load />
+
+## What just happened
+
+1. `payloadFor()` built the EMVCo MPM wire string from your inputs
+2. `parsePayload()` round-tripped it to verify the CRC + decode the merchant template
+3. `encodeQR()` ran ISO/IEC 18004 Reed-Solomon ECC + mask selection
+4. `renderThaiQrPayment()` composed the final SVG (card mode) or `renderThaiQrPaymentMatrix()` emitted just the QR matrix
+
+Every step ran client-side. No network call, no server. Same code-path a production app takes.
+
+## Known limitations of the demo
+
+- The dummy phone `0812345678` is not a real PromptPay account — your banking app will scan it correctly but reject the recipient at the "confirm" step.
+- The card mode embeds the Thai QR Payment + PromptPay marks. Production apps must comply with the [official brand guidelines](https://www.bot.or.th/) when using these logos.
