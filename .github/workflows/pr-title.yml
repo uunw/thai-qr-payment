@@ -35,8 +35,5 @@ jobs:
             test
             wip
           requireScope: false
-          subjectPattern: ^(?![A-Z]).+$
-          subjectPatternError: |
-            The subject "{subject}" found in the pull request title "{title}"
-            didn't match the configured pattern. Please ensure that the subject
-            starts with a lowercase character.
+          # Allow uppercase first word — Dependabot uses "Bump …" which
+          # is the de-facto standard across the ecosystem.
