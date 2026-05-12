@@ -1,6 +1,6 @@
 {
   "name": "@thai-qr-payment/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React component bindings for @thai-qr-payment — drop-in <ThaiQrPayment /> + <ThaiQrPaymentMatrix /> components.",
   "keywords": [
     "billpayment",
