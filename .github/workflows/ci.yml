@@ -78,7 +78,7 @@ jobs:
           for f in /tmp/svg/*.svg; do
             python3 -c "import xml.etree.ElementTree as ET; ET.parse('$f')" || (echo "Invalid XML: $f"; exit 1)
           done
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: render-samples
           path: /tmp/svg
