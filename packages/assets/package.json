@@ -1,0 +1,96 @@
+{
+  "name": "@thai-qr-payment/assets",
+  "version": "0.1.0",
+  "description": "SVG brand assets (Thai QR Payment logo + PromptPay logo) for the @thai-qr-payment ecosystem. Each mark ships as both a color-preserved SVG and a monochrome silhouette.",
+  "keywords": [
+    "assets",
+    "billpayment",
+    "bot",
+    "brand",
+    "browser",
+    "bun",
+    "cloudflare-workers",
+    "deno",
+    "edge-runtime",
+    "emv-qrcps",
+    "emvco",
+    "esm",
+    "icons",
+    "kbank",
+    "kshop",
+    "logo",
+    "national-itmx",
+    "node",
+    "payment",
+    "promptpay",
+    "qr",
+    "qr-code",
+    "qrcode",
+    "scb",
+    "svg",
+    "svg-assets",
+    "thai-qr",
+    "thai-qr-payment",
+    "thailand",
+    "typescript",
+    "zero-dependency"
+  ],
+  "homepage": "https://github.com/uunw/thai-qr-payment/tree/main/packages/assets",
+  "bugs": {
+    "url": "https://github.com/uunw/thai-qr-payment/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "uunw",
+    "url": "https://github.com/uunw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uunw/thai-qr-payment.git",
+    "directory": "packages/assets"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/uunw"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.test.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.js",
+  "jsdelivr": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./svg/*": "./src/svg/*",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-svg-module.mjs && rspack build && tsc -p tsconfig.json --emitDeclarationOnly",
+    "dev": "rspack build --watch",
+    "test": "vitest run",
+    "lint": "oxlint src",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo src/generated.ts",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

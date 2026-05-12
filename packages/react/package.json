@@ -1,0 +1,109 @@
+{
+  "name": "@thai-qr-payment/react",
+  "version": "0.1.0",
+  "description": "React component bindings for @thai-qr-payment — drop-in <ThaiQrPayment /> + <ThaiQrPaymentMatrix /> components.",
+  "keywords": [
+    "billpayment",
+    "bot",
+    "browser",
+    "bun",
+    "cloudflare-workers",
+    "component",
+    "deno",
+    "edge-runtime",
+    "emv-qrcps",
+    "emvco",
+    "esm",
+    "jsx",
+    "kbank",
+    "kshop",
+    "national-itmx",
+    "node",
+    "payment",
+    "preact",
+    "promptpay",
+    "qr",
+    "qr-code",
+    "qrcode",
+    "react",
+    "react-component",
+    "scb",
+    "svg",
+    "thai-qr",
+    "thai-qr-payment",
+    "thailand",
+    "tsx",
+    "typescript",
+    "zero-dependency"
+  ],
+  "homepage": "https://github.com/uunw/thai-qr-payment/tree/main/packages/react",
+  "bugs": {
+    "url": "https://github.com/uunw/thai-qr-payment/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "uunw",
+    "url": "https://github.com/uunw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uunw/thai-qr-payment.git",
+    "directory": "packages/react"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/uunw"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.test.ts",
+    "!**/*.test.tsx",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.js",
+  "jsdelivr": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "rspack build && tsc -p tsconfig.json --emitDeclarationOnly",
+    "dev": "rspack build --watch",
+    "test": "vitest run",
+    "lint": "oxlint src",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "peerDependencies": {
+    "@thai-qr-payment/payload": "workspace:^",
+    "@thai-qr-payment/qr": "workspace:^",
+    "@thai-qr-payment/render": "workspace:^",
+    "react": ">=18"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

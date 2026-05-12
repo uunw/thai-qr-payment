@@ -1,0 +1,121 @@
+{
+  "name": "thai-qr-payment",
+  "version": "0.1.0",
+  "description": "Zero-dependency Thai QR Payment (EMVCo MPM) toolkit — one-stop umbrella for payload builder, QR encoder, SVG card renderer, brand assets, and CLI.",
+  "keywords": [
+    "all-in-one",
+    "billpayment",
+    "bot",
+    "browser",
+    "bun",
+    "cloudflare-workers",
+    "deno",
+    "edge-runtime",
+    "emv-qrcps",
+    "emvco",
+    "esm",
+    "kbank",
+    "kshop",
+    "national-itmx",
+    "node",
+    "payment",
+    "promptpay",
+    "qr",
+    "qr-code",
+    "qrcode",
+    "scb",
+    "svg",
+    "thai-qr",
+    "thai-qr-payment",
+    "thailand",
+    "typescript",
+    "umbrella",
+    "zero-dependency"
+  ],
+  "homepage": "https://github.com/uunw/thai-qr-payment",
+  "bugs": {
+    "url": "https://github.com/uunw/thai-qr-payment/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "uunw",
+    "url": "https://github.com/uunw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uunw/thai-qr-payment.git",
+    "directory": "packages/thai-qr-payment"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/uunw"
+  },
+  "bin": {
+    "thai-qr-payment": "./dist/cli.js",
+    "tqp": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.test.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./payload": {
+      "types": "./dist/payload.d.ts",
+      "import": "./dist/payload.js",
+      "require": "./dist/payload.cjs"
+    },
+    "./qr": {
+      "types": "./dist/qr.d.ts",
+      "import": "./dist/qr.js",
+      "require": "./dist/qr.cjs"
+    },
+    "./render": {
+      "types": "./dist/render.d.ts",
+      "import": "./dist/render.js",
+      "require": "./dist/render.cjs"
+    },
+    "./assets": {
+      "types": "./dist/assets.d.ts",
+      "import": "./dist/assets.js",
+      "require": "./dist/assets.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-umbrella.mjs",
+    "dev": "node ../../scripts/build-umbrella.mjs --watch",
+    "test": "vitest run",
+    "lint": "oxlint src",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "@thai-qr-payment/assets": "workspace:^",
+    "@thai-qr-payment/cli": "workspace:^",
+    "@thai-qr-payment/payload": "workspace:^",
+    "@thai-qr-payment/qr": "workspace:^",
+    "@thai-qr-payment/render": "workspace:^"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

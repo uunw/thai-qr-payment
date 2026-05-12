@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build + test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec oxlint packages/*/src
+
+      - name: Format check (oxfmt)
+        run: pnpm format:check
+
+      - name: Type check
+        run: pnpm check-types
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+      - name: Verify CLI binary
+        run: |
+          OUT=$(node packages/cli/dist/cli.js 0812345678 --amount 50 --format payload)
+          echo "CLI output: $OUT"
+          test "${#OUT}" -gt 50 || (echo "CLI output too short"; exit 1)
+
+  smoke-render:
+    name: Smoke test renderer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Render sample SVGs
+        run: |
+          mkdir -p /tmp/svg
+          node packages/cli/dist/cli.js 0812345678 --amount 50 --merchant "ABOUT YOU" -o /tmp/svg/card.svg
+          node packages/cli/dist/cli.js 0812345678 --amount 50 --format matrix --size 512 -o /tmp/svg/matrix.svg
+          node packages/cli/dist/cli.js 0812345678 --format payload > /tmp/svg/payload.txt
+          ls -la /tmp/svg
+          # Make sure the SVGs parse as XML
+          for f in /tmp/svg/*.svg; do
+            python3 -c "import xml.etree.ElementTree as ET; ET.parse('$f')" || (echo "Invalid XML: $f"; exit 1)
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: render-samples
+          path: /tmp/svg
+          if-no-files-found: error

@@ -1,0 +1,34 @@
+name: Lockfile
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'pnpm-lock.yaml'
+      - '**/package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  lockfile:
+    name: Lockfile integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Frozen install must not modify the lockfile
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Confirm lockfile resolves to whitelisted registries only
+        run: |
+          if grep -E '^\s*resolution: ' pnpm-lock.yaml | grep -v 'registry.npmjs.org' | grep -v 'integrity: '; then
+            echo "Unexpected resolution source detected in pnpm-lock.yaml" >&2
+            exit 1
+          fi

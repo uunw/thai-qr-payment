@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>thai-qr-payment — quickstart preview</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 40px 24px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+        background: #f5f6fa;
+        color: #0a2540;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      h1 {
+        font-weight: 700;
+        margin: 0;
+        font-size: 22px;
+      }
+      .card-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        max-width: 960px;
+        width: 100%;
+      }
+      .card {
+        background: white;
+        padding: 24px;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px -10px rgba(10, 37, 64, 0.18);
+      }
+      .card svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        margin-top: 12px;
+        color: #5b6680;
+      }
+      input {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #d6dbe5;
+        font: inherit;
+      }
+      footer {
+        font-size: 13px;
+        color: #5b6680;
+        margin-top: 32px;
+      }
+      code {
+        background: #eef0f4;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>@thai-qr-payment — live preview</h1>
+    <div class="card-row">
+      <div class="card">
+        <label>Recipient</label>
+        <input id="recipient" value="0812345678" />
+        <label>Amount (THB)</label>
+        <input id="amount" type="number" value="50" />
+        <label>Merchant name</label>
+        <input id="merchant" value="Acme Coffee" />
+      </div>
+      <div class="card" id="output"></div>
+      <div class="card" id="output-matrix"></div>
+    </div>
+    <footer>
+      Live demo. Edit the inputs to regenerate. Built from <code>@thai-qr-payment/render</code>.
+    </footer>
+
+    <script type="module">
+      import {
+        renderThaiQrPayment,
+        renderThaiQrPaymentMatrix,
+      } from '../../packages/render/dist/index.js';
+
+      const recipient = document.getElementById('recipient');
+      const amount = document.getElementById('amount');
+      const merchant = document.getElementById('merchant');
+      const out = document.getElementById('output');
+      const matrixOut = document.getElementById('output-matrix');
+
+      function render() {
+        const amt = Number.parseFloat(amount.value);
+        out.innerHTML = renderThaiQrPayment({
+          recipient: recipient.value,
+          amount: Number.isFinite(amt) && amt > 0 ? amt : undefined,
+          merchantName: merchant.value,
+          amountLabel: Number.isFinite(amt) && amt > 0 ? `฿ ${amt.toFixed(2)}` : undefined,
+          errorCorrectionLevel: 'M',
+        });
+        matrixOut.innerHTML = renderThaiQrPaymentMatrix({
+          recipient: recipient.value,
+          amount: Number.isFinite(amt) && amt > 0 ? amt : undefined,
+          errorCorrectionLevel: 'M',
+        });
+      }
+
+      for (const el of [recipient, amount, merchant]) {
+        el.addEventListener('input', render);
+      }
+      render();
+    </script>
+  </body>
+</html>

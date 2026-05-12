@@ -1,0 +1,104 @@
+{
+  "name": "@thai-qr-payment/cli",
+  "version": "0.1.0",
+  "description": "Command-line tool to generate Thai QR Payment SVGs from a PromptPay recipient + amount",
+  "keywords": [
+    "billpayment",
+    "bin",
+    "bot",
+    "browser",
+    "bun",
+    "cli",
+    "cloudflare-workers",
+    "command-line",
+    "deno",
+    "edge-runtime",
+    "emv-qrcps",
+    "emvco",
+    "esm",
+    "kbank",
+    "kshop",
+    "national-itmx",
+    "node",
+    "payment",
+    "promptpay",
+    "qr",
+    "qr-code",
+    "qrcode",
+    "scb",
+    "svg",
+    "thai-qr",
+    "thai-qr-payment",
+    "thailand",
+    "tqp",
+    "typescript",
+    "zero-dependency"
+  ],
+  "homepage": "https://github.com/uunw/thai-qr-payment/tree/main/packages/cli",
+  "bugs": {
+    "url": "https://github.com/uunw/thai-qr-payment/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "uunw",
+    "url": "https://github.com/uunw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uunw/thai-qr-payment.git",
+    "directory": "packages/cli"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/uunw"
+  },
+  "bin": {
+    "thai-qr-payment": "./dist/cli.js",
+    "tqp": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.test.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./bin": "./dist/cli.js",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "rspack build && tsc -p tsconfig.json --emitDeclarationOnly",
+    "dev": "rspack build --watch",
+    "test": "vitest run",
+    "lint": "oxlint src",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "dependencies": {
+    "@thai-qr-payment/payload": "workspace:^",
+    "@thai-qr-payment/qr": "workspace:^",
+    "@thai-qr-payment/render": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

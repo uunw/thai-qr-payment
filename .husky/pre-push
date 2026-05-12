@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+# Pre-push gate: full type-check + build + test suite + lint. Catches
+# anything pre-commit's narrower lint-staged sweep would miss.
+# Bypass with `git push --no-verify` if you really know what you're doing.
+
+set -e
+
+echo "→ pnpm check-types"
+pnpm check-types
+
+echo "→ pnpm build"
+pnpm build
+
+echo "→ pnpm test"
+pnpm test
+
+echo "→ pnpm exec oxlint packages/*/src"
+pnpm exec oxlint packages/*/src

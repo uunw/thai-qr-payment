@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Validate the commit message against Conventional Commits.
+# Bypass with `git commit --no-verify` when needed.
+pnpm exec commitlint --edit "$1"

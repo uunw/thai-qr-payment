@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "import"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn",
+    "style": "off"
+  },
+  "rules": {
+    "no-console": "warn",
+    "no-debugger": "error"
+  },
+  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/coverage/**", "**/*.svg"]
+}

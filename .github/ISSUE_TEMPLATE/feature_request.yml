@@ -1,0 +1,24 @@
+name: Feature request
+description: Propose a new feature or API
+title: '[feat]: '
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem are you trying to solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: Sketch the function signature / component prop / CLI flag you have in mind.
+      render: ts
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

@@ -1,0 +1,53 @@
+name: Smoke (published)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'npm dist-tag or version to smoke-test (e.g. "latest" or "0.1.0")'
+        required: true
+        default: 'latest'
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Install + run from npm
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22']
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install thai-qr-payment from npm
+        run: |
+          mkdir smoke && cd smoke
+          npm init -y >/dev/null
+          npm install thai-qr-payment@${{ inputs.version || 'latest' }}
+
+      - name: Smoke — generate payload + render SVG
+        run: |
+          cd smoke
+          cat > smoke.mjs <<'JS'
+          import { payloadFor, parsePayload, renderThaiQrPayment } from 'thai-qr-payment';
+          const wire = payloadFor({ recipient: '0812345678', amount: 50 });
+          if (!wire.startsWith('000201')) throw new Error('Bad payload prefix');
+          const parsed = parsePayload(wire);
+          if (parsed.amount !== 50) throw new Error('Bad parsed amount');
+          const svg = renderThaiQrPayment({ recipient: '0812345678', amount: 50 });
+          if (!svg.startsWith('<svg')) throw new Error('Bad SVG output');
+          console.log('OK: payload', wire);
+          JS
+          node smoke.mjs
+
+      - name: Smoke — CLI bin
+        run: |
+          cd smoke
+          npx thai-qr-payment 0812345678 --amount 50 --format payload

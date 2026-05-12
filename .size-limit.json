@@ -1,0 +1,64 @@
+[
+  {
+    "name": "thai-qr-payment (umbrella, full incl. logo assets)",
+    "path": "packages/thai-qr-payment/dist/index.js",
+    "import": "*",
+    "limit": "25 KB"
+  },
+  {
+    "name": "thai-qr-payment (renderThaiQrPayment, incl. logo assets)",
+    "path": "packages/thai-qr-payment/dist/index.js",
+    "import": "{ renderThaiQrPayment }",
+    "limit": "25 KB"
+  },
+  {
+    "name": "thai-qr-payment (payload helpers only — tree-shake check)",
+    "path": "packages/thai-qr-payment/dist/index.js",
+    "import": "{ payloadFor, parsePayload, ThaiQrPaymentBuilder }",
+    "limit": "10 KB",
+    "ignore": ["@thai-qr-payment/assets"]
+  },
+  {
+    "name": "@thai-qr-payment/payload",
+    "path": "packages/payload/dist/index.js",
+    "import": "*",
+    "limit": "5 KB"
+  },
+  {
+    "name": "@thai-qr-payment/payload (payloadFor only)",
+    "path": "packages/payload/dist/index.js",
+    "import": "{ payloadFor }",
+    "limit": "4 KB"
+  },
+  {
+    "name": "@thai-qr-payment/qr",
+    "path": "packages/qr/dist/index.js",
+    "import": "*",
+    "limit": "6 KB"
+  },
+  {
+    "name": "@thai-qr-payment/render",
+    "path": "packages/render/dist/index.js",
+    "import": "*",
+    "limit": "2 KB",
+    "ignore": ["@thai-qr-payment/payload", "@thai-qr-payment/qr", "@thai-qr-payment/assets"]
+  },
+  {
+    "name": "@thai-qr-payment/react",
+    "path": "packages/react/dist/index.js",
+    "import": "*",
+    "limit": "1 KB",
+    "ignore": [
+      "react",
+      "@thai-qr-payment/payload",
+      "@thai-qr-payment/qr",
+      "@thai-qr-payment/render"
+    ]
+  },
+  {
+    "name": "@thai-qr-payment/assets",
+    "path": "packages/assets/dist/index.js",
+    "import": "*",
+    "limit": "20 KB"
+  }
+]

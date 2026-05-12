@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "noEmit": false,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "lib": ["ES2023"]
+  },
+  "include": ["src/**/*"],
+  "references": [{ "path": "../payload" }, { "path": "../qr" }, { "path": "../assets" }],
+  "exclude": ["**/*.test.ts", "dist", "node_modules"]
+}

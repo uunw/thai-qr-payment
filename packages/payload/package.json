@@ -1,0 +1,98 @@
+{
+  "name": "@thai-qr-payment/payload",
+  "version": "0.1.0",
+  "description": "Zero-dependency EMVCo Merchant-Presented-Mode QR payload builder + parser for Thai QR Payment (PromptPay, BillPayment, KShop)",
+  "keywords": [
+    "billpayment",
+    "bot",
+    "browser",
+    "builder",
+    "bun",
+    "cloudflare-workers",
+    "crc-16-ccitt",
+    "crc16",
+    "deno",
+    "edge-runtime",
+    "emv",
+    "emv-qrcps",
+    "emvco",
+    "esm",
+    "kbank",
+    "kshop",
+    "national-itmx",
+    "node",
+    "parser",
+    "payment",
+    "promptpay",
+    "qr",
+    "qr-code",
+    "qrcode",
+    "scb",
+    "svg",
+    "thai-qr",
+    "thai-qr-payment",
+    "thailand",
+    "tlv",
+    "typescript",
+    "wire-format",
+    "zero-dependency"
+  ],
+  "homepage": "https://github.com/uunw/thai-qr-payment/tree/main/packages/payload",
+  "bugs": {
+    "url": "https://github.com/uunw/thai-qr-payment/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "uunw",
+    "url": "https://github.com/uunw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uunw/thai-qr-payment.git",
+    "directory": "packages/payload"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/uunw"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.test.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.js",
+  "jsdelivr": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "rspack build && tsc -p tsconfig.json --emitDeclarationOnly",
+    "dev": "rspack build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "oxlint src",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo",
+    "prepublishOnly": "pnpm build && pnpm test"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  }
+}

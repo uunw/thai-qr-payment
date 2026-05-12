@@ -1,0 +1,42 @@
+name: Stale
+
+on:
+  schedule:
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          stale-issue-message: |
+            This issue has been quiet for 60 days. It will close in 14 more
+            days unless updated. If it is still relevant, drop a comment or
+            remove the `stale` label.
+          stale-pr-message: |
+            This PR has been quiet for 30 days. It will close in 14 more
+            days unless updated. If you still want to land it, push a fresh
+            commit or remove the `stale` label.
+          close-issue-message: |
+            Closing because there has been no further activity for 14 days
+            since the stale notice. Feel free to reopen if you have more
+            information.
+          close-pr-message: |
+            Closing because there has been no further activity for 14 days.
+            Feel free to reopen if you want to revive this change.
+          exempt-issue-labels: 'pinned,security,help-wanted'
+          exempt-pr-labels: 'pinned,security,work-in-progress'
+          remove-stale-when-updated: true

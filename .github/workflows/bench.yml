@@ -1,0 +1,28 @@
+name: Benchmark
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1' # Monday 06:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  bench:
+    name: Vitest bench
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Run benchmarks (if any)
+        run: pnpm exec turbo run bench || echo "no bench task defined"
+        continue-on-error: true

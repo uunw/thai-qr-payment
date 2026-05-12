@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/@changesets/[email protected]/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "uunw/thai-qr-payment" }],
+  "commit": false,
+  "fixed": [],
+  "linked": [
+    [
+      "thai-qr-payment",
+      "@thai-qr-payment/payload",
+      "@thai-qr-payment/qr",
+      "@thai-qr-payment/assets",
+      "@thai-qr-payment/render",
+      "@thai-qr-payment/cli",
+      "@thai-qr-payment/react"
+    ]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}

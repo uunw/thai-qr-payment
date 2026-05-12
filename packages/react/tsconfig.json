@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "lib": ["ES2023", "DOM"]
+  },
+  "include": ["src/**/*"],
+  "references": [{ "path": "../payload" }, { "path": "../qr" }, { "path": "../render" }],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "dist", "node_modules"]
+}

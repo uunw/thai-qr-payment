@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [],
+  "references": [
+    { "path": "./packages/payload" },
+    { "path": "./packages/qr" },
+    { "path": "./packages/assets" },
+    { "path": "./packages/render" },
+    { "path": "./packages/cli" },
+    { "path": "./packages/react" },
+    { "path": "./packages/thai-qr-payment" }
+  ]
+}

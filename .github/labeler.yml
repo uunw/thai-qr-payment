@@ -1,0 +1,64 @@
+# Auto-label PRs based on which files they touch.
+
+'pkg: thai-qr-payment':
+  - changed-files:
+      - any-glob-to-any-file: packages/thai-qr-payment/**
+
+'pkg: payload':
+  - changed-files:
+      - any-glob-to-any-file: packages/payload/**
+
+'pkg: qr':
+  - changed-files:
+      - any-glob-to-any-file: packages/qr/**
+
+'pkg: render':
+  - changed-files:
+      - any-glob-to-any-file: packages/render/**
+
+'pkg: assets':
+  - changed-files:
+      - any-glob-to-any-file: packages/assets/**
+
+'pkg: react':
+  - changed-files:
+      - any-glob-to-any-file: packages/react/**
+
+'pkg: cli':
+  - changed-files:
+      - any-glob-to-any-file: packages/cli/**
+
+'documentation':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - 'docs/**'
+
+'ci':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+
+'dependencies':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'pnpm-lock.yaml'
+          - '**/package.json'
+
+'tooling':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'tsconfig*.json'
+          - 'biome.json'
+          - '.oxlintrc.json'
+          - '.oxfmtrc.json'
+          - 'turbo.json'
+          - 'rspack.config.*'
+          - 'scripts/**'
+
+'test':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.test.ts'
+          - '**/*.test.tsx'
+          - 'vitest.config.*'
