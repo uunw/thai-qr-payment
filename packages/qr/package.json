@@ -1,6 +1,6 @@
 {
   "name": "@thai-qr-payment/qr",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Zero-dependency QR Code (ISO/IEC 18004) matrix encoder optimised for Thai QR Payment payloads",
   "keywords": [
     "billpayment",
