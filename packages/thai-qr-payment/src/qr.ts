@@ -1,2 +1,2 @@
-/** Sub-path entry — narrow re-export of `@thai-qr-payment/qr`. */
-export * from '@thai-qr-payment/qr';
+/** Sub-path entry — direct re-export of the QR encoder source. */
+export * from '../../qr/src/index.js';

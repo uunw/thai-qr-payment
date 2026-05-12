@@ -99,15 +99,15 @@
     "provenance": true
   },
   "scripts": {
-    "build": "node ../../scripts/build-umbrella.mjs",
-    "dev": "node ../../scripts/build-umbrella.mjs --watch",
+    "build": "rspack build && tsc -p tsconfig.json --emitDeclarationOnly",
+    "dev": "rspack build --watch",
     "test": "vitest run",
     "lint": "oxlint src",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf dist .turbo",
     "prepublishOnly": "pnpm build && pnpm test"
   },
-  "dependencies": {
+  "devDependencies": {
     "@thai-qr-payment/assets": "workspace:^",
     "@thai-qr-payment/cli": "workspace:^",
     "@thai-qr-payment/payload": "workspace:^",

@@ -15,7 +15,6 @@ const libConfig = (format: 'esm' | 'cjs'): Configuration => ({
     assets: './src/assets.ts',
   },
   externalsType: format === 'esm' ? 'module' : 'commonjs',
-  externals: [/^@thai-qr-payment\//],
   output: {
     path: resolve(here, 'dist'),
     filename: format === 'esm' ? '[name].js' : '[name].cjs',
@@ -67,7 +66,7 @@ const cliConfig: Configuration = {
     clean: false,
   },
   externalsType: 'module',
-  externals: [/^node:/, /^@thai-qr-payment\//],
+  externals: [/^node:/],
   resolve: {
     extensions: ['.ts', '.js'],
     extensionAlias: { '.js': ['.ts', '.js'] },

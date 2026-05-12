@@ -1,2 +1,2 @@
-/** Sub-path entry — narrow re-export of `@thai-qr-payment/render`. */
-export * from '@thai-qr-payment/render';
+/** Sub-path entry — direct re-export of the SVG renderer source. */
+export * from '../../render/src/index.js';

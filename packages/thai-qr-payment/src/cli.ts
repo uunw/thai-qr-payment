@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 /**
- * CLI shim — delegates to `@thai-qr-payment/cli` so `npx thai-qr-payment`
- * and `npx tqp` both work after a top-level install.
- *
- * The downstream CLI module self-executes on import (it calls `main()`
- * at top level), so a bare import is sufficient. We reach for the
- * package's `./bin` sub-path entry rather than `./dist/cli.js` so we
- * don't depend on internal layout.
+ * CLI bin — inline copy of the `@thai-qr-payment/cli` runner so the
+ * umbrella stays zero-runtime-dep. Bundler inlines the actual CLI
+ * source via this import; the published tarball ships a single
+ * self-contained dist/cli.js with no transitive lookups.
  */
-import '@thai-qr-payment/cli/bin';
+import '../../cli/src/cli.js';

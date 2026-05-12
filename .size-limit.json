@@ -12,11 +12,16 @@
     "limit": "25 KB"
   },
   {
-    "name": "thai-qr-payment (payload helpers only — tree-shake check)",
-    "path": "packages/thai-qr-payment/dist/index.js",
-    "import": "{ payloadFor, parsePayload, ThaiQrPaymentBuilder }",
-    "limit": "10 KB",
-    "ignore": ["@thai-qr-payment/assets"]
+    "name": "thai-qr-payment (payload sub-path entry)",
+    "path": "packages/thai-qr-payment/dist/payload.js",
+    "import": "*",
+    "limit": "5 KB"
+  },
+  {
+    "name": "thai-qr-payment (qr sub-path entry)",
+    "path": "packages/thai-qr-payment/dist/qr.js",
+    "import": "*",
+    "limit": "6 KB"
   },
   {
     "name": "@thai-qr-payment/payload",

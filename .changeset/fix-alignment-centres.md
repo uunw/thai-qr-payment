@@ -1,11 +1,11 @@
 ---
-"thai-qr-payment": patch
-"@thai-qr-payment/qr": patch
-"@thai-qr-payment/payload": patch
-"@thai-qr-payment/render": patch
-"@thai-qr-payment/assets": patch
-"@thai-qr-payment/react": patch
-"@thai-qr-payment/cli": patch
+'thai-qr-payment': patch
+'@thai-qr-payment/qr': patch
+'@thai-qr-payment/payload': patch
+'@thai-qr-payment/render': patch
+'@thai-qr-payment/assets': patch
+'@thai-qr-payment/react': patch
+'@thai-qr-payment/cli': patch
 ---
 
 Fix QR matrix alignment-pattern placement for v2-v40. The previous

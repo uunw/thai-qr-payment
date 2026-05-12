@@ -1,2 +1,2 @@
-/** Sub-path entry — narrow re-export of `@thai-qr-payment/assets`. */
-export * from '@thai-qr-payment/assets';
+/** Sub-path entry — direct re-export of the brand asset registry. */
+export * from '../../assets/src/index.js';

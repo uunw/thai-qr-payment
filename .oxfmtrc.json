@@ -11,9 +11,5 @@
   "arrowParens": "always",
   "bracketSameLine": false,
   "bracketSpacing": true,
-  "ignorePatterns": [
-    "**/dist/**",
-    "**/node_modules/**",
-    "packages/assets/src/generated.ts"
-  ]
+  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "packages/assets/src/generated.ts"]
 }
