@@ -36,22 +36,33 @@ describe('alignmentCentres', () => {
     expect(alignmentCentres(1)).toEqual([]);
   });
 
-  it('returns one centre near (6) for version 2-6', () => {
-    for (let v = 2; v <= 6; v += 1) {
-      const centres = alignmentCentres(v);
-      expect(centres.length).toBeGreaterThan(0);
-      expect(centres[0]).toBe(6);
-    }
-  });
-
-  it('returns multiple centres for high versions', () => {
-    expect(alignmentCentres(7).length).toBeGreaterThan(1);
-    expect(alignmentCentres(40).length).toBeGreaterThan(5);
+  // Sourced from ISO/IEC 18004 Annex E. These are load-bearing — if the
+  // returned set drifts from the spec, scanners reject the QR even
+  // though every other layer (finders, format-info, RS-ECC) is correct.
+  it.each([
+    [2, [6, 18]],
+    [3, [6, 22]],
+    [4, [6, 26]],
+    [5, [6, 30]],
+    [6, [6, 34]],
+    [7, [6, 22, 38]],
+    [10, [6, 28, 50]],
+    [14, [6, 26, 46, 66]],
+    [20, [6, 34, 62, 90]],
+    [40, [6, 30, 58, 86, 114, 142, 170]],
+  ] as const)('v%i matches the ISO/IEC 18004 Annex E table', (version, expected) => {
+    expect(alignmentCentres(version)).toEqual(expected);
   });
 
   it('always starts at 6 (top-left finder edge)', () => {
     for (let v = 2; v <= 40; v += 1) {
       expect(alignmentCentres(v)[0]).toBe(6);
+    }
+  });
+
+  it('returns count = floor(v/7) + 2 entries for v >= 2', () => {
+    for (let v = 2; v <= 40; v += 1) {
+      expect(alignmentCentres(v).length).toBe(Math.floor(v / 7) + 2);
     }
   });
 
@@ -61,6 +72,15 @@ describe('alignmentCentres', () => {
       for (const c of alignmentCentres(v)) {
         expect(c).toBeGreaterThanOrEqual(0);
         expect(c).toBeLessThan(dim);
+      }
+    }
+  });
+
+  it('returns entries in strictly ascending order', () => {
+    for (let v = 2; v <= 40; v += 1) {
+      const cs = alignmentCentres(v);
+      for (let i = 1; i < cs.length; i += 1) {
+        expect(cs[i]!).toBeGreaterThan(cs[i - 1]!);
       }
     }
   });

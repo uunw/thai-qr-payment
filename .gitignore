@@ -38,10 +38,7 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Changesets temporary
-.changeset/*.md
-!.changeset/README.md
-!.changeset/config.json
 
 # Generated previews
 examples/*/out/
+.tmp-test-modules/

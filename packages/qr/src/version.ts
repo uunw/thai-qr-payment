@@ -358,12 +358,13 @@ export function alignmentCentres(version: number): readonly number[] {
   const dim = moduleCount(version);
   const last = dim - 7;
   const step = version === 32 ? 26 : 2 * Math.ceil((last - 6) / (2 * (count - 1)));
+  // Walk backwards from `last` toward 6, prepending each centre until we
+  // have `count` entries (the first being the fixed 6 at the top-left
+  // finder edge). Returned in ascending order so callers can iterate
+  // predictably.
   const centres: number[] = [6];
-  for (let i = count - 1; i > 0; i -= 1) centres.unshift(last - (count - 1 - i) * step);
-  centres.shift();
-  centres.unshift(6);
-  // Deduplicate in case rounding produced a duplicate boundary.
-  const unique: number[] = [];
-  for (const c of centres) if (!unique.includes(c)) unique.push(c);
-  return unique;
+  for (let pos = last; centres.length < count; pos -= step) {
+    centres.unshift(pos);
+  }
+  return centres.sort((a, b) => a - b);
 }
