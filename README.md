@@ -11,6 +11,7 @@
 
 <!-- repo -->
 
+[![docs](https://img.shields.io/badge/docs-thai--qr--payment.js.org-3245ff?logo=astro&logoColor=white)](https://thai-qr-payment.js.org)
 [![CI](https://github.com/uunw/thai-qr-payment/actions/workflows/ci.yml/badge.svg)](https://github.com/uunw/thai-qr-payment/actions/workflows/ci.yml)
 [![release](https://github.com/uunw/thai-qr-payment/actions/workflows/release.yml/badge.svg)](https://github.com/uunw/thai-qr-payment/actions/workflows/release.yml)
 [![CodeQL](https://github.com/uunw/thai-qr-payment/actions/workflows/codeql.yml/badge.svg)](https://github.com/uunw/thai-qr-payment/actions/workflows/codeql.yml)
