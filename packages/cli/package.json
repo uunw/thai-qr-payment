@@ -34,7 +34,7 @@
     "typescript",
     "zero-dependency"
   ],
-  "homepage": "https://github.com/uunw/thai-qr-payment/tree/main/packages/cli",
+  "homepage": "https://thai-qr-payment.js.org/guide/cli/",
   "bugs": {
     "url": "https://github.com/uunw/thai-qr-payment/issues"
   },

@@ -9,6 +9,7 @@ const pkg = require('./package.json') as { version: string };
 
 const cliConfig: Configuration = {
   mode: 'production',
+  devtool: 'source-map',
   target: 'node18',
   entry: { cli: './src/cli.ts' },
   output: {
@@ -46,7 +47,11 @@ const cliConfig: Configuration = {
     minimize: true,
     minimizer: [
       new rspack.SwcJsMinimizerRspackPlugin({
-        minimizerOptions: { compress: true, mangle: true, format: { comments: false } },
+        minimizerOptions: {
+          compress: true,
+          mangle: { keep_classnames: true, keep_fnames: true },
+          format: { comments: false },
+        },
       }),
     ],
   },

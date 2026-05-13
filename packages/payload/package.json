@@ -37,7 +37,7 @@
     "wire-format",
     "zero-dependency"
   ],
-  "homepage": "https://github.com/uunw/thai-qr-payment/tree/main/packages/payload",
+  "homepage": "https://thai-qr-payment.js.org/guide/payload/",
   "bugs": {
     "url": "https://github.com/uunw/thai-qr-payment/issues"
   },

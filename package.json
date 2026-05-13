@@ -31,7 +31,7 @@
     "typescript",
     "zero-dependency"
   ],
-  "homepage": "https://github.com/uunw/thai-qr-payment",
+  "homepage": "https://thai-qr-payment.js.org",
   "bugs": {
     "url": "https://github.com/uunw/thai-qr-payment/issues"
   },

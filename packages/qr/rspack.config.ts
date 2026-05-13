@@ -6,6 +6,7 @@ const here = fileURLToPath(new URL('.', import.meta.url));
 
 const baseConfig = (format: 'esm' | 'cjs'): Configuration => ({
   mode: 'production',
+  devtool: 'source-map',
   target: ['web', 'es2022'],
   entry: { index: './src/index.ts' },
   output: {
@@ -45,7 +46,7 @@ const baseConfig = (format: 'esm' | 'cjs'): Configuration => ({
       new rspack.SwcJsMinimizerRspackPlugin({
         minimizerOptions: {
           compress: { passes: 3, drop_console: false },
-          mangle: true,
+          mangle: { keep_classnames: true, keep_fnames: true },
           format: { comments: false },
         },
       }),
