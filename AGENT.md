@@ -177,7 +177,13 @@ Examples from repo history:
 
 ## Brand asset policy
 
-`@thai-qr-payment/assets` ships only the **canonical** marks (`Thai_QR_Payment_Logo-01` + `PromptPay1`, each in color + silhouette flavors). Logo variants 02-06 + PromptPay2 were dropped in commit `bdadef3` to keep the bundle small.
+`@thai-qr-payment/assets` ships:
+
+- `Thai_QR_Payment_Logo-01` — color + silhouette (vectorised via vtracer, colours unified to brand spec `#00427A` + `#00A796`)
+- `PromptPay1` — color + silhouette (mono w/ rounded border frame)
+- `PromptPay2` — **color only** (navy bg, pairs with the navy header). Ships as an **embedded PNG** inside an SVG `<image>` wrapper because vtracer turns wordmark glyphs into jagged polygons; the raster keeps fonts smooth at every render size. Re-added in v0.1.2 after the original drop in commit `bdadef3`.
+
+The silhouette registry is allowed to be a **subset** of the color registry — marks without a silhouette twin (PromptPay2) fall back to their color version when the silhouette theme is requested.
 
 If you need a specific layout, re-trace via:
 
@@ -205,13 +211,13 @@ Pre-compressed `.br` + `.gz` ship inside every published package's `dist/`. CDNs
 
 | Where   | What                         | Version                        |
 | ------- | ---------------------------- | ------------------------------ |
-| npm     | `thai-qr-payment` (umbrella) | 0.1.1                          |
-| npm     | `@thai-qr-payment/payload`   | 0.1.1                          |
-| npm     | `@thai-qr-payment/qr`        | 0.1.1                          |
-| npm     | `@thai-qr-payment/render`    | 0.1.1                          |
-| npm     | `@thai-qr-payment/assets`    | 0.1.1                          |
-| npm     | `@thai-qr-payment/react`     | 0.1.1                          |
-| npm     | `@thai-qr-payment/cli`       | 0.1.1                          |
+| npm     | `thai-qr-payment` (umbrella) | 0.1.2                          |
+| npm     | `@thai-qr-payment/payload`   | 0.1.2                          |
+| npm     | `@thai-qr-payment/qr`        | 0.1.2                          |
+| npm     | `@thai-qr-payment/render`    | 0.1.2                          |
+| npm     | `@thai-qr-payment/assets`    | 0.1.2                          |
+| npm     | `@thai-qr-payment/react`     | 0.1.2                          |
+| npm     | `@thai-qr-payment/cli`       | 0.1.2                          |
 | GitHub  | `uunw/thai-qr-payment`       | public, default branch `main`  |
 | npm org | `thai-qr-payment`            | free tier (created 2026-05-12) |
 
@@ -219,6 +225,7 @@ All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagg
 
 ## Migration history (what's been bumped)
 
+- **Commits `c3b199d` + `c46857d` → published v0.1.2** (2026-05-13): Brand-spec card redesign — full-width navy header strip, TQR Maximum Blue (`#00427A`) unified across `Thai_QR_Payment_Logo-01.svg` (replacing vtracer's `#0e3d67` + six auxiliary shades), `PromptPay2` (navy) is now the default sub-mark for `theme: 'color'` shipped as an embedded PNG inside an SVG `<image>` wrapper, QR fill decoupled from accent via new `qrColor` option (defaults to `#000000` for scanner contrast). CI matrix bumped to Node 22 + 24 because the Astro docs build needs Node >= 22.12.
 - **Commit `e4af92f` → published v0.1.1** (2026-05-12): Critical fix — `alignmentCentres()` for QR v2-v40 was returning wrong positions, every scanner rejected the output as "invalid QR". The published v0.1.0 had this bug. Verified post-fix by round-tripping every (version, ECC, mask) combo through `jsQR`.
 - **Commit `2d1ed7c` → still v0.1.1** (2026-05-12): Inlined scoped siblings into the umbrella. npm UI now correctly shows "0 Dependencies" instead of "5 Dependencies". Moved deps → devDeps in umbrella's `package.json`.
 - **Commit `80fe990`** (2026-05-11): Rspack 1→2, Vitest 3→4, TS 5→6, React 18→19, @types/node 22→25, @changesets/changelog-github 0.5→0.7, oxlint 1.0→1.63, turbo 2.5→2.9. Each major was cross-checked against its Context7 migration guide before applying.
@@ -242,6 +249,12 @@ All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagg
 - **`packages/assets/src/generated.ts` flip-flops between `JSON.stringify`'s double-quote style and oxfmt's single-quote style** every build. Added to `.oxfmtrc.json` `ignorePatterns` to prevent diff churn; if you add another generated file, ignore it too.
 - **The PR title check rejects uppercase first word** by default in `amannn/action-semantic-pull-request@v5`. Dependabot uses `"Bump …"` (capital B), so we removed `subjectPattern` from `pr-title.yml` to accept both.
 - **`.tmp-test-modules/` and similar scratch dirs** can sneak into commits if you `cp -r node_modules` for local smoke tests. Listed in `.gitignore`; if you do this trick elsewhere, add the path explicitly.
+- **vtracer turns wordmark glyphs into jagged polygons.** For text-heavy assets (PromptPay2), embed the source PNG inside an SVG `<image>` wrapper instead of vector-tracing it. ~9 KB base64 vs ~12 KB jagged trace; renders smooth at every scale. Pure-vector marks (icons + simple logos) trace fine. Generate via `base64 -i logo.png | tr -d '\n'` then wrap with `<svg width=... height=...><image href="data:image/png;base64,..."/></svg>`.
+- **`unwrapSvg` must fall back to width/height when `viewBox` is absent.** Hand-authored / Illustrator-exported SVGs often omit `viewBox` and rely on `width=` + `height=` alone. Without the fallback the `<symbol>` defaults to `0 0 100 100` and the artwork renders 0.5-px tall. Implemented in `packages/render/src/card.ts unwrapSvg`.
+- **`unwrapSvg` must strip `<?xml ?>` AND leading `<!-- -->` comments before the outer `<svg>`.** vtracer output starts with `<?xml ... ?>\n<!-- Generator: visioncortex VTracer ... -->\n<svg>`. The naive `^<svg` regex fails because comments push the `<svg>` off the line start; result is 2 `<svg>` tags in the final composite SVG. Three-step strip handles it.
+- **Stale `.tsbuildinfo` in `dist/` blocks TSC project-reference resolution.** After regenerating `src/generated.ts` (e.g. adding a new SVG → new exported const), `tsc --emitDeclarationOnly` may keep emitting the old `dist/generated.d.ts` because the buildinfo says "nothing changed". Wipe `packages/*/dist/.tsbuildinfo` and rebuild deps in dependency order (assets → payload → qr → render).
+- **Brand color is `#00427A` ("TQR Maximum Blue"), NOT `#0e3d67`.** vtracer's default colour clustering picked `#0e3d67` + six auxiliary shades (`#103e68`, `#113f68`, `#124069`, `#19446d`, `#1a456d`, `#1b466e`, `#0f3e67`) as approximations. The brand book §4 specifies CMYK 100/60/0/40 = RGB 0/66/122 = `#00427A`. Unify all variants to the canonical hex; same goes for the iris glyph `#1ba997` → `#00A796` (brand secondary green). `perl -i -pe 's/#0e3d67/#00427A/gi; …'` on the source SVG is the fix.
+- **Astro docs toolchain requires Node >= 22.12.** CI matrix `node: ['20', '22']` failed on Node 20 because `pnpm build` includes the Astro docs site via turbo. Either drop Node 20 from CI matrix or filter docs out of the build pipeline. Lib runtime still works on Node 18+ per `engines` field.
 
 ## Adding a new package
 
