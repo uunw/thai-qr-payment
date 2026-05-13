@@ -1,5 +1,11 @@
 # @thai-qr-payment/assets
 
+## 0.1.3
+
+### Patch Changes
+
+- [`ba9e8e8`](https://github.com/uunw/thai-qr-payment/commit/ba9e8e8022d864475710e631d4fb104a951b6f51) Thanks [@uunw](https://github.com/uunw)! - Point every package `homepage` at the new docs site `https://thai-qr-payment.js.org`. Ship sourcemaps with every published bundle and keep original function + class names through minification — published code is now traceable to source and no longer trips supply-chain scanners that flag aggressive mangling.
+
 ## 0.1.2
 
 ### Patch Changes
