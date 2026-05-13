@@ -1,6 +1,6 @@
 {
   "name": "thai-qr-payment",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Zero-dependency Thai QR Payment (EMVCo MPM) toolkit — one-stop umbrella for payload builder, QR encoder, SVG card renderer, brand assets, and CLI.",
   "keywords": [
     "all-in-one",
