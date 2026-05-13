@@ -20,7 +20,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['20', '22']
+        # Astro docs toolchain requires Node >= 22.12. Library runtime
+        # still works on Node 18+ — see `engines` in package.json — but
+        # the build pipeline itself needs the newer Node. Test on 22
+        # + 24 to cover current + next-LTS.
+        node: ['22', '24']
     steps:
       - uses: actions/checkout@v4
 
