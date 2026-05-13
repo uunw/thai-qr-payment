@@ -77,4 +77,4 @@ console.log(parsed.amount); // 50
 console.log(parsed.merchant); // { kind: 'promptpay', recipientType: 'mobile', recipient: '0812345678' }
 ```
 
-Next: [try it in the live demo](/thai-qr-payment/demo/) or jump into the [payload guide](/thai-qr-payment/guide/payload/).
+Next: [try it in the live demo](/demo/) or jump into the [payload guide](/guide/payload/).

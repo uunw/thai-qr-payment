@@ -3,16 +3,10 @@ import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 
-// https://astro.build/config
-//
-// GitHub Pages serves project pages from
-// `https://<user>.github.io/<repo>/`, so the `site` + `base` pair below
-// keeps every URL + asset reference correct after the rewrite. The
-// interactive demo component is a React island hydrated via
-// `client:load` — that's why `@astrojs/react` is wired here.
+// Custom domain via js.org — Pages serves at root of `thai-qr-payment.js.org`.
+// CNAME file in `public/` pins the domain across deploys.
 export default defineConfig({
-  site: 'https://uunw.github.io',
-  base: '/thai-qr-payment',
+  site: 'https://thai-qr-payment.js.org',
   integrations: [
     react(),
     starlight({

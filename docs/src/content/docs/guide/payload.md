@@ -105,4 +105,4 @@ Max wire value: 9,999,999,999.99 THB. Negative or `NaN` throws.
 
 ## Tag coverage
 
-See the [spec coverage reference](/thai-qr-payment/reference/spec/) for the complete tag-by-tag table.
+See the [spec coverage reference](/reference/spec/) for the complete tag-by-tag table.
