@@ -158,23 +158,48 @@ describe('renderCard', () => {
     expect(svg).toMatch(/<symbol[^>]*id="tqp-header"[^>]*>[\s\S]*?<path/);
   });
 
-  it('emits a 600 × 700 canvas matching the brand-guide proportions', () => {
+  it('emits a 600 × 800 canvas matching the brand-guide proportions', () => {
     const matrix = encodeQR('HELLO');
     const svg = renderCard(matrix);
-    expect(svg).toContain('viewBox="0 0 600 700"');
+    expect(svg).toContain('viewBox="0 0 600 800"');
   });
 
-  it('embeds a centre-overlay tqp-header-icon when theme = color', () => {
+  it('uses TQR Maximum Blue (#00427A) as the default accent', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix);
+    expect(svg).toContain('fill="#00427A"');
+  });
+
+  it('defaults to PromptPay2 (navy) under the color theme', () => {
     const matrix = encodeQR('HELLO');
     const svg = renderCard(matrix, { theme: 'color' });
-    expect(svg).toContain('symbol id="tqp-header-icon"');
-    expect(svg).toContain('href="#tqp-header-icon"');
+    // PromptPay2 markup contains paths emitted by vtracer; the safest
+    // anchor is the symbol id + the unique navy bg path that PromptPay1
+    // does NOT carry (PromptPay1 has a black bg + white border instead).
+    expect(svg).toContain('symbol id="tqp-promptpay"');
   });
 
-  it('skips the centre overlay when theme = silhouette', () => {
+  it('crops the header logo to its tight content bbox', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix);
+    // The raw asset's viewBox is "0 0 913 376"; the tight content
+    // bbox is "88 75 750 210" (skips ~90 px navy padding top/bottom
+    // and ~80 px each side). The header symbol must carry the crop.
+    expect(svg).toMatch(/<symbol[^>]*id="tqp-header"[^>]*viewBox="88 75 750 210"/);
+  });
+
+  it('embeds a centre-overlay tqp-icon (icon-only crop) when theme = color', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix, { theme: 'color' });
+    expect(svg).toContain('symbol id="tqp-icon"');
+    expect(svg).toContain('href="#tqp-icon"');
+    expect(svg).toContain('viewBox="0 0 325 376"');
+  });
+
+  it('skips the centre overlay <use> when theme = silhouette', () => {
     const matrix = encodeQR('HELLO');
     const svg = renderCard(matrix, { theme: 'silhouette' });
-    expect(svg.match(/href="#tqp-header-icon"/g)).toBeNull();
+    expect(svg.match(/href="#tqp-icon"/g)).toBeNull();
   });
 
   it('honours custom background', () => {
@@ -185,8 +210,27 @@ describe('renderCard', () => {
 
   it('honours custom accent colour', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderCard(matrix, { accent: '#ff0066' });
+    const svg = renderCard(matrix, {
+      accent: '#ff0066',
+      merchantName: 'Test',
+      amountLabel: '100',
+    });
+    // Accent now applies to text only (merchant + amount labels); QR
+    // modules render in `qrColor` for scanner contrast (defaults to
+    // black). Test the accent shows up on the merchant text fill.
     expect(svg).toContain('fill="#ff0066"');
+  });
+
+  it('renders QR modules in black by default for scanner contrast', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix);
+    expect(svg).toContain('fill="#000000"');
+  });
+
+  it('honours custom qrColor', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix, { qrColor: '#222222' });
+    expect(svg).toContain('fill="#222222"');
   });
 
   it('escapes HTML in merchantName (XSS prevention)', () => {

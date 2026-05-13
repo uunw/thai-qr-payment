@@ -1,35 +1,36 @@
 /**
- * Card composer: combine a QR matrix, the Thai QR Payment header
- * artwork, the PromptPay sub-mark, and an optional centre-overlay
- * Thai QR Payment icon into a single scannable SVG.
+ * Card composer: Thai QR Payment header + PromptPay sub-mark + QR
+ * matrix + centre-overlay icon. Layout + sizing follows the official
+ * BOT/TBA Thai QR Payment brand guideline:
  *
- * Layout (canvas 600 × 700):
+ *   - Card aspect 7.4 cm × 10.5 cm (0.7048) — portrait-ish
+ *   - Navy `#00427A` ("TQR Maximum Blue", brand book §4)
+ *   - Header band ~75 % of card width, ~3.5 : 1 aspect
+ *   - PromptPay sub-mark *left-aligned* under the header (narrow strip)
+ *   - QR ~85 % of card width, centred
+ *   - Centre-overlay icon ~10 % of QR (ECC-H recovers the obscured modules)
  *
  *   ┌──────────────────────────┐
- *   │ ▓▓ Thai QR Payment ▓▓ │  navy band, 0-100
+ *   │     ▓ THAI QR PAYMENT ▓  │  navy band, tight content crop
+ *   │   ⎡Pmt⎤                  │  left-aligned narrow sub-mark
  *   ├──────────────────────────┤
- *   │ PromptPay mark           │  inset left, 100-180
+ *   │   ▓▓▓▓▓▓▓▓▓▓▓▓▓        │
+ *   │   ▓▓▓▓▓ ┌┐ ▓▓▓▓▓        │
+ *   │   ▓▓▓▓▓ └┘ ▓▓▓▓▓        │  small icon overlay (~10%)
+ *   │   ▓▓▓▓▓▓▓▓▓▓▓▓▓        │
  *   ├──────────────────────────┤
- *   │     ▓▓▓▓▓▓▓▓▓▓▓        │
- *   │     ▓▓▓ ┌──┐ ▓▓▓        │  QR centred, 180-580
- *   │     ▓▓▓ │ ◆│ ▓▓▓        │  with optional logo
- *   │     ▓▓▓ └──┘ ▓▓▓        │  overlay at centre
- *   │     ▓▓▓▓▓▓▓▓▓▓▓        │
- *   ├──────────────────────────┤
- *   │ optional merchant name   │  580-640
- *   │ optional amount label    │  640-700
+ *   │ optional merchant name   │
+ *   │ optional amount label    │
  *   └──────────────────────────┘
  *
- * The centre overlay is the canonical Thai QR Payment design: a small
- * white square containing the Thai QR Payment icon, occupying about
- * 16 % of the QR's width. Scanners survive the obscured centre as
- * long as the QR is encoded with ECC level Q or H — callers should
- * pass `errorCorrectionLevel: 'H'` to `encodeQR()` when relying on
- * the overlay (the one-shot `renderThaiQrPayment` helper defaults to
- * `'M'`, but the overlay only kicks in for `theme: 'color'`).
+ * Theme rules:
+ *   - `theme: 'color'` (default) → Thai_QR_Payment_Logo-01 + PromptPay2 (navy)
+ *   - `theme: 'silhouette'`      → silhouette variant + PromptPay1 (black/white)
  *
- * Logos are inlined via `<symbol>` defs so the file stays compact
- * and the marks can be themed at runtime.
+ * Default PromptPay variant is `PromptPay2` (color theme) because the
+ * brand book pairs the navy header with the navy PromptPay sub-mark.
+ * Callers can override with `promptpayLogo` to pick `PromptPay1` (the
+ * monochrome rounded-border variant) regardless of theme.
  */
 
 import { COLOR_LOGOS, SILHOUETTE_LOGOS } from '@thai-qr-payment/assets';
@@ -49,6 +50,8 @@ export interface CardOptions {
   background?: string;
   /** Foreground / accent colour for text + silhouette artwork. */
   accent?: string;
+  /** QR module fill colour. Defaults to `#000000` for max scanner contrast. */
+  qrColor?: string;
   /** Override the Thai QR Payment header logo by registry name. */
   headerLogo?: keyof typeof COLOR_LOGOS;
   /** Override the PromptPay sub-mark by registry name. */
@@ -62,12 +65,28 @@ export interface CardOptions {
   centerOverlay?: boolean;
 }
 
-// Canonical layout matching the Thai QR Payment / PromptPay brand guidelines.
-const CANVAS = { width: 600, height: 700 } as const;
-const HEADER_BAND = { x: 80, y: 30, width: 440, height: 70 } as const;
-const PROMPTPAY_BAND = { x: 70, y: 110, width: 160, height: 50 } as const;
-const QR_FRAME = { x: 75, y: 180, width: 450, height: 450 } as const;
-const QR_INSET = 20;
+// Canvas 600 × 800 (3 : 4). Mirrors kittinan's 1000×1200 5:6 plus 80 px
+// of footer room for optional merchant + amount labels.
+const CANVAS = { width: 600, height: 800 } as const;
+
+// Header band — full canvas width, ~6:1 aspect (BOT/TBA reference).
+// Acts as a solid navy strip; the logo sits centred inside with
+// generous padding rather than filling the band edge-to-edge.
+const HEADER_BAND = { x: 0, y: 0, width: 600, height: 110 } as const;
+
+// Logo placement inside the header band — 40 % of canvas width,
+// centred horizontally with vertical padding.
+const HEADER_LOGO = { x: 195, y: 15, width: 210, height: 80 } as const;
+
+// PromptPay sub-mark — centred under the header. PromptPay2 native
+// aspect 384 : 130 ≈ 2.95 : 1; we scale to 260 × 88 for a chunky
+// readable mark matching the brand reference.
+const PROMPTPAY_BAND = { x: 170, y: 140, width: 260, height: 88 } as const;
+
+// QR frame — 500 × 500 (83 % of canvas width, larger than v6 to
+// match the brand reference's QR-dominant layout).
+const QR_FRAME = { x: 50, y: 250, width: 500, height: 500 } as const;
+const QR_INSET = 14;
 const QR_BAND = {
   x: QR_FRAME.x + QR_INSET,
   y: QR_FRAME.y + QR_INSET,
@@ -75,37 +94,87 @@ const QR_BAND = {
   height: QR_FRAME.height - QR_INSET * 2,
 } as const;
 
+// Tight content bbox of `Thai_QR_Payment_Logo-01.svg`. The raw asset
+// is 913 × 376 with ~90 px of empty navy padding top/bottom and ~80 px
+// each side. Cropping to the actual icon+wordmark bbox yields the
+// brand-guide aspect (~3.55 : 1) and removes the floating-in-empty-navy
+// look the previous full-viewBox render produced.
+const HEADER_VIEWBOX_CROP = '88 75 750 210';
+
+// Icon-only viewBox for the centre overlay. The icon glyph lives at
+// roughly x = 88..318 of the original 0..913 viewBox; we keep the full
+// vertical extent so the navy bg paints the centre overlay square.
+const ICON_VIEWBOX = '0 0 325 376';
+
 /** Strip the outer `<svg …>…</svg>` wrapper so the contents can be reused inside a `<symbol>`. */
 function unwrapSvg(svg: string): { viewBox: string; inner: string } {
   const viewBoxMatch = svg.match(/viewBox="([^"]+)"/);
-  const viewBox = viewBoxMatch?.[1] ?? '0 0 100 100';
+  let viewBox = viewBoxMatch?.[1];
+  if (viewBox == null) {
+    // Asset has no explicit viewBox — derive from width/height. Many
+    // hand-authored / Illustrator-exported SVGs omit the viewBox and
+    // rely on width/height alone; without this fallback the symbol
+    // defaults to "0 0 100 100" and the artwork renders 0.5-px tall.
+    const widthMatch = svg.match(/<svg[^>]*\swidth="([\d.]+)"/);
+    const heightMatch = svg.match(/<svg[^>]*\sheight="([\d.]+)"/);
+    if (widthMatch != null && heightMatch != null) {
+      viewBox = `0 0 ${widthMatch[1]} ${heightMatch[1]}`;
+    } else {
+      viewBox = '0 0 100 100';
+    }
+  }
+  // Some assets (vtracer output) ship with leading `<?xml ... ?>`
+  // and/or `<!-- Generator ... -->` comments before the `<svg>`. Strip
+  // each pattern greedily so the outer `<svg>` always anchors at the
+  // start of the string before we drop it.
   const inner = svg
-    .replace(/^<\?xml[^>]+\?>/, '')
-    .replace(/^<svg[^>]*>/, '')
-    .replace(/<\/svg>\s*$/, '');
+    .replace(/^\s*<\?xml[^?]*\?>\s*/i, '')
+    .replace(/^\s*<!--[\s\S]*?-->\s*/g, '')
+    .replace(/^\s*<svg\b[^>]*>/i, '')
+    .replace(/<\/svg>\s*$/i, '');
   return { viewBox, inner };
 }
 
-function defineSymbol(id: string, svg: string): string {
+function defineSymbol(id: string, svg: string, viewBoxOverride?: string): string {
   const { viewBox, inner } = unwrapSvg(svg);
-  return `<symbol id="${id}" viewBox="${escapeXmlAttribute(viewBox)}">${inner}</symbol>`;
+  const vb = viewBoxOverride ?? viewBox;
+  return `<symbol id="${id}" viewBox="${escapeXmlAttribute(vb)}">${inner}</symbol>`;
 }
 
-function pickHeaderLogo(theme: CardTheme, override?: keyof typeof COLOR_LOGOS): string {
+// SILHOUETTE_LOGOS is a strict subset of COLOR_LOGOS (only marks for
+// which we shipped a `.silhouette.svg` are registered there). When the
+// caller asks for a colour-only mark (e.g. PromptPay2) under the
+// silhouette theme, fall back to the colour version rather than
+// erroring at the type level.
+type AnyLogoName = keyof typeof COLOR_LOGOS;
+const SILHOUETTE_LOOKUP = SILHOUETTE_LOGOS as Record<AnyLogoName, string | undefined>;
+
+function pickHeaderLogo(theme: CardTheme, override?: AnyLogoName): string {
   const name = override ?? 'Thai_QR_Payment_Logo-01';
-  return theme === 'silhouette' ? SILHOUETTE_LOGOS[name] : COLOR_LOGOS[name];
+  if (theme === 'silhouette') {
+    return SILHOUETTE_LOOKUP[name] ?? COLOR_LOGOS[name];
+  }
+  return COLOR_LOGOS[name];
 }
 
-function pickPromptpayLogo(theme: CardTheme, override?: keyof typeof COLOR_LOGOS): string {
-  const name = override ?? 'PromptPay1';
-  return theme === 'silhouette' ? SILHOUETTE_LOGOS[name] : COLOR_LOGOS[name];
+function pickPromptpayLogo(theme: CardTheme, override?: AnyLogoName): string {
+  // Default differs by theme:
+  //   color      → PromptPay2 (navy bg, pairs with navy header)
+  //   silhouette → PromptPay1 (mono w/ rounded border)
+  const fallback: AnyLogoName = theme === 'silhouette' ? 'PromptPay1' : 'PromptPay2';
+  const name = override ?? fallback;
+  if (theme === 'silhouette') {
+    return SILHOUETTE_LOOKUP[name] ?? COLOR_LOGOS[name];
+  }
+  return COLOR_LOGOS[name];
 }
 
 /** Compose the full Thai QR Payment card SVG. */
 export function renderCard(matrix: QrMatrix, options: CardOptions = {}): string {
   const theme: CardTheme = options.theme ?? 'color';
   const bg = options.background ?? '#ffffff';
-  const accent = options.accent ?? '#0a2540';
+  const accent = options.accent ?? '#00427A';
+  const qrColor = options.qrColor ?? '#000000';
   const headerSvg = pickHeaderLogo(theme, options.headerLogo);
   const promptpaySvg = pickPromptpayLogo(theme, options.promptpayLogo);
   const overlay = options.centerOverlay ?? theme === 'color';
@@ -114,50 +183,54 @@ export function renderCard(matrix: QrMatrix, options: CardOptions = {}): string 
   const modulePx = QR_BAND.width / matrix.size;
   const qrTransform = `translate(${QR_BAND.x} ${QR_BAND.y}) scale(${modulePx})`;
 
-  // Centre overlay: a white rounded square containing the Thai QR Payment
-  // icon, 16 % of the QR's width. Per the brand guide the icon sits on a
-  // small white background so the surrounding dark modules don't bleed in.
-  const overlaySize = QR_BAND.width * 0.18;
+  // Centre overlay: navy mini-logo (icon-only crop of the header
+  // artwork) inside a small white pad with rounded corners. 16 % of
+  // the QR width — small enough that ECC-H recovers the obscured
+  // modules cleanly.
+  const overlaySize = QR_BAND.width * 0.16;
   const overlayX = QR_BAND.x + (QR_BAND.width - overlaySize) / 2;
   const overlayY = QR_BAND.y + (QR_BAND.height - overlaySize) / 2;
-  const iconInset = overlaySize * 0.12;
   const overlayMarkup = overlay
     ? [
-        `<rect x="${overlayX - 3}" y="${overlayY - 3}" width="${overlaySize + 6}" height="${overlaySize + 6}" fill="#ffffff" rx="8"/>`,
-        `<use href="#tqp-header-icon" xlink:href="#tqp-header-icon" x="${overlayX + iconInset}" y="${overlayY + iconInset}" width="${overlaySize - iconInset * 2}" height="${overlaySize - iconInset * 2}" preserveAspectRatio="xMidYMid meet"/>`,
+        `<rect x="${overlayX - 4}" y="${overlayY - 4}" width="${overlaySize + 8}" height="${overlaySize + 8}" fill="#ffffff" rx="4"/>`,
+        `<use href="#tqp-icon" xlink:href="#tqp-icon" x="${overlayX}" y="${overlayY}" width="${overlaySize}" height="${overlaySize}" preserveAspectRatio="xMidYMid meet"/>`,
       ].join('')
     : '';
 
-  const labelBaseY = QR_FRAME.y + QR_FRAME.height + 30;
+  const labelBaseY = QR_FRAME.y + QR_FRAME.height + 38;
   const merchantText =
     options.merchantName != null
       ? `<text x="${CANVAS.width / 2}" y="${labelBaseY}" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="${escapeXmlAttribute(accent)}">${escapeXmlAttribute(options.merchantName)}</text>`
       : '';
 
-  const amountY = options.merchantName != null ? labelBaseY + 36 : labelBaseY + 8;
+  const amountY = options.merchantName != null ? labelBaseY + 36 : labelBaseY + 6;
   const amountText =
     options.amountLabel != null
-      ? `<text x="${CANVAS.width / 2}" y="${amountY}" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="700" fill="${escapeXmlAttribute(accent)}">${escapeXmlAttribute(options.amountLabel)}</text>`
+      ? `<text x="${CANVAS.width / 2}" y="${amountY}" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="700" fill="${escapeXmlAttribute(accent)}">${escapeXmlAttribute(options.amountLabel)}</text>`
       : '';
 
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" `,
     `viewBox="0 0 ${CANVAS.width} ${CANVAS.height}" shape-rendering="crispEdges">`,
     `<defs>`,
-    defineSymbol('tqp-header', headerSvg),
-    defineSymbol('tqp-header-icon', headerSvg),
+    // Tight content-bbox crop so the header band renders flush — no
+    // empty navy padding around the icon+wordmark.
+    defineSymbol('tqp-header', headerSvg, HEADER_VIEWBOX_CROP),
+    defineSymbol('tqp-icon', headerSvg, ICON_VIEWBOX),
     defineSymbol('tqp-promptpay', promptpaySvg),
     `</defs>`,
-    `<rect width="${CANVAS.width}" height="${CANVAS.height}" fill="${escapeXmlAttribute(bg)}" rx="24"/>`,
-    // Header band — navy bg + white logo
-    `<rect x="${HEADER_BAND.x - 20}" y="${HEADER_BAND.y - 10}" width="${HEADER_BAND.width + 40}" height="${HEADER_BAND.height + 20}" fill="${escapeXmlAttribute(accent)}" rx="6"/>`,
-    `<use href="#tqp-header" xlink:href="#tqp-header" x="${HEADER_BAND.x}" y="${HEADER_BAND.y}" width="${HEADER_BAND.width}" height="${HEADER_BAND.height}" preserveAspectRatio="xMidYMid meet"/>`,
-    // PromptPay sub-mark
+    `<rect width="${CANVAS.width}" height="${CANVAS.height}" fill="${escapeXmlAttribute(bg)}" rx="20"/>`,
+    // Solid navy strip — full canvas width, no rounded corners on
+    // bottom (overlaps the rounded card bg's top corners only).
+    `<path d="M0 ${HEADER_BAND.height} V20 a20 20 0 0 1 20 -20 H${CANVAS.width - 20} a20 20 0 0 1 20 20 V${HEADER_BAND.height} Z" fill="${escapeXmlAttribute(theme === 'silhouette' ? accent : '#00427A')}"/>`,
+    // Logo centred inside the strip with `meet` so it never overflows
+    // and never gets cropped. Tight-crop viewBox keeps the icon+text
+    // tight together; the strip provides the navy padding around them.
+    `<use href="#tqp-header" xlink:href="#tqp-header" x="${HEADER_LOGO.x}" y="${HEADER_LOGO.y}" width="${HEADER_LOGO.width}" height="${HEADER_LOGO.height}" preserveAspectRatio="xMidYMid meet"/>`,
     `<use href="#tqp-promptpay" xlink:href="#tqp-promptpay" x="${PROMPTPAY_BAND.x}" y="${PROMPTPAY_BAND.y}" width="${PROMPTPAY_BAND.width}" height="${PROMPTPAY_BAND.height}" preserveAspectRatio="xMidYMid meet"/>`,
-    // QR frame (white background under the matrix so the QR is always
-    // black-on-white even when the card background is themed).
-    `<rect x="${QR_FRAME.x}" y="${QR_FRAME.y}" width="${QR_FRAME.width}" height="${QR_FRAME.height}" fill="#ffffff" rx="8"/>`,
-    `<g transform="${qrTransform}"><path d="${matrixPath}" fill="${escapeXmlAttribute(accent)}"/></g>`,
+    // White QR frame keeps the matrix readable even with a themed bg.
+    `<rect x="${QR_FRAME.x}" y="${QR_FRAME.y}" width="${QR_FRAME.width}" height="${QR_FRAME.height}" fill="#ffffff" rx="6"/>`,
+    `<g transform="${qrTransform}"><path d="${matrixPath}" fill="${escapeXmlAttribute(qrColor)}"/></g>`,
     overlayMarkup,
     merchantText,
     amountText,
