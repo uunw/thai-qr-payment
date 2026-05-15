@@ -209,22 +209,24 @@ Pre-compressed `.br` + `.gz` ship inside every published package's `dist/`. CDNs
 
 ## Live deploys
 
-| Where   | What                         | Version                        |
-| ------- | ---------------------------- | ------------------------------ |
-| npm     | `thai-qr-payment` (umbrella) | 0.1.2                          |
-| npm     | `@thai-qr-payment/payload`   | 0.1.2                          |
-| npm     | `@thai-qr-payment/qr`        | 0.1.2                          |
-| npm     | `@thai-qr-payment/render`    | 0.1.2                          |
-| npm     | `@thai-qr-payment/assets`    | 0.1.2                          |
-| npm     | `@thai-qr-payment/react`     | 0.1.2                          |
-| npm     | `@thai-qr-payment/cli`       | 0.1.2                          |
-| GitHub  | `uunw/thai-qr-payment`       | public, default branch `main`  |
-| npm org | `thai-qr-payment`            | free tier (created 2026-05-12) |
+| Where   | What                         | Version                                              |
+| ------- | ---------------------------- | ---------------------------------------------------- |
+| npm     | `thai-qr-payment` (umbrella) | 0.1.4                                                |
+| npm     | `@thai-qr-payment/payload`   | 0.1.3                                                |
+| npm     | `@thai-qr-payment/qr`        | 0.1.3                                                |
+| npm     | `@thai-qr-payment/render`    | 0.1.4                                                |
+| npm     | `@thai-qr-payment/assets`    | 0.1.3                                                |
+| npm     | `@thai-qr-payment/react`     | 0.1.3                                                |
+| npm     | `@thai-qr-payment/cli`       | 0.1.3                                                |
+| Docs    | <https://thai-qr-payment.js.org> | Astro Starlight, 14 pages, served via js.org → CF → GH Pages |
+| GitHub  | `uunw/thai-qr-payment`       | public, default branch `main`                        |
+| npm org | `thai-qr-payment`            | free tier (created 2026-05-12)                       |
 
 All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagged in git as `<pkg>@<version>` by changesets/action on each release.
 
 ## Migration history (what's been bumped)
 
+- **Commits `ba9e8e8` + `7d07f64` → published v0.1.3 (all 7 packages) + v0.1.4 (`thai-qr-payment` + `@thai-qr-payment/render`)** (2026-05-15): Docs site moved from `https://uunw.github.io/thai-qr-payment/` to `https://thai-qr-payment.js.org` (js.org subdomain merged in [js-org/js.org#11306](https://github.com/js-org/js.org/pull/11306)); `astro.config.mjs` dropped its `/thai-qr-payment` base path; every package.json `homepage` repointed at the new domain (sub-packages link to `/guide/<name>/`). rspack configs now ship `.js.map` sourcemaps (`devtool: 'source-map'`) and keep original function/class names through SWC minification (`mangle: { keep_classnames: true, keep_fnames: true }`) — published bundles are now traceable to source and no longer trip Socket's "Obfuscated code" supply-chain alert. `renderQrSvg()` numeric attributes (`size`, `quietZone`, `matrix.size`) routed through a `toSafeUint()` finite-non-negative-integer guard before HTML interpolation — closes 7 CodeQL `js/html-constructed-from-input` alerts on `packages/render/src/matrix-svg.ts`. Bundle sizes unchanged (umbrella 20.82 KB / 25 KB budget).
 - **Commits `c3b199d` + `c46857d` → published v0.1.2** (2026-05-13): Brand-spec card redesign — full-width navy header strip, TQR Maximum Blue (`#00427A`) unified across `Thai_QR_Payment_Logo-01.svg` (replacing vtracer's `#0e3d67` + six auxiliary shades), `PromptPay2` (navy) is now the default sub-mark for `theme: 'color'` shipped as an embedded PNG inside an SVG `<image>` wrapper, QR fill decoupled from accent via new `qrColor` option (defaults to `#000000` for scanner contrast). CI matrix bumped to Node 22 + 24 because the Astro docs build needs Node >= 22.12.
 - **Commit `e4af92f` → published v0.1.1** (2026-05-12): Critical fix — `alignmentCentres()` for QR v2-v40 was returning wrong positions, every scanner rejected the output as "invalid QR". The published v0.1.0 had this bug. Verified post-fix by round-tripping every (version, ECC, mask) combo through `jsQR`.
 - **Commit `2d1ed7c` → still v0.1.1** (2026-05-12): Inlined scoped siblings into the umbrella. npm UI now correctly shows "0 Dependencies" instead of "5 Dependencies". Moved deps → devDeps in umbrella's `package.json`.
@@ -255,6 +257,10 @@ All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagg
 - **Stale `.tsbuildinfo` in `dist/` blocks TSC project-reference resolution.** After regenerating `src/generated.ts` (e.g. adding a new SVG → new exported const), `tsc --emitDeclarationOnly` may keep emitting the old `dist/generated.d.ts` because the buildinfo says "nothing changed". Wipe `packages/*/dist/.tsbuildinfo` and rebuild deps in dependency order (assets → payload → qr → render).
 - **Brand color is `#00427A` ("TQR Maximum Blue"), NOT `#0e3d67`.** vtracer's default colour clustering picked `#0e3d67` + six auxiliary shades (`#103e68`, `#113f68`, `#124069`, `#19446d`, `#1a456d`, `#1b466e`, `#0f3e67`) as approximations. The brand book §4 specifies CMYK 100/60/0/40 = RGB 0/66/122 = `#00427A`. Unify all variants to the canonical hex; same goes for the iris glyph `#1ba997` → `#00A796` (brand secondary green). `perl -i -pe 's/#0e3d67/#00427A/gi; …'` on the source SVG is the fix.
 - **Astro docs toolchain requires Node >= 22.12.** CI matrix `node: ['20', '22']` failed on Node 20 because `pnpm build` includes the Astro docs site via turbo. Either drop Node 20 from CI matrix or filter docs out of the build pipeline. Lib runtime still works on Node 18+ per `engines` field.
+- **js.org subdomains sit behind Cloudflare's proxy by default — GH Pages cert never provisions.** GH's Let's Encrypt DCV checks the public IP, sees Cloudflare's IPs (104.26.x.x / 172.67.x.x), and fails. `gh api -X PUT repos/<owner>/<repo>/pages -F https_enforced=true` returns `404 The certificate does not exist yet` indefinitely. **HTTPS works regardless** — Cloudflare's Universal SSL terminates TLS at the edge and 301-redirects HTTP. Don't try to "fix" the missing GH cert; it's by design. The only opt-out is adding `// noCF` to your `cnames_active.js` entry via a follow-up js.org PR, which costs you the CDN. Pages CNAME was set via `gh api -X PUT repos/uunw/thai-qr-payment/pages -f cname=thai-qr-payment.js.org` (the `https_enforced` flag stays `false`).
+- **rspack/swc default `mangle: true` triggers Socket "Obfuscated code" supply-chain alert.** SWC's `SwcJsMinimizerRspackPlugin` with `mangle: true` renames every function and class to single letters; Socket flags this as obfuscation regardless of intent. Two-line fix per `rspack.config.ts`: `devtool: 'source-map'` + `mangle: { keep_classnames: true, keep_fnames: true }`. Bundle size impact is negligible (umbrella 20.82 KB on a 25 KB budget). Published `.tgz` now ships `.js.map` next to every entrypoint — set in commit `ba9e8e8`.
+- **CodeQL `js/html-constructed-from-input` flags numeric values too, not just strings.** Even integers from a typed options object trigger the alert when interpolated into HTML attributes (`width="${size}"`). TypeScript types don't enforce at runtime, so JS callers can still pass `NaN` / `Infinity` / strings. Coerce through `Number.isFinite` + `Math.floor` + non-negative gate at the renderer boundary; CodeQL recognises this as a sanitizer barrier and the alerts auto-close on the next scan. Pattern in `packages/render/src/matrix-svg.ts toSafeUint()`.
+- **js.org PR validator demands the EXACT template — paraphrasing or reordering kills the bot check.** The `jsorg-validation` GitHub Action greps the PR description for literal phrases from `PULL_REQUEST_TEMPLATE.md`; missing-checkbox / missing-content-URL / wrong-format errors all surface as "PR description validation failed". Fetch the template raw (`curl https://raw.githubusercontent.com/js-org/js.org/master/PULL_REQUEST_TEMPLATE.md`) and edit only the fillable bits. Once the bot passes, MattIPv4 reviews → indus / a maintainer merges (turnaround was ~30 min for #11306 after the description fix).
 
 ## Adding a new package
 
