@@ -1,5 +1,11 @@
 # thai-qr-payment
 
+## 0.1.4
+
+### Patch Changes
+
+- [`655b343`](https://github.com/uunw/thai-qr-payment/commit/655b343bce1e790acc1fca9574b5d002c14b550a) Thanks [@uunw](https://github.com/uunw)! - Sanitize numeric SVG attributes (`width`, `height`, `viewBox`, `transform`) at the renderer boundary. `renderQrSvg()` now coerces `options.size`, `options.quietZone`, and `matrix.size` through a finite-non-negative-integer guard before interpolation. Closes 7 CodeQL `js/html-constructed-from-input` alerts; also hardens the JS-callable surface against NaN/Infinity/non-numeric input.
+
 ## 0.1.3
 
 ### Patch Changes
