@@ -209,18 +209,18 @@ Pre-compressed `.br` + `.gz` ship inside every published package's `dist/`. CDNs
 
 ## Live deploys
 
-| Where   | What                         | Version                                              |
-| ------- | ---------------------------- | ---------------------------------------------------- |
-| npm     | `thai-qr-payment` (umbrella) | 0.1.4                                                |
-| npm     | `@thai-qr-payment/payload`   | 0.1.3                                                |
-| npm     | `@thai-qr-payment/qr`        | 0.1.3                                                |
-| npm     | `@thai-qr-payment/render`    | 0.1.4                                                |
-| npm     | `@thai-qr-payment/assets`    | 0.1.3                                                |
-| npm     | `@thai-qr-payment/react`     | 0.1.3                                                |
-| npm     | `@thai-qr-payment/cli`       | 0.1.3                                                |
+| Where   | What                             | Version                                                      |
+| ------- | -------------------------------- | ------------------------------------------------------------ |
+| npm     | `thai-qr-payment` (umbrella)     | 0.1.4                                                        |
+| npm     | `@thai-qr-payment/payload`       | 0.1.3                                                        |
+| npm     | `@thai-qr-payment/qr`            | 0.1.3                                                        |
+| npm     | `@thai-qr-payment/render`        | 0.1.4                                                        |
+| npm     | `@thai-qr-payment/assets`        | 0.1.3                                                        |
+| npm     | `@thai-qr-payment/react`         | 0.1.3                                                        |
+| npm     | `@thai-qr-payment/cli`           | 0.1.3                                                        |
 | Docs    | <https://thai-qr-payment.js.org> | Astro Starlight, 14 pages, served via js.org → CF → GH Pages |
-| GitHub  | `uunw/thai-qr-payment`       | public, default branch `main`                        |
-| npm org | `thai-qr-payment`            | free tier (created 2026-05-12)                       |
+| GitHub  | `uunw/thai-qr-payment`           | public, default branch `main`                                |
+| npm org | `thai-qr-payment`                | free tier (created 2026-05-12)                               |
 
 All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagged in git as `<pkg>@<version>` by changesets/action on each release.
 
