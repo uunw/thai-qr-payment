@@ -46,11 +46,11 @@ export interface QrSvgOptions {
 
 /** Render a QR matrix to a self-contained `<svg>` string. */
 export function renderQrSvg(matrix: QrMatrix, options: QrSvgOptions = {}): string {
-  const quietZone = options.quietZone ?? 4;
+  const quietZone = toSafeUint(options.quietZone, 4);
   const fg = options.foreground ?? '#000';
   const bg = options.background ?? '#fff';
-  const total = matrix.size + quietZone * 2;
-  const size = options.size ?? total;
+  const total = toSafeUint(matrix.size, 0) + quietZone * 2;
+  const size = toSafeUint(options.size, total);
   const path = matrixToPath(matrix);
 
   const extra = options.rootAttributes
@@ -70,6 +70,11 @@ export function renderQrSvg(matrix: QrMatrix, options: QrSvgOptions = {}): strin
     `<path d="${path}" fill="${escapeXmlAttribute(fg)}"/>` +
     `</g></svg>`
   );
+}
+
+function toSafeUint(value: unknown, fallback: number): number {
+  const n = Number(value);
+  return Number.isFinite(n) && n >= 0 ? Math.floor(n) : fallback;
 }
 
 function escapeXmlAttribute(value: string): string {
