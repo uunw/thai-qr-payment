@@ -10,15 +10,15 @@ The **Bank of Thailand 1D bill-payment barcode** is the one-dimensional ASCII st
 It lives in the same `@thai-qr-payment/payload` package because the `billerId` / `ref1` / `ref2` vocabulary matches the Thai bill-payment merchant template (EMVCo tag 30), but the on-wire bytes are unrelated. The module sits behind its own export so callers who only need the QR path can tree-shake it away.
 
 ```ts
-import { buildBotBarcode, parseBotBarcode } from 'thai-qr-payment';
+import { buildBOTBarcode, parseBOTBarcode } from 'thai-qr-payment';
 ```
 
 ## Build
 
-`buildBotBarcode({ billerId, ref1, ref2?, amount? })`. `billerId` is the 15-char cross-bank biller id (Tax ID + suffix); shorter inputs are zero-padded on the left, longer ones throw. `ref1` is required; `ref2` defaults to the empty string on the wire when omitted.
+`buildBOTBarcode({ billerId, ref1, ref2?, amount? })`. `billerId` is the 15-char cross-bank biller id (Tax ID + suffix); shorter inputs are zero-padded on the left, longer ones throw. `ref1` is required; `ref2` defaults to the empty string on the wire when omitted.
 
 ```ts
-buildBotBarcode({
+buildBOTBarcode({
   billerId: '099400016550100',
   ref1: '123456789012',
   ref2: '670429',
@@ -30,7 +30,7 @@ buildBotBarcode({
 The trailing amount is stored as **integer satang** (baht × 100, rounded). Omit it (or pass `0`) for a counter-keyed total — the literal `'0'` sentinel is written and the cashier types the amount in by hand:
 
 ```ts
-buildBotBarcode({ billerId: '099999999999990', ref1: '111222333444' });
+buildBOTBarcode({ billerId: '099999999999990', ref1: '111222333444' });
 // '|099999999999990\r111222333444\r\r0'
 ```
 
@@ -38,10 +38,10 @@ Throws on malformed input — negative / non-finite amounts, over-long biller id
 
 ## Parse
 
-`parseBotBarcode(barcode)` returns the decoded fields, or `null` on any structural issue (missing prefix, wrong field count, biller id too short). Amount comes back as a decimal baht number; the `'0'` sentinel surfaces as `undefined`.
+`parseBOTBarcode(barcode)` returns the decoded fields, or `null` on any structural issue (missing prefix, wrong field count, biller id too short). Amount comes back as a decimal baht number; the `'0'` sentinel surfaces as `undefined`.
 
 ```ts
-parseBotBarcode('|099400016550100\r123456789012\r670429\r364922');
+parseBOTBarcode('|099400016550100\r123456789012\r670429\r364922');
 // {
 //   billerId: '099400016550100',
 //   ref1: '123456789012',
@@ -49,7 +49,7 @@ parseBotBarcode('|099400016550100\r123456789012\r670429\r364922');
 //   amount: 3649.22,
 // }
 
-parseBotBarcode('|099999999999990\r111222333444\r\r0');
+parseBOTBarcode('|099999999999990\r111222333444\r\r0');
 // { billerId: '099999999999990', ref1: '111222333444' }
 ```
 

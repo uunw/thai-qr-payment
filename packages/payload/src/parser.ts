@@ -66,7 +66,7 @@ import {
   TAG_VAT_TQRC,
   TRUE_MONEY_PREFIX,
 } from './tags.js';
-import { iterateFields, parseFields, type TlvField } from './tlv.js';
+import { iterateFields, parseFields, type TLVField } from './tlv.js';
 
 const BANK_CODE_LENGTH = 3;
 
@@ -121,14 +121,14 @@ export interface ParsedAdditionalData {
 }
 
 /** Decoded VAT TQRC template (tag 80). */
-export interface ParsedVatTqrc {
+export interface ParsedVATTQRC {
   readonly sellerTaxBranchId: string;
   readonly vatRate?: string;
   readonly vatAmount: string;
 }
 
 /** Bookkeeping for the trailing checksum — useful when reporting auto-fix. */
-export interface ParsedCrc {
+export interface ParsedCRC {
   /** The CRC text as it appeared on the wire (may be 1–4 chars). */
   readonly value: string;
   /** True when the wire CRC matches the recomputed value (possibly after padding). */
@@ -149,12 +149,12 @@ export interface ParsedPayload {
   readonly merchantCategoryCode?: string;
   readonly postalCode?: string;
   readonly additionalData?: ParsedAdditionalData;
-  readonly vatTqrc?: ParsedVatTqrc;
-  readonly crc: ParsedCrc;
+  readonly vatTqrc?: ParsedVATTQRC;
+  readonly crc: ParsedCRC;
   /** All top-level TLV fields, in wire order. Use for unknown / future tags. */
-  readonly rawTags: readonly TlvField[];
+  readonly rawTags: readonly TLVField[];
   /** Lookup a top-level TLV field by id. Returns `undefined` if absent. */
-  getTag(id: string): TlvField | undefined;
+  getTag(id: string): TLVField | undefined;
   /**
    * Lookup a value by id. Pass `subId` to descend one level into a nested
    * template (tags 29–31, 62, 64 are templated). Returns `undefined` if
@@ -298,7 +298,7 @@ function parseAdditionalDataTemplate(template: string): ParsedAdditionalData {
  * `vatAmount` sub-tag (02) is absent — callers in strict mode escalate
  * that to an exception, lax callers surface it as `vatTqrc: undefined`.
  */
-function parseVatTqrcTemplate(template: string): ParsedVatTqrc | null {
+function parseVatTqrcTemplate(template: string): ParsedVATTQRC | null {
   const sub = parseFields(template);
   const sellerTaxBranchId = sub.get(SUB_VAT_SELLER_TAX_BRANCH_ID);
   const vatAmount = sub.get(SUB_VAT_AMOUNT);
@@ -315,7 +315,7 @@ function parseVatTqrcTemplate(template: string): ParsedVatTqrc | null {
  * sees a well-formed `6304XXXX` tail so it never needs to special-case
  * the truncated path.
  */
-function extractCrc(payload: string, strict: boolean): { canonical: string; crc: ParsedCrc } {
+function extractCrc(payload: string, strict: boolean): { canonical: string; crc: ParsedCRC } {
   // Standard case: payload ends with "6304XXXX" where XXXX is the CRC.
   // Verify first because it's the >99% path.
   const fullCrc = payload.slice(-4);
@@ -418,7 +418,7 @@ export function parsePayload(payload: string, options: ParsePayloadOptions = {})
   const amountText = root.get(TAG_TRANSACTION_AMOUNT);
   const additional = root.get(TAG_ADDITIONAL_DATA);
   const vatTemplate = root.get(TAG_VAT_TQRC);
-  let vatTqrc: ParsedVatTqrc | undefined;
+  let vatTqrc: ParsedVATTQRC | undefined;
   if (vatTemplate != null) {
     const decoded = parseVatTqrcTemplate(vatTemplate);
     if (decoded == null && strict) {
@@ -442,7 +442,7 @@ export function parsePayload(payload: string, options: ParsePayloadOptions = {})
     vatTqrc,
     crc,
     rawTags,
-    getTag(id: string): TlvField | undefined {
+    getTag(id: string): TLVField | undefined {
       for (const field of rawTags) {
         if (field.tag === id) return field;
       }

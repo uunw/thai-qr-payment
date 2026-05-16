@@ -16,12 +16,12 @@ const wire = payloadFor({ recipient: '0812345678', amount: 50 });
 // 00020101021229370016A000000677010111011300668123456785303764540550.005802TH6304XXXX
 ```
 
-Reach for `ThaiQrPaymentBuilder` when you need merchant info, references, OTA, bank-account credit transfer, TrueMoney, VAT TQRC, or cross-border.
+Reach for `ThaiQRPaymentBuilder` when you need merchant info, references, OTA, bank-account credit transfer, TrueMoney, VAT TQRC, or cross-border.
 
 ## Builder
 
 ```ts
-import { ThaiQrPaymentBuilder } from 'thai-qr-payment';
+import { ThaiQRPaymentBuilder } from 'thai-qr-payment';
 ```
 
 Three terminal methods regardless of what you configure: `.build()` returns the wire string, `.buildWithChecksum()` splits the body / CRC for inspection, `.toBytes()` returns a `Uint8Array` for hashing or transport.
@@ -31,9 +31,9 @@ Three terminal methods regardless of what you configure: `.build()` returns the 
 Mobile, national ID, or e-wallet recipient. Type is inferred from digit length when omitted: 9–12 → `mobile`, 13 → `nationalId`, 15 → `eWallet`. The override exists for the (rare) ambiguous case.
 
 ```ts
-new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
-new ThaiQrPaymentBuilder().promptpay('1234567890123', 'nationalId').amount(50).build();
-new ThaiQrPaymentBuilder().promptpay('123456789012345', 'eWallet').amount(50).build();
+new ThaiQRPaymentBuilder().promptpay('0812345678').amount(50).build();
+new ThaiQRPaymentBuilder().promptpay('1234567890123', 'nationalId').amount(50).build();
+new ThaiQRPaymentBuilder().promptpay('123456789012345', 'eWallet').amount(50).build();
 ```
 
 Mobile recipients are zero-padded to the 13-char `0066xxxxxxxxxx` wire form before encoding.
@@ -43,7 +43,7 @@ Mobile recipients are zero-padded to the 13-char `0066xxxxxxxxxx` wire form befo
 PromptPay credit transfer to a bank account (sub-tag 04 under tag 29). `bankCode` is the 3-digit BoT bank identifier (`'002'` Bangkok Bank, `'014'` SCB, …); `accountNo` is the variable-length numeric account. Combined wire value is capped at 43 chars per the EMVCo sub-tag limit.
 
 ```ts
-new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').amount(100).build();
+new ThaiQRPaymentBuilder().bankAccount('014', '1234567890').amount(100).build();
 // 00020101021229370016A0000006770101110413014123456789053037645406100.005802TH6304901D
 ```
 
@@ -54,7 +54,7 @@ This method exists separately from `.promptpay(..., 'bankAccount')` because the 
 Attach a **One-Time Authorization** code (sub-tag 05, exactly 10 chars). The AID swap is the whole point: the builder flips tag 29's GUID from `A000000677010111` (standard PromptPay) to `A000000677010114` (PromptPay OTA) so the receiving bank routes the payload through the single-use credit-transfer flow instead of the repeatable PromptPay merchant flow.
 
 ```ts
-new ThaiQrPaymentBuilder().promptpay('0812345678').ota('1234567890').amount(50).build();
+new ThaiQRPaymentBuilder().promptpay('0812345678').ota('1234567890').amount(50).build();
 // 00020101021229510016A00000067701011401130066812345678051012345678905303764540550.005802TH63048856
 ```
 
@@ -65,10 +65,10 @@ Combines cleanly with `.bankAccount()` for an OTA bank-account transfer.
 TrueMoney Wallet QR. Same merchant template tag as PromptPay (29) but with the literal `'14'` prefix on sub-tag 03 — that prefix is how the TrueMoney app discriminates its own payloads from a plain e-wallet QR. Mobile is zero-padded left to 13 digits, then prefixed; final sub-tag 03 value is always 15 chars.
 
 ```ts
-new ThaiQrPaymentBuilder().trueMoney('0801111111').build();
+new ThaiQRPaymentBuilder().trueMoney('0801111111').build();
 // 00020101021129390016A000000677010111031514000080111111153037645802TH63047C0F
 
-new ThaiQrPaymentBuilder().trueMoney('0801111111', { amount: 10, message: 'Hello World!' }).build();
+new ThaiQRPaymentBuilder().trueMoney('0801111111', { amount: 10, message: 'Hello World!' }).build();
 // includes tag 81: '814800480065006C006C006F00200057006F0072006C00640021'
 ```
 
@@ -79,7 +79,7 @@ The optional `message` is carried in tag 81 as **UTF-16BE** hex (each Unicode co
 BillPayment merchant template (tag 30). `billerId` is the cross-bank biller identifier (15 chars on the wire); references are application-defined.
 
 ```ts
-new ThaiQrPaymentBuilder()
+new ThaiQRPaymentBuilder()
   .billPayment({
     billerId: '123456789012345',
     reference1: 'INV001',
@@ -92,7 +92,7 @@ new ThaiQrPaymentBuilder()
 Pass `crossBorder: true` to emit the **ASEAN-region remittance AID** (`A000000677012006`) instead of the domestic one (`A000000677010112`) — same sub-tag layout, but receivers route the payment through the ASEAN PayNow / DuitNow / QRIS interop rails instead of the local PromptPay biller switch.
 
 ```ts
-new ThaiQrPaymentBuilder()
+new ThaiQRPaymentBuilder()
   .billPayment({ billerId: '099400016550100', reference1: '123456789012', crossBorder: true })
   .amount(100)
   .build();
@@ -170,7 +170,7 @@ A zero fixed tip throws — pass `undefined` instead.
 Bank of Thailand **VAT TQRC** extension (top-level tag 80). Promotes a regular PromptPay payment QR into a **Tax-Qualified-QR-Code** source for Thai e-tax-receipt integrations — the receiving system reads the VAT split off the QR and emits a compliant electronic receipt without a separate API call.
 
 ```ts
-new ThaiQrPaymentBuilder()
+new ThaiQRPaymentBuilder()
   .promptpay('0812345678')
   .amount(107)
   .vatTqrc({ sellerTaxBranchId: '0001', vatRate: '7', vatAmount: '7.00' })

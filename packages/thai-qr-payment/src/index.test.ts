@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import * as umbrella from './index.js';
 
 describe('thai-qr-payment (umbrella) — payload surface', () => {
-  it('re-exports ThaiQrPaymentBuilder', () => {
-    expect(typeof umbrella.ThaiQrPaymentBuilder).toBe('function');
+  it('re-exports ThaiQRPaymentBuilder', () => {
+    expect(typeof umbrella.ThaiQRPaymentBuilder).toBe('function');
   });
 
   it('re-exports payloadFor', () => {
@@ -50,20 +50,20 @@ describe('thai-qr-payment (umbrella) — qr surface', () => {
 });
 
 describe('thai-qr-payment (umbrella) — render surface', () => {
-  it('re-exports renderThaiQrPayment', () => {
-    expect(typeof umbrella.renderThaiQrPayment).toBe('function');
+  it('re-exports renderThaiQRPayment', () => {
+    expect(typeof umbrella.renderThaiQRPayment).toBe('function');
   });
 
-  it('re-exports renderThaiQrPaymentMatrix', () => {
-    expect(typeof umbrella.renderThaiQrPaymentMatrix).toBe('function');
+  it('re-exports renderThaiQRPaymentMatrix', () => {
+    expect(typeof umbrella.renderThaiQRPaymentMatrix).toBe('function');
   });
 
   it('re-exports renderCard', () => {
     expect(typeof umbrella.renderCard).toBe('function');
   });
 
-  it('re-exports renderQrSvg', () => {
-    expect(typeof umbrella.renderQrSvg).toBe('function');
+  it('re-exports renderQRSvg', () => {
+    expect(typeof umbrella.renderQRSvg).toBe('function');
   });
 
   it('re-exports matrixToPath', () => {
@@ -100,7 +100,7 @@ describe('thai-qr-payment (umbrella) — end-to-end', () => {
   });
 
   it('renders a card via the one-shot helper', () => {
-    const svg = umbrella.renderThaiQrPayment({
+    const svg = umbrella.renderThaiQRPayment({
       recipient: '0812345678',
       amount: 50,
       merchantName: 'Acme Coffee',
@@ -110,7 +110,7 @@ describe('thai-qr-payment (umbrella) — end-to-end', () => {
   });
 
   it('renders a bare matrix via the one-shot helper', () => {
-    const svg = umbrella.renderThaiQrPaymentMatrix({
+    const svg = umbrella.renderThaiQRPaymentMatrix({
       recipient: '0812345678',
       amount: 50,
       size: 256,
@@ -126,7 +126,7 @@ describe('thai-qr-payment (umbrella) — end-to-end', () => {
   });
 
   it('chains builder → encoder → renderer manually', () => {
-    const wire = new umbrella.ThaiQrPaymentBuilder()
+    const wire = new umbrella.ThaiQRPaymentBuilder()
       .promptpay('0812345678')
       .amount(120.5)
       .merchant({ name: 'Acme Coffee', city: 'BANGKOK', categoryCode: '5814' })

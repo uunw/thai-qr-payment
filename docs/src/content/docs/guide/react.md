@@ -1,6 +1,6 @@
 ---
 title: React component
-description: <ThaiQrPayment /> and <ThaiQrPaymentMatrix /> for React 18+ apps.
+description: <ThaiQRPayment /> and <ThaiQRPaymentMatrix /> for React 18+ apps.
 ---
 
 ![Rendered React component output](/img/samples/qr-card-merchant.svg)
@@ -18,11 +18,11 @@ pnpm add @thai-qr-payment/react react
 ## Full card
 
 ```tsx
-import { ThaiQrPayment } from '@thai-qr-payment/react';
+import { ThaiQRPayment } from '@thai-qr-payment/react';
 
 export function PaymentScreen() {
   return (
-    <ThaiQrPayment
+    <ThaiQRPayment
       recipient="0812345678"
       amount={50}
       merchantName="Acme Coffee"
@@ -37,9 +37,9 @@ export function PaymentScreen() {
 ## Bare matrix
 
 ```tsx
-import { ThaiQrPaymentMatrix } from '@thai-qr-payment/react';
+import { ThaiQRPaymentMatrix } from '@thai-qr-payment/react';
 
-<ThaiQrPaymentMatrix
+<ThaiQRPaymentMatrix
   recipient="0812345678"
   amount={50}
   size={256}
@@ -55,7 +55,7 @@ Both components serialize on the server via `react-dom/server.renderToStaticMark
 ```tsx
 // Next.js app router — server component
 export default function Page() {
-  return <ThaiQrPayment recipient="0812345678" amount={50} />;
+  return <ThaiQRPayment recipient="0812345678" amount={50} />;
 }
 ```
 
@@ -64,7 +64,7 @@ export default function Page() {
 The wrapper carries `role="img"` and a generated `aria-label` (`"Thai QR Payment for <recipient>"`). Override with `ariaLabel`:
 
 ```tsx
-<ThaiQrPayment recipient="0812345678" amount={50} ariaLabel="Pay 50 baht to Acme Coffee" />
+<ThaiQRPayment recipient="0812345678" amount={50} ariaLabel="Pay 50 baht to Acme Coffee" />
 ```
 
 ## All props

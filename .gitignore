@@ -42,3 +42,4 @@ yarn-error.log*
 # Generated previews
 examples/*/out/
 .tmp-test-modules/
+/.claude/

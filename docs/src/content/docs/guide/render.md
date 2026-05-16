@@ -10,9 +10,9 @@ description: Compose a Thai QR Payment SVG card or bare matrix from a wire paylo
 ## One-shot card
 
 ```ts
-import { renderThaiQrPayment } from 'thai-qr-payment';
+import { renderThaiQRPayment } from 'thai-qr-payment';
 
-const svg = renderThaiQrPayment({
+const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
   merchantName: 'Acme Coffee',
@@ -28,9 +28,9 @@ Returns a full SVG card: Thai QR Payment header band + PromptPay sub-mark + bord
 When you want to wrap the QR in your own design system:
 
 ```ts
-import { renderThaiQrPaymentMatrix } from 'thai-qr-payment';
+import { renderThaiQRPaymentMatrix } from 'thai-qr-payment';
 
-const svg = renderThaiQrPaymentMatrix({
+const svg = renderThaiQRPaymentMatrix({
   recipient: '0812345678',
   amount: 50,
   size: 320,
@@ -54,13 +54,13 @@ const svg = renderThaiQrPaymentMatrix({
 
 ```ts
 import { encodeQR } from 'thai-qr-payment';
-import { renderCard, renderQrSvg, matrixToPath } from 'thai-qr-payment';
+import { renderCard, renderQRSvg, matrixToPath } from 'thai-qr-payment';
 
 const matrix = encodeQR(wireString, { errorCorrectionLevel: 'H' });
 const svg = renderCard(matrix, { merchantName: 'Acme', amountLabel: '฿ 50' });
 
 // Or even lower:
-const justTheQr = renderQrSvg(matrix, { size: 512, quietZone: 4 });
+const justTheQr = renderQRSvg(matrix, { size: 512, quietZone: 4 });
 const pathData = matrixToPath(matrix);
 ```
 

@@ -9,13 +9,13 @@ pnpm add @thai-qr-payment/payload
 ## Quickstart
 
 ```ts
-import { ThaiQrPaymentBuilder, parsePayload, payloadFor } from '@thai-qr-payment/payload';
+import { ThaiQRPaymentBuilder, parsePayload, payloadFor } from '@thai-qr-payment/payload';
 
 // One-shot
 const wire = payloadFor({ recipient: '0812345678', amount: 50 });
 
 // Builder for full control
-const advanced = new ThaiQrPaymentBuilder()
+const advanced = new ThaiQRPaymentBuilder()
   .promptpay('0812345678')
   .amount(120.5)
   .merchant({ name: 'Acme Coffee', city: 'BANGKOK', categoryCode: '5814' })
@@ -31,7 +31,7 @@ const parsed = parsePayload(wire);
 
 | Export                                          | What it does                                                                  |
 | ----------------------------------------------- | ----------------------------------------------------------------------------- |
-| `ThaiQrPaymentBuilder`                          | Chainable builder. Terminal: `.build()`, `.buildWithChecksum()`, `.toBytes()` |
+| `ThaiQRPaymentBuilder`                          | Chainable builder. Terminal: `.build()`, `.buildWithChecksum()`, `.toBytes()` |
 | `parsePayload(wire)`                            | Decode + validate CRC. Throws on tamper.                                      |
 | `payloadFor(input)`                             | One-shot helper for PromptPay                                                 |
 | `normaliseRecipient(input, type?)`              | Stand-alone recipient → wire format                                           |

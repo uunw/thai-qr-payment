@@ -14,7 +14,7 @@ The demo below imports `thai-qr-payment` straight from this site's bundle and re
 1. `payloadFor()` built the EMVCo MPM wire string from your inputs
 2. `parsePayload()` round-tripped it to verify the CRC + decode the merchant template
 3. `encodeQR()` ran ISO/IEC 18004 Reed-Solomon ECC + mask selection
-4. `renderThaiQrPayment()` composed the final SVG (card mode) or `renderThaiQrPaymentMatrix()` emitted just the QR matrix
+4. `renderThaiQRPayment()` composed the final SVG (card mode) or `renderThaiQRPaymentMatrix()` emitted just the QR matrix
 
 Every step ran client-side. No network call, no server. Same code-path a production app takes.
 

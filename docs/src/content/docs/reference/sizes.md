@@ -10,7 +10,7 @@ Every published `dist/*.js` ships pre-compressed `.br` + `.gz` siblings, and CI 
 | Entry                                          | Budget |      Actual |
 | ---------------------------------------------- | -----: | ----------: |
 | `thai-qr-payment` (full umbrella)              |  25 KB | **13.7 KB** |
-| `thai-qr-payment` (`renderThaiQrPayment` only) |  25 KB |     13.6 KB |
+| `thai-qr-payment` (`renderThaiQRPayment` only) |  25 KB |     13.6 KB |
 | `thai-qr-payment/payload` sub-path             |   5 KB |     3.09 KB |
 | `thai-qr-payment/qr` sub-path                  |   6 KB |     4.74 KB |
 | `@thai-qr-payment/payload` (full)              |   5 KB |     3.09 KB |

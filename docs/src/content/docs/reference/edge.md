@@ -20,7 +20,7 @@ The full umbrella (and every scoped package) avoids Node-only APIs. The only exc
 ## Cloudflare Worker example
 
 ```ts
-import { renderThaiQrPayment } from 'thai-qr-payment';
+import { renderThaiQRPayment } from 'thai-qr-payment';
 
 export default {
   async fetch(req: Request): Promise<Response> {
@@ -32,7 +32,7 @@ export default {
       return new Response('?recipient=…&amount=…', { status: 400 });
     }
 
-    const svg = renderThaiQrPayment({
+    const svg = renderThaiQRPayment({
       recipient,
       amount,
       errorCorrectionLevel: 'H',
@@ -54,13 +54,13 @@ export default {
 
 ```ts
 // pages/api/qr.ts
-import { renderThaiQrPayment } from 'thai-qr-payment';
+import { renderThaiQRPayment } from 'thai-qr-payment';
 
 export const config = { runtime: 'edge' };
 
 export default function handler(req: Request): Response {
   const { searchParams } = new URL(req.url);
-  const svg = renderThaiQrPayment({
+  const svg = renderThaiQRPayment({
     recipient: searchParams.get('recipient') ?? '0812345678',
     amount: Number(searchParams.get('amount')) || undefined,
   });

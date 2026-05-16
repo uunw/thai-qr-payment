@@ -2,8 +2,8 @@
  * `@thai-qr-payment/react` — drop-in React components.
  *
  * Two surfaces:
- *  - `<ThaiQrPayment />` renders the full Thai QR Payment card
- *  - `<ThaiQrPaymentMatrix />` renders just the QR matrix
+ *  - `<ThaiQRPayment />` renders the full Thai QR Payment card
+ *  - `<ThaiQRPaymentMatrix />` renders just the QR matrix
  *
  * Both components produce an inline SVG. The underlying SVG string is
  * generated via the framework-agnostic `@thai-qr-payment/render`, then
@@ -16,13 +16,13 @@ import { useMemo, type CSSProperties, type ReactElement } from 'react';
 import type { PromptPayRecipientType } from '@thai-qr-payment/payload';
 import type { ErrorCorrectionLevel } from '@thai-qr-payment/qr';
 import {
-  renderThaiQrPayment,
-  renderThaiQrPaymentMatrix,
+  renderThaiQRPayment,
+  renderThaiQRPaymentMatrix,
   type CardOptions,
-  type QrSvgOptions,
+  type QRSvgOptions,
 } from '@thai-qr-payment/render';
 
-export interface ThaiQrPaymentProps extends CardOptions {
+export interface ThaiQRPaymentProps extends CardOptions {
   recipient: string;
   amount?: number;
   recipientType?: PromptPayRecipientType;
@@ -34,7 +34,7 @@ export interface ThaiQrPaymentProps extends CardOptions {
   ariaLabel?: string;
 }
 
-export interface ThaiQrPaymentMatrixProps extends QrSvgOptions {
+export interface ThaiQRPaymentMatrixProps extends QRSvgOptions {
   recipient: string;
   amount?: number;
   recipientType?: PromptPayRecipientType;
@@ -46,7 +46,7 @@ export interface ThaiQrPaymentMatrixProps extends QrSvgOptions {
 }
 
 /** Full Thai QR Payment card (header logo + QR + amount). */
-export function ThaiQrPayment({
+export function ThaiQRPayment({
   recipient,
   amount,
   recipientType,
@@ -56,10 +56,10 @@ export function ThaiQrPayment({
   style,
   ariaLabel,
   ...cardOptions
-}: ThaiQrPaymentProps): ReactElement {
+}: ThaiQRPaymentProps): ReactElement {
   const svg = useMemo(
     () =>
-      renderThaiQrPayment({
+      renderThaiQRPayment({
         recipient,
         amount,
         recipientType,
@@ -83,7 +83,7 @@ export function ThaiQrPayment({
 }
 
 /** Just the QR matrix (no card chrome). */
-export function ThaiQrPaymentMatrix({
+export function ThaiQRPaymentMatrix({
   recipient,
   amount,
   recipientType,
@@ -93,10 +93,10 @@ export function ThaiQrPaymentMatrix({
   style,
   ariaLabel,
   ...qrOptions
-}: ThaiQrPaymentMatrixProps): ReactElement {
+}: ThaiQRPaymentMatrixProps): ReactElement {
   const svg = useMemo(
     () =>
-      renderThaiQrPaymentMatrix({
+      renderThaiQRPaymentMatrix({
         recipient,
         amount,
         recipientType,

@@ -10,7 +10,7 @@
 import { writeFile } from 'node:fs/promises';
 import { payloadFor } from '@thai-qr-payment/payload';
 import { encodeQR } from '@thai-qr-payment/qr';
-import { renderCard, renderQrSvg } from '@thai-qr-payment/render';
+import { renderCard, renderQRSvg } from '@thai-qr-payment/render';
 import { HELP_TEXT, parseArgs } from './args.js';
 
 declare const VERSION: string;
@@ -54,7 +54,7 @@ async function main(): Promise<number> {
     });
     const matrix = encodeQR(wire, { errorCorrectionLevel });
     if (format === 'matrix') {
-      output = renderQrSvg(matrix, { size: parsed.size });
+      output = renderQRSvg(matrix, { size: parsed.size });
     } else {
       output = renderCard(matrix, {
         theme: parsed.theme,

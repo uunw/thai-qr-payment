@@ -9,8 +9,8 @@ Every published `dist/*.js` ships with pre-compressed `.br` + `.gz` siblings. CD
 
 ```html
 <script type="module">
-  import { renderThaiQrPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
-  document.body.innerHTML = renderThaiQrPayment({
+  import { renderThaiQRPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
+  document.body.innerHTML = renderThaiQRPayment({
     recipient: '0812345678',
     amount: 50,
     merchantName: 'Acme Coffee',
@@ -86,7 +86,7 @@ The React adapter relies on a peer-dep React; for CDN use, mount it through ESM:
 <script type="module">
   import { createRoot } from 'react-dom/client';
   import { createElement } from 'react';
-  import { renderThaiQrPayment } from 'thai-qr-payment';
+  import { renderThaiQRPayment } from 'thai-qr-payment';
   // …
 </script>
 ```

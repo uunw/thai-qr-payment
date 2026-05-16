@@ -105,7 +105,7 @@ export interface MerchantInfo {
   categoryCode?: string;
 }
 
-export interface VatTqrcInput {
+export interface VATTQRCInput {
   /** Seller's tax branch identifier — exactly 4 characters. */
   sellerTaxBranchId: string;
   /** VAT rate as displayed on the receipt (e.g. "7" or "7.00"); 1–5 chars. */
@@ -124,14 +124,14 @@ export interface VatTqrcInput {
  *  - `.toBytes()` returns a `Uint8Array` of the ASCII-encoded payload
  *    for callers that want to hash or sign it.
  */
-export class ThaiQrPaymentBuilder {
+export class ThaiQRPaymentBuilder {
   private readonly fields = new Map<string, string>();
   private readonly additional: AdditionalDataFields = {};
   private tip: TipMode | undefined;
   private personalMessage: string | undefined;
   private promptPayRecipient: NormalisedRecipient | undefined;
   private otaCode: string | undefined;
-  private vat: VatTqrcInput | undefined;
+  private vat: VATTQRCInput | undefined;
 
   constructor() {
     this.fields.set(TAG_PAYLOAD_FORMAT, PAYLOAD_FORMAT_VERSION);
@@ -162,7 +162,7 @@ export class ThaiQrPaymentBuilder {
    * variable-length numeric account.
    *
    * @example
-   *   new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').amount(100).build()
+   *   new ThaiQRPaymentBuilder().bankAccount('014', '1234567890').amount(100).build()
    */
   bankAccount(bankCode: string, accountNo: string): this {
     this.promptPayRecipient = normaliseBankAccount(bankCode, accountNo);
@@ -177,7 +177,7 @@ export class ThaiQrPaymentBuilder {
    * the OTA GUID so scanners route the payload to the single-use flow.
    *
    * @example
-   *   new ThaiQrPaymentBuilder().promptpay('0812345678').ota('1234567890').amount(50).build()
+   *   new ThaiQRPaymentBuilder().promptpay('0812345678').ota('1234567890').amount(50).build()
    */
   ota(otaCode: string): this {
     if (otaCode.length !== OTA_CODE_LENGTH) {
@@ -315,7 +315,7 @@ export class ThaiQrPaymentBuilder {
    *  - `vatRate` is 1–5 characters when present (e.g. "7" or "7.00")
    *  - `vatAmount` is 1–13 characters and required
    */
-  vatTqrc(input: VatTqrcInput | undefined): this {
+  vatTqrc(input: VATTQRCInput | undefined): this {
     if (input == null) {
       this.vat = undefined;
       return this;

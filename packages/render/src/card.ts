@@ -34,7 +34,7 @@
  */
 
 import { COLOR_LOGOS, SILHOUETTE_LOGOS } from '@thai-qr-payment/assets';
-import type { QrMatrix } from '@thai-qr-payment/qr';
+import type { QRMatrix } from '@thai-qr-payment/qr';
 import { escapeXmlAttribute, matrixToPath } from './matrix-svg.js';
 
 export type CardTheme = 'color' | 'silhouette';
@@ -170,7 +170,7 @@ function pickPromptpayLogo(theme: CardTheme, override?: AnyLogoName): string {
 }
 
 /** Compose the full Thai QR Payment card SVG. */
-export function renderCard(matrix: QrMatrix, options: CardOptions = {}): string {
+export function renderCard(matrix: QRMatrix, options: CardOptions = {}): string {
   const theme: CardTheme = options.theme ?? 'color';
   const bg = options.background ?? '#ffffff';
   const accent = options.accent ?? '#00427A';

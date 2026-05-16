@@ -26,7 +26,7 @@ packages/
   qr/                ISO/IEC 18004 QR encoder (zero dep)
   render/            High-level SVG card composer
   assets/            Thai QR Payment + PromptPay vector SVGs
-  react/             <ThaiQrPayment /> + <ThaiQrPaymentMatrix /> (peer-dep React)
+  react/             <ThaiQRPayment /> + <ThaiQRPaymentMatrix /> (peer-dep React)
   cli/               thai-qr-payment / tqp bin
 scripts/
   build-assets.sh        vtracer + potrace + svgo pipeline (regen logos)
@@ -115,7 +115,7 @@ Add tests as `packages/*/src/*.test.ts(x)`. Vitest globs auto-discover them.
 | Entry                                        | Budget | Actual (brotli) |
 | -------------------------------------------- | -----: | --------------: |
 | `thai-qr-payment` (full)                     |  25 KB |     **13.7 KB** |
-| `thai-qr-payment` (renderThaiQrPayment)      |  25 KB |         13.6 KB |
+| `thai-qr-payment` (renderThaiQRPayment)      |  25 KB |         13.6 KB |
 | `thai-qr-payment/payload` sub-path           |   5 KB |         3.09 KB |
 | `thai-qr-payment/qr` sub-path                |   6 KB |         4.74 KB |
 | `@thai-qr-payment/payload` (full)            |   5 KB |         3.09 KB |
@@ -203,7 +203,7 @@ Pre-compressed `.br` + `.gz` ship inside every published package's `dist/`. CDNs
 
 ```html
 <script type="module">
-  import { renderThaiQrPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
+  import { renderThaiQRPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
 </script>
 ```
 
@@ -227,7 +227,7 @@ All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagg
 ## Migration history (what's been bumped)
 
 - **Commits `7ae8f9d` + `5a5a62e` + manual dist-tag reset + `e65ca90` → published v1.0.0 (all 7 packages, with 2.0.0 + 3.0.0 ghost versions stranded)** (2026-05-16): Two rounds of feature work shipped seven new wire-format surfaces (`parsePayload({ strict })`, truncated-CRC auto-fix, raw-tag accessors, `.trueMoney()`, `.bankAccount()`, `.ota()`, `.vatTqrc()`, `.billPayment({ crossBorder })`, plus Slip Verify Mini-QR, TrueMoney Slip Verify, BOT 1D barcode). Docs site grew to 16 pages with new guide pages for slip-verify + barcode and an updated reference/spec table covering tag 80 + the new sub-tags. Tests: payload package 290 → 337 + new modules (28 slip-verify + 42 barcode + 7 message codec). Bundle: 5.37 KB brotli payload, 22.42 KB umbrella. **Versions then went chaotic** — see the "linked-changesets cascade" landmine below; final state is all seven packages aligned at 1.0.0 via `npm dist-tag` + a manual qr/assets publish, with 2.0.0 / 3.0.0 left on the registry as un-unpublishable ghosts. Changesets config switched from `linked` → `fixed` to lock future releases in lockstep.
-- **Commits `ba9e8e8` + `7d07f64` → published v0.1.3 (all 7 packages) + v0.1.4 (`thai-qr-payment` + `@thai-qr-payment/render`)** (2026-05-15): Docs site moved from `https://uunw.github.io/thai-qr-payment/` to `https://thai-qr-payment.js.org` (js.org subdomain merged in [js-org/js.org#11306](https://github.com/js-org/js.org/pull/11306)); `astro.config.mjs` dropped its `/thai-qr-payment` base path; every package.json `homepage` repointed at the new domain (sub-packages link to `/guide/<name>/`). rspack configs now ship `.js.map` sourcemaps (`devtool: 'source-map'`) and keep original function/class names through SWC minification (`mangle: { keep_classnames: true, keep_fnames: true }`) — published bundles are now traceable to source and no longer trip Socket's "Obfuscated code" supply-chain alert. `renderQrSvg()` numeric attributes (`size`, `quietZone`, `matrix.size`) routed through a `toSafeUint()` finite-non-negative-integer guard before HTML interpolation — closes 7 CodeQL `js/html-constructed-from-input` alerts on `packages/render/src/matrix-svg.ts`. Bundle sizes unchanged (umbrella 20.82 KB / 25 KB budget).
+- **Commits `ba9e8e8` + `7d07f64` → published v0.1.3 (all 7 packages) + v0.1.4 (`thai-qr-payment` + `@thai-qr-payment/render`)** (2026-05-15): Docs site moved from `https://uunw.github.io/thai-qr-payment/` to `https://thai-qr-payment.js.org` (js.org subdomain merged in [js-org/js.org#11306](https://github.com/js-org/js.org/pull/11306)); `astro.config.mjs` dropped its `/thai-qr-payment` base path; every package.json `homepage` repointed at the new domain (sub-packages link to `/guide/<name>/`). rspack configs now ship `.js.map` sourcemaps (`devtool: 'source-map'`) and keep original function/class names through SWC minification (`mangle: { keep_classnames: true, keep_fnames: true }`) — published bundles are now traceable to source and no longer trip Socket's "Obfuscated code" supply-chain alert. `renderQRSvg()` numeric attributes (`size`, `quietZone`, `matrix.size`) routed through a `toSafeUint()` finite-non-negative-integer guard before HTML interpolation — closes 7 CodeQL `js/html-constructed-from-input` alerts on `packages/render/src/matrix-svg.ts`. Bundle sizes unchanged (umbrella 20.82 KB / 25 KB budget).
 - **Commits `c3b199d` + `c46857d` → published v0.1.2** (2026-05-13): Brand-spec card redesign — full-width navy header strip, TQR Maximum Blue (`#00427A`) unified across `Thai_QR_Payment_Logo-01.svg` (replacing vtracer's `#0e3d67` + six auxiliary shades), `PromptPay2` (navy) is now the default sub-mark for `theme: 'color'` shipped as an embedded PNG inside an SVG `<image>` wrapper, QR fill decoupled from accent via new `qrColor` option (defaults to `#000000` for scanner contrast). CI matrix bumped to Node 22 + 24 because the Astro docs build needs Node >= 22.12.
 - **Commit `e4af92f` → published v0.1.1** (2026-05-12): Critical fix — `alignmentCentres()` for QR v2-v40 was returning wrong positions, every scanner rejected the output as "invalid QR". The published v0.1.0 had this bug. Verified post-fix by round-tripping every (version, ECC, mask) combo through `jsQR`.
 - **Commit `2d1ed7c` → still v0.1.1** (2026-05-12): Inlined scoped siblings into the umbrella. npm UI now correctly shows "0 Dependencies" instead of "5 Dependencies". Moved deps → devDeps in umbrella's `package.json`.
@@ -308,7 +308,7 @@ You don't release directly. When PRs with changeset markdown files land on `main
 ./packages/thai-qr-payment/dist/cli.js 0812345678 --amount 50 --format matrix --size 512 -o /tmp/qr.svg
 
 # Library usage from Node / browser / edge
-import { renderThaiQrPayment, payloadFor, ThaiQrPaymentBuilder } from 'thai-qr-payment';
+import { renderThaiQRPayment, payloadFor, ThaiQRPaymentBuilder } from 'thai-qr-payment';
 import { COLOR_LOGOS } from 'thai-qr-payment/assets';   # sub-path opt-in
 ```
 

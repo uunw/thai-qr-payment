@@ -20,15 +20,15 @@ A single install pulls **payload builder + QR encoder + SVG renderer + brand ass
 
 ```ts
 import {
-  renderThaiQrPayment,
-  ThaiQrPaymentBuilder,
+  renderThaiQRPayment,
+  ThaiQRPaymentBuilder,
   encodeQR,
   parsePayload,
   COLOR_LOGOS,
 } from 'thai-qr-payment';
 
 // One-shot: pay-to-this-PromptPay SVG card
-const svg = renderThaiQrPayment({
+const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
   merchantName: 'Acme Coffee',
@@ -37,7 +37,7 @@ const svg = renderThaiQrPayment({
 });
 
 // Granular: build wire payload, encode QR, render manually
-const wire = new ThaiQrPaymentBuilder()
+const wire = new ThaiQRPaymentBuilder()
   .promptpay('0812345678')
   .amount(50)
   .merchant({ name: 'Acme Coffee', city: 'BANGKOK', categoryCode: '5814' })
@@ -68,7 +68,7 @@ tqp 0812345678 --format payload
 Tree-shaking handles dead-code elimination automatically, but if you want even tighter bundles you can reach for the sub-paths:
 
 ```ts
-import { ThaiQrPaymentBuilder } from 'thai-qr-payment/payload';
+import { ThaiQRPaymentBuilder } from 'thai-qr-payment/payload';
 import { encodeQR } from 'thai-qr-payment/qr';
 import { renderCard } from 'thai-qr-payment/render';
 import { COLOR_LOGOS } from 'thai-qr-payment/assets';

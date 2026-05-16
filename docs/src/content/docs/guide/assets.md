@@ -37,7 +37,7 @@ return new Response(svg, {
 
 ## Why assets are opt-in from the umbrella
 
-`import { ... } from 'thai-qr-payment'` (the default umbrella entry) does **not** include the brand SVGs — that keeps the surface lean (~3 KB for payload-only callers). The renderer helpers (`renderThaiQrPayment`, `renderCard`) still reach for the assets internally; they're only excluded from the top-level re-export.
+`import { ... } from 'thai-qr-payment'` (the default umbrella entry) does **not** include the brand SVGs — that keeps the surface lean (~3 KB for payload-only callers). The renderer helpers (`renderThaiQRPayment`, `renderCard`) still reach for the assets internally; they're only excluded from the top-level re-export.
 
 To get the asset map at the top level:
 

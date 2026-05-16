@@ -7,7 +7,7 @@
  */
 
 export { encodeQR } from './encoder.js';
-export type { EncodeOptions, QrMatrix } from './encoder.js';
+export type { EncodeOptions, QRMatrix } from './encoder.js';
 export type { ErrorCorrectionLevel } from './version.js';
 export { detectMode } from './mode.js';
 export type { EncodingMode } from './mode.js';

@@ -1,6 +1,6 @@
 # @thai-qr-payment/react
 
-React component bindings for `@thai-qr-payment`. Drop-in `<ThaiQrPayment />` + `<ThaiQrPaymentMatrix />`.
+React component bindings for `@thai-qr-payment`. Drop-in `<ThaiQRPayment />` + `<ThaiQRPaymentMatrix />`.
 
 ```bash
 pnpm add @thai-qr-payment/react @thai-qr-payment/render @thai-qr-payment/payload @thai-qr-payment/qr react
@@ -9,10 +9,10 @@ pnpm add @thai-qr-payment/react @thai-qr-payment/render @thai-qr-payment/payload
 ## Usage
 
 ```tsx
-import { ThaiQrPayment, ThaiQrPaymentMatrix } from '@thai-qr-payment/react';
+import { ThaiQRPayment, ThaiQRPaymentMatrix } from '@thai-qr-payment/react';
 
 // Full Thai QR Payment card
-<ThaiQrPayment
+<ThaiQRPayment
   recipient="0812345678"
   amount={50}
   merchantName="Acme Coffee"
@@ -22,7 +22,7 @@ import { ThaiQrPayment, ThaiQrPaymentMatrix } from '@thai-qr-payment/react';
 />
 
 // Just the QR matrix
-<ThaiQrPaymentMatrix
+<ThaiQRPaymentMatrix
   recipient="0812345678"
   amount={50}
   size={256}

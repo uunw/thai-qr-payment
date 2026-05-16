@@ -35,7 +35,7 @@ encodeQR(text: string, opts?: {
   minVersion?: number;
   maxVersion?: number;
   forceMask?: number;
-}): QrMatrix
+}): QRMatrix
 ```
 
 ## License

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ThaiQrPaymentBuilder } from './builder.js';
+import { ThaiQRPaymentBuilder } from './builder.js';
 import {
   buildSlipVerify,
   buildTrueMoneySlipVerify,
@@ -103,7 +103,7 @@ describe('parseSlipVerify — CRC handling', () => {
 
 describe('parseSlipVerify — rejects non-slip-verify payloads', () => {
   it('returns null for a regular PromptPay QR (wrong CRC tag — 63 not 91)', () => {
-    const promptpay = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
+    const promptpay = new ThaiQRPaymentBuilder().promptpay('0812345678').amount(50).build();
     expect(parseSlipVerify(promptpay)).toBeNull();
   });
 
@@ -232,7 +232,7 @@ describe('parseTrueMoneySlipVerify — rejects non-truemoney payloads', () => {
   });
 
   it('returns null for a regular PromptPay QR', () => {
-    const promptpay = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
+    const promptpay = new ThaiQRPaymentBuilder().promptpay('0812345678').amount(50).build();
     expect(parseTrueMoneySlipVerify(promptpay)).toBeNull();
   });
 

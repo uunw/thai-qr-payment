@@ -8,7 +8,7 @@
  */
 
 /** A parsed TLV field with its (possibly-nested) value text. */
-export interface TlvField {
+export interface TLVField {
   readonly tag: string;
   readonly value: string;
 }
@@ -47,7 +47,7 @@ export function encodeFields(
  * Designed for parsing both the root payload and nested template values
  * — the same algorithm applies at any depth.
  */
-export function* iterateFields(input: string): IterableIterator<TlvField> {
+export function* iterateFields(input: string): IterableIterator<TLVField> {
   let cursor = 0;
   while (cursor < input.length) {
     if (cursor + 4 > input.length) {

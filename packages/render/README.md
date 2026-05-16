@@ -9,9 +9,9 @@ pnpm add @thai-qr-payment/render
 ## Quickstart
 
 ```ts
-import { renderThaiQrPayment } from '@thai-qr-payment/render';
+import { renderThaiQRPayment } from '@thai-qr-payment/render';
 
-const svg = renderThaiQrPayment({
+const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
   merchantName: 'Acme Coffee',
@@ -26,9 +26,9 @@ return new Response(svg, { headers: { 'content-type': 'image/svg+xml; charset=ut
 ## Just the QR (no card chrome)
 
 ```ts
-import { renderThaiQrPaymentMatrix } from '@thai-qr-payment/render';
+import { renderThaiQRPaymentMatrix } from '@thai-qr-payment/render';
 
-const svg = renderThaiQrPaymentMatrix({
+const svg = renderThaiQRPaymentMatrix({
   recipient: '0812345678',
   amount: 50,
   size: 256, // px

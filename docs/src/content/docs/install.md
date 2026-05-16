@@ -33,7 +33,7 @@ For consumers who want only one slice (e.g. payload-only on edge runtimes):
 Or import from the umbrella sub-paths — same bytes, same tree-shake:
 
 ```ts
-import { ThaiQrPaymentBuilder } from 'thai-qr-payment/payload';
+import { ThaiQRPaymentBuilder } from 'thai-qr-payment/payload';
 import { encodeQR } from 'thai-qr-payment/qr';
 import { renderCard } from 'thai-qr-payment/render';
 import { COLOR_LOGOS } from 'thai-qr-payment/assets';
@@ -45,8 +45,8 @@ Every published `dist/*.js` ships pre-compressed `.br` + `.gz` siblings, so CDNs
 
 ```html
 <script type="module">
-  import { renderThaiQrPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
-  document.body.innerHTML = renderThaiQrPayment({ recipient: '0812345678', amount: 50 });
+  import { renderThaiQRPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
+  document.body.innerHTML = renderThaiQRPayment({ recipient: '0812345678', amount: 50 });
 </script>
 
 <script type="module">

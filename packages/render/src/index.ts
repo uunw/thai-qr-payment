@@ -9,12 +9,12 @@
 import { payloadFor, type PromptPayRecipientType } from '@thai-qr-payment/payload';
 import { encodeQR, type ErrorCorrectionLevel } from '@thai-qr-payment/qr';
 import { renderCard, type CardOptions } from './card.js';
-import { renderQrSvg, type QrSvgOptions } from './matrix-svg.js';
+import { renderQRSvg, type QRSvgOptions } from './matrix-svg.js';
 
 export { renderCard } from './card.js';
-export { renderQrSvg, matrixToPath } from './matrix-svg.js';
+export { renderQRSvg, matrixToPath } from './matrix-svg.js';
 export type { CardOptions, CardTheme } from './card.js';
-export type { QrSvgOptions } from './matrix-svg.js';
+export type { QRSvgOptions } from './matrix-svg.js';
 
 export interface RenderInput {
   recipient: string;
@@ -29,7 +29,7 @@ export interface RenderInput {
  * One-shot helper: build payload → encode QR → render Thai QR Payment card.
  * Returns the SVG string ready to ship.
  */
-export function renderThaiQrPayment(input: RenderInput & Omit<CardOptions, never>): string {
+export function renderThaiQRPayment(input: RenderInput & Omit<CardOptions, never>): string {
   const wire = payloadFor({
     recipient: input.recipient,
     amount: input.amount,
@@ -49,7 +49,7 @@ export function renderThaiQrPayment(input: RenderInput & Omit<CardOptions, never
  * One-shot helper for callers that want only the QR (no header card).
  * Useful when wrapping the QR in your own design system.
  */
-export function renderThaiQrPaymentMatrix(input: RenderInput & QrSvgOptions): string {
+export function renderThaiQRPaymentMatrix(input: RenderInput & QRSvgOptions): string {
   const wire = payloadFor({
     recipient: input.recipient,
     amount: input.amount,
@@ -59,5 +59,5 @@ export function renderThaiQrPaymentMatrix(input: RenderInput & QrSvgOptions): st
   const matrix = encodeQR(wire, {
     errorCorrectionLevel: input.errorCorrectionLevel ?? 'M',
   });
-  return renderQrSvg(matrix, input);
+  return renderQRSvg(matrix, input);
 }

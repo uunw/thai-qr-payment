@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { ThaiQrPaymentBuilder } from './builder.js';
+import { ThaiQRPaymentBuilder } from './builder.js';
 import { checksum } from './crc.js';
 import { parsePayload } from './parser.js';
 
 describe('parsePayload — happy paths', () => {
   it('parses a static PromptPay mobile QR', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const parsed = parsePayload(wire);
     expect(parsed.payloadFormat).toBe('01');
     expect(parsed.pointOfInitiation).toBe('static');
@@ -15,14 +15,14 @@ describe('parsePayload — happy paths', () => {
   });
 
   it('parses a dynamic PromptPay mobile QR', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').amount(50).build();
     const parsed = parsePayload(wire);
     expect(parsed.pointOfInitiation).toBe('dynamic');
     expect(parsed.amount).toBe(50);
   });
 
   it('recovers the human-readable mobile number', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     expect(parsePayload(wire).merchant).toMatchObject({
       kind: 'promptpay',
       recipientType: 'mobile',
@@ -31,7 +31,7 @@ describe('parsePayload — happy paths', () => {
   });
 
   it('passes through nationalId verbatim', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('1234567890123').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('1234567890123').build();
     expect(parsePayload(wire).merchant).toMatchObject({
       recipientType: 'nationalId',
       recipient: '1234567890123',
@@ -39,7 +39,7 @@ describe('parsePayload — happy paths', () => {
   });
 
   it('passes through eWallet verbatim', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('123456789012345').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('123456789012345').build();
     expect(parsePayload(wire).merchant).toMatchObject({
       recipientType: 'eWallet',
       recipient: '123456789012345',
@@ -47,7 +47,7 @@ describe('parsePayload — happy paths', () => {
   });
 
   it('parses BillPayment with all fields', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .billPayment({ billerId: '123456789012345', reference1: 'INV001', reference2: 'CUST42' })
       .amount(250)
       .build();
@@ -62,7 +62,7 @@ describe('parsePayload — happy paths', () => {
   });
 
   it('parses BillPayment biller-only', () => {
-    const wire = new ThaiQrPaymentBuilder().billPayment({ billerId: '123456789012345' }).build();
+    const wire = new ThaiQRPaymentBuilder().billPayment({ billerId: '123456789012345' }).build();
     const parsed = parsePayload(wire);
     if (parsed.merchant?.kind === 'billPayment') {
       expect(parsed.merchant.reference1).toBeUndefined();
@@ -71,7 +71,7 @@ describe('parsePayload — happy paths', () => {
   });
 
   it('parses merchant info', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .promptpay('0812345678')
       .merchant({ name: 'Acme Coffee', city: 'BANGKOK', categoryCode: '5814', postalCode: '10310' })
       .build();
@@ -83,7 +83,7 @@ describe('parsePayload — happy paths', () => {
   });
 
   it('parses additional-data sub-fields', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .promptpay('0812345678')
       .additionalData({ billNumber: 'BILL01', terminalLabel: 'T01' })
       .build();
@@ -101,7 +101,7 @@ describe('parsePayload — happy paths', () => {
       'eWallet',
     ];
     samples.forEach((sample, i) => {
-      const wire = new ThaiQrPaymentBuilder().promptpay(sample).build();
+      const wire = new ThaiQRPaymentBuilder().promptpay(sample).build();
       const parsed = parsePayload(wire);
       expect((parsed.merchant as { recipientType: string })?.recipientType).toBe(expected[i]);
     });
@@ -110,7 +110,7 @@ describe('parsePayload — happy paths', () => {
 
 describe('parsePayload — BillPayment cross-border', () => {
   it('flags cross-border AID with crossBorder: true', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .billPayment({ billerId: '099400016550100', reference1: '123456789012', crossBorder: true })
       .amount(100)
       .build();
@@ -124,7 +124,7 @@ describe('parsePayload — BillPayment cross-border', () => {
   });
 
   it('flags domestic AID with crossBorder: false', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .billPayment({ billerId: '099400016550100', reference1: '123456789012' })
       .build();
     const parsed = parsePayload(wire);
@@ -137,7 +137,7 @@ describe('parsePayload — BillPayment cross-border', () => {
   it('returns merchant: null on an unknown AID (tamper protection)', () => {
     // Construct a payload with a made-up bill-payment AID by swapping the
     // domestic AID inside the tag-30 template, then recomputing the CRC.
-    const valid = new ThaiQrPaymentBuilder().billPayment({ billerId: '099400016550100' }).build();
+    const valid = new ThaiQRPaymentBuilder().billPayment({ billerId: '099400016550100' }).build();
     const tamperedBody = valid.slice(0, -4).replace('A000000677010112', 'A000000677012007');
     // Strip the trailing "6304" header from the body before re-hashing —
     // checksum() expects the seed to include that header, same as the
@@ -153,7 +153,7 @@ describe('parsePayload — BillPayment cross-border', () => {
     // ("0000000010000") + 2-char country ("SG") = 18 chars. Parser must
     // not interpret the inner structure.
     const purpose = '7020000000010000SG';
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .billPayment({ billerId: '099400016550100', crossBorder: true })
       .amount(100)
       .additionalData({ purposeOfTransaction: purpose })
@@ -164,7 +164,7 @@ describe('parsePayload — BillPayment cross-border', () => {
   });
 
   it('parses biller-only cross-border payloads', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .billPayment({ billerId: '099400016550100', crossBorder: true })
       .build();
     const parsed = parsePayload(wire);
@@ -181,14 +181,14 @@ describe('parsePayload — BillPayment cross-border', () => {
 describe('parsePayload — round-trip properties', () => {
   it('round-trips amounts across a range', () => {
     for (const amount of [1, 10, 50, 99.5, 100, 1000, 12_345.67, 9_999_999.99]) {
-      const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(amount).build();
+      const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').amount(amount).build();
       expect(parsePayload(wire).amount).toBe(amount);
     }
   });
 
   it('round-trips merchant names below the 25-char limit', () => {
     for (const name of ['A', 'Acme', 'Acme Coffee Bangkok', 'Twenty Five Chars Length!']) {
-      const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').merchant({ name }).build();
+      const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').merchant({ name }).build();
       expect(parsePayload(wire).merchantName).toBe(name);
     }
   });
@@ -204,7 +204,7 @@ describe('parsePayload — round-trip properties', () => {
       { purposeOfTransaction: 'GIFT' },
     ];
     for (const labelSet of labels) {
-      const wire = new ThaiQrPaymentBuilder()
+      const wire = new ThaiQRPaymentBuilder()
         .promptpay('0812345678')
         .additionalData(labelSet)
         .build();
@@ -215,13 +215,13 @@ describe('parsePayload — round-trip properties', () => {
 
 describe('parsePayload — error cases', () => {
   it('throws on tampered checksum', () => {
-    const valid = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const valid = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const tampered = `${valid.slice(0, -4)}0000`;
     expect(() => parsePayload(tampered)).toThrow(/Checksum mismatch/);
   });
 
   it('throws on tampered body (CRC mismatch)', () => {
-    const valid = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const valid = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const tampered = valid.replace('00668123456785', '00668199999995');
     expect(() => parsePayload(tampered)).toThrow();
   });
@@ -244,13 +244,13 @@ describe('parsePayload — edge cases', () => {
     // would be tedious; here we only verify the default path is hit when
     // tag 53 is absent in the field map). Use the parsed value's
     // `currency` directly.
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const parsed = parsePayload(wire);
     expect(parsed.currency).toBe('764');
   });
 
   it('returns country TH default when tag 58 missing', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     expect(parsePayload(wire).country).toBe('TH');
   });
 
@@ -259,19 +259,19 @@ describe('parsePayload — edge cases', () => {
     // verify that any payload from the builder produces a non-null
     // merchant. Real-world coverage of the null branch is in render's
     // own tests where it parses external strings.
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     expect(parsePayload(wire).merchant).not.toBeNull();
   });
 
   it('reports payloadFormat from tag 00', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     expect(parsePayload(wire).payloadFormat).toBe('01');
   });
 });
 
 describe('parsePayload — strict mode', () => {
   it('still passes a valid payload in strict mode', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').amount(50).build();
     const parsed = parsePayload(wire, { strict: true });
     expect(parsed.amount).toBe(50);
     expect(parsed.crc.valid).toBe(true);
@@ -279,14 +279,14 @@ describe('parsePayload — strict mode', () => {
   });
 
   it('throws "Invalid CRC" when CRC tag is missing in strict mode', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     // Strip the entire CRC tag (last 8 chars: 6304XXXX).
     const stripped = wire.slice(0, -8);
     expect(() => parsePayload(stripped, { strict: true })).toThrow(/Invalid CRC/);
   });
 
   it('throws "Invalid CRC" when CRC value is wrong in strict mode', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const tampered = `${wire.slice(0, -4)}0000`;
     expect(() => parsePayload(tampered, { strict: true })).toThrow(/Invalid CRC/);
   });
@@ -297,7 +297,7 @@ describe('parsePayload — strict mode', () => {
     // even if the fix would have succeeded.
     for (let i = 0; i < 100; i += 1) {
       const phone = `08${(i * 7919 + 1).toString(10).padStart(8, '0').slice(0, 8)}`;
-      const wire = new ThaiQrPaymentBuilder().promptpay(phone).build();
+      const wire = new ThaiQRPaymentBuilder().promptpay(phone).build();
       if (wire.slice(-4, -3) === '0') {
         const truncated = wire.slice(0, -4) + wire.slice(-3);
         expect(() => parsePayload(truncated, { strict: true })).toThrow(/Invalid CRC/);
@@ -315,7 +315,7 @@ describe('parsePayload — truncated-CRC auto-fix', () => {
     // without zero-padding.
     for (let i = 0; i < 100; i += 1) {
       const phone = `08${(i * 7919 + 1).toString(10).padStart(8, '0').slice(0, 8)}`;
-      const wire = new ThaiQrPaymentBuilder().promptpay(phone).build();
+      const wire = new ThaiQRPaymentBuilder().promptpay(phone).build();
       if (wire.slice(-4, -3) === '0') {
         // Wire ends "6304" + 4 hex chars; drop the first hex char so
         // only 3 follow the length header.
@@ -334,7 +334,7 @@ describe('parsePayload — truncated-CRC auto-fix', () => {
   it('recovers a payload that lost two leading zeros from its CRC', () => {
     for (let i = 0; i < 5000; i += 1) {
       const phone = `08${(i * 7919 + 1).toString(10).padStart(8, '0').slice(0, 8)}`;
-      const wire = new ThaiQrPaymentBuilder().promptpay(phone).build();
+      const wire = new ThaiQRPaymentBuilder().promptpay(phone).build();
       if (wire.slice(-4, -2) === '00') {
         const truncated = wire.slice(0, -4) + wire.slice(-2);
         const parsed = parsePayload(truncated);
@@ -348,7 +348,7 @@ describe('parsePayload — truncated-CRC auto-fix', () => {
   });
 
   it('reports the canonical CRC value on a non-truncated payload', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const parsed = parsePayload(wire);
     expect(parsed.crc.value).toBe(wire.slice(-4));
     expect(parsed.crc.valid).toBe(true);
@@ -358,7 +358,7 @@ describe('parsePayload — truncated-CRC auto-fix', () => {
 
 describe('parsePayload — raw tag accessors', () => {
   it('exposes rawTags in wire order', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').amount(50).build();
     const parsed = parsePayload(wire);
     const tagIds = parsed.rawTags.map((field) => field.tag);
     expect(tagIds[0]).toBe('00');
@@ -370,7 +370,7 @@ describe('parsePayload — raw tag accessors', () => {
   });
 
   it('getTag returns the matching TLV field', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const parsed = parsePayload(wire);
     expect(parsed.getTag('00')?.value).toBe('01');
     expect(parsed.getTag('01')?.value).toBe('11');
@@ -379,7 +379,7 @@ describe('parsePayload — raw tag accessors', () => {
   });
 
   it('getTagValue returns the top-level value when no subId is passed', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const parsed = parsePayload(wire);
     expect(parsed.getTagValue('53')).toBe('764');
     expect(parsed.getTagValue('58')).toBe('TH');
@@ -387,7 +387,7 @@ describe('parsePayload — raw tag accessors', () => {
   });
 
   it('getTagValue descends one level for nested templates', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const parsed = parsePayload(wire);
     expect(parsed.getTagValue('29', '00')).toBe('A000000677010111');
     expect(parsed.getTagValue('29', '01')).toBe('0066812345678');
@@ -396,7 +396,7 @@ describe('parsePayload — raw tag accessors', () => {
   });
 
   it('getTagValue resolves additional-data sub-fields', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .promptpay('0812345678')
       .additionalData({ billNumber: 'BILL01', terminalLabel: 'T01' })
       .build();
@@ -408,7 +408,7 @@ describe('parsePayload — raw tag accessors', () => {
 
 describe('parsePayload — TrueMoney decoding', () => {
   it('decodes a static TrueMoney payload (no amount, no message)', () => {
-    const wire = new ThaiQrPaymentBuilder().trueMoney('0801111111').build();
+    const wire = new ThaiQRPaymentBuilder().trueMoney('0801111111').build();
     const parsed = parsePayload(wire);
     expect(parsed.merchant).toMatchObject({ kind: 'trueMoney', mobileNo: '0801111111' });
     expect(parsed.amount).toBeNull();
@@ -416,7 +416,7 @@ describe('parsePayload — TrueMoney decoding', () => {
   });
 
   it('decodes a dynamic TrueMoney payload with amount', () => {
-    const wire = new ThaiQrPaymentBuilder().trueMoney('0801111111', { amount: 10 }).build();
+    const wire = new ThaiQRPaymentBuilder().trueMoney('0801111111', { amount: 10 }).build();
     const parsed = parsePayload(wire);
     expect(parsed.merchant).toMatchObject({ kind: 'trueMoney', mobileNo: '0801111111' });
     expect(parsed.amount).toBe(10);
@@ -424,7 +424,7 @@ describe('parsePayload — TrueMoney decoding', () => {
   });
 
   it('decodes a TrueMoney personal message from tag 81', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .trueMoney('0801111111', { amount: 10, message: 'Hello World!' })
       .build();
     const parsed = parsePayload(wire);
@@ -436,7 +436,7 @@ describe('parsePayload — TrueMoney decoding', () => {
   });
 
   it('still parses a plain PromptPay e-wallet (sub 03 without 14 prefix) as e-wallet', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('012345678901234').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('012345678901234').build();
     const parsed = parsePayload(wire);
     expect(parsed.merchant?.kind).toBe('promptpay');
   });
@@ -444,7 +444,7 @@ describe('parsePayload — TrueMoney decoding', () => {
 
 describe('parsePayload — bankAccount recipient', () => {
   it('parses a static bankAccount payload', () => {
-    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').build();
+    const wire = new ThaiQRPaymentBuilder().bankAccount('014', '1234567890').build();
     const parsed = parsePayload(wire);
     expect(parsed.merchant).toMatchObject({
       kind: 'promptpay',
@@ -458,7 +458,7 @@ describe('parsePayload — bankAccount recipient', () => {
   });
 
   it('parses a dynamic bankAccount payload with an amount', () => {
-    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').amount(100).build();
+    const wire = new ThaiQRPaymentBuilder().bankAccount('014', '1234567890').amount(100).build();
     const parsed = parsePayload(wire);
     expect(parsed.merchant).toMatchObject({
       kind: 'promptpay',
@@ -470,7 +470,7 @@ describe('parsePayload — bankAccount recipient', () => {
   });
 
   it('does not set ota when the standard AID is used', () => {
-    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').build();
+    const wire = new ThaiQRPaymentBuilder().bankAccount('014', '1234567890').build();
     const parsed = parsePayload(wire);
     if (parsed.merchant?.kind !== 'promptpay') expect.fail('Expected promptpay merchant');
     expect(parsed.merchant.ota).toBeUndefined();
@@ -478,21 +478,21 @@ describe('parsePayload — bankAccount recipient', () => {
 
   it('handles long account numbers up to the EMVCo cap', () => {
     const longAccount = '1'.repeat(40);
-    const wire = new ThaiQrPaymentBuilder().bankAccount('014', longAccount).build();
+    const wire = new ThaiQRPaymentBuilder().bankAccount('014', longAccount).build();
     const parsed = parsePayload(wire);
     if (parsed.merchant?.kind !== 'promptpay') expect.fail('Expected promptpay merchant');
     expect(parsed.merchant.accountNo).toBe(longAccount);
   });
 
   it('exposes sub-tag 04 through getTagValue', () => {
-    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').build();
+    const wire = new ThaiQRPaymentBuilder().bankAccount('014', '1234567890').build();
     expect(parsePayload(wire).getTagValue('29', '04')).toBe('0141234567890');
   });
 });
 
 describe('parsePayload — OTA credit transfer', () => {
   it('parses a dynamic OTA payload with a mobile recipient', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .promptpay('0812345678')
       .ota('1234567890')
       .amount(50)
@@ -508,7 +508,7 @@ describe('parsePayload — OTA credit transfer', () => {
   });
 
   it('parses an OTA payload that targets a bankAccount', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .bankAccount('014', '1234567890')
       .ota('1234567890')
       .build();
@@ -523,7 +523,7 @@ describe('parsePayload — OTA credit transfer', () => {
   });
 
   it('exposes the OTA sub-tag through getTagValue', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').ota('1234567890').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').ota('1234567890').build();
     const parsed = parsePayload(wire);
     expect(parsed.getTagValue('29', '00')).toBe('A000000677010114');
     expect(parsed.getTagValue('29', '05')).toBe('1234567890');
@@ -533,7 +533,7 @@ describe('parsePayload — OTA credit transfer', () => {
     // Replace the standard PromptPay AID with a bogus 16-char string,
     // then re-checksum so the CRC layer accepts the payload and we can
     // exercise the parser's discriminator path.
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const tampered = wire.replace('A000000677010111', 'A000000677010199');
     const body = tampered.slice(0, -4);
     const repaired = body + checksum(body);
@@ -544,7 +544,7 @@ describe('parsePayload — OTA credit transfer', () => {
     // Builder always pairs the OTA AID with sub-tag 05. Hand-craft a
     // payload that carries the OTA AID but omits the sub-tag to exercise
     // the discriminator on its own.
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').ota('1234567890').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').ota('1234567890').build();
     const stripped = wire.replace('05101234567890', '');
     const body = stripped.slice(0, -4);
     // Need to also patch the tag-29 length header to reflect the missing
@@ -563,7 +563,7 @@ describe('parsePayload — OTA credit transfer', () => {
   });
 
   it('a standard payload reports ota === undefined', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const parsed = parsePayload(wire);
     if (parsed.merchant?.kind !== 'promptpay') expect.fail('Expected promptpay merchant');
     expect(parsed.merchant.ota).toBeUndefined();
@@ -572,7 +572,7 @@ describe('parsePayload — OTA credit transfer', () => {
 
 describe('parsePayload — VAT TQRC decoding', () => {
   it('round-trips all three VAT sub-fields', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .promptpay('0812345678')
       .amount(107)
       .vatTqrc({ sellerTaxBranchId: '0001', vatRate: '7', vatAmount: '7.00' })
@@ -586,7 +586,7 @@ describe('parsePayload — VAT TQRC decoding', () => {
   });
 
   it('round-trips with only the required sellerTaxBranchId + vatAmount', () => {
-    const wire = new ThaiQrPaymentBuilder()
+    const wire = new ThaiQRPaymentBuilder()
       .promptpay('0812345678')
       .vatTqrc({ sellerTaxBranchId: '0001', vatAmount: '7.00' })
       .build();
@@ -596,7 +596,7 @@ describe('parsePayload — VAT TQRC decoding', () => {
   });
 
   it('returns vatTqrc = undefined when tag 80 is absent', () => {
-    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const wire = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     expect(parsePayload(wire).vatTqrc).toBeUndefined();
   });
 
@@ -604,7 +604,7 @@ describe('parsePayload — VAT TQRC decoding', () => {
     // Hand-build a payload whose tag 80 only carries sub-tag 00 — i.e.
     // a malformed VAT block. CRC must still validate so the parser
     // reaches the VAT decode step.
-    const seedPayload = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const seedPayload = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const body = seedPayload.slice(0, -8); // strip 6304XXXX
     // Inject malformed tag 80: only sub-tag 00 present (no 02).
     const malformedTag80 = '800800040001';
@@ -614,7 +614,7 @@ describe('parsePayload — VAT TQRC decoding', () => {
   });
 
   it('throws in strict mode when sub-tag 02 is missing', () => {
-    const seedPayload = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const seedPayload = new ThaiQRPaymentBuilder().promptpay('0812345678').build();
     const body = seedPayload.slice(0, -8);
     const malformedTag80 = '800800040001';
     const seed = body + malformedTag80 + '6304';
@@ -628,7 +628,7 @@ describe('parsePayload — fuzz on random builder configs', () => {
     for (let i = 0; i < 30; i += 1) {
       const phone = `08${(i * 7919 + 1).toString(10).padStart(8, '0').slice(0, 8)}`;
       const amount = ((i * 13) % 1000) + 1;
-      const wire = new ThaiQrPaymentBuilder().promptpay(phone).amount(amount).build();
+      const wire = new ThaiQRPaymentBuilder().promptpay(phone).amount(amount).build();
       const parsed = parsePayload(wire);
       expect(parsed.amount).toBe(amount);
       expect(parsed.merchant?.kind).toBe('promptpay');
@@ -638,7 +638,7 @@ describe('parsePayload — fuzz on random builder configs', () => {
   it('parses every output the builder produces (nationalId sweep)', () => {
     for (let i = 0; i < 20; i += 1) {
       const id = `1${(i * 99991).toString(10).padStart(12, '0').slice(0, 12)}`;
-      const wire = new ThaiQrPaymentBuilder().promptpay(id, 'nationalId').build();
+      const wire = new ThaiQRPaymentBuilder().promptpay(id, 'nationalId').build();
       const parsed = parsePayload(wire);
       expect(parsed.merchant?.kind).toBe('promptpay');
       if (parsed.merchant?.kind === 'promptpay') {

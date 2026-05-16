@@ -26,7 +26,7 @@ const NO_AMOUNT_SENTINEL = '0';
 /** 13 chars: "9999999999.99" — matches `formatAmount`'s cap for consistency. */
 const MAX_BAHT = 9_999_999_999.99;
 
-export interface BotBarcodeInput {
+export interface BOTBarcodeInput {
   /** Cross-bank biller id (Tax ID + suffix). ≤ 15 chars, zero-padded on emit. */
   billerId: string;
   /** Customer / invoice reference. Must be non-empty. */
@@ -40,7 +40,7 @@ export interface BotBarcodeInput {
   amount?: number;
 }
 
-export interface ParsedBotBarcode {
+export interface ParsedBOTBarcode {
   billerId: string;
   ref1: string;
   ref2?: string;
@@ -54,11 +54,11 @@ export interface ParsedBotBarcode {
  * never silently produces an unscannable barcode.
  *
  * @example
- *   buildBotBarcode({ billerId: '099999999999990', ref1: '111222333444' })
+ *   buildBOTBarcode({ billerId: '099999999999990', ref1: '111222333444' })
  *   // → '|099999999999990\r111222333444\r\r0'
  *
  * @example
- *   buildBotBarcode({
+ *   buildBOTBarcode({
  *     billerId: '099400016550100',
  *     ref1: '123456789012',
  *     ref2: '670429',
@@ -66,7 +66,7 @@ export interface ParsedBotBarcode {
  *   })
  *   // → '|099400016550100\r123456789012\r670429\r364922'
  */
-export function buildBotBarcode(input: BotBarcodeInput): string {
+export function buildBOTBarcode(input: BOTBarcodeInput): string {
   const billerId = normaliseBillerId(input.billerId);
   const ref1 = ensureRef('ref1', input.ref1, { allowEmpty: false });
   const ref2 = ensureRef('ref2', input.ref2 ?? '', { allowEmpty: true });
@@ -93,11 +93,11 @@ export function buildBotBarcode(input: BotBarcodeInput): string {
  * and the literal "0" sentinel surfaces as `undefined`.
  *
  * @example
- *   parseBotBarcode('|099999999999990\r111222333444\r\r0')
+ *   parseBOTBarcode('|099999999999990\r111222333444\r\r0')
  *   // → { billerId: '099999999999990', ref1: '111222333444' }
  *
  * @example
- *   parseBotBarcode('|099400016550100\r123456789012\r670429\r364922')
+ *   parseBOTBarcode('|099400016550100\r123456789012\r670429\r364922')
  *   // → {
  *   //     billerId: '099400016550100',
  *   //     ref1: '123456789012',
@@ -105,7 +105,7 @@ export function buildBotBarcode(input: BotBarcodeInput): string {
  *   //     amount: 3649.22,
  *   //   }
  */
-export function parseBotBarcode(barcode: string): ParsedBotBarcode | null {
+export function parseBOTBarcode(barcode: string): ParsedBOTBarcode | null {
   if (typeof barcode !== 'string') return null;
   if (!barcode.startsWith(PAYLOAD_PREFIX)) return null;
 
@@ -122,7 +122,7 @@ export function parseBotBarcode(barcode: string): ParsedBotBarcode | null {
   if (billerId.length < BILLER_ID_LENGTH) return null;
   if (ref1.length === 0) return null;
 
-  const result: ParsedBotBarcode = { billerId, ref1 };
+  const result: ParsedBOTBarcode = { billerId, ref1 };
   if (ref2.length > 0) result.ref2 = ref2;
 
   const amount = decodeAmountField(amountField);

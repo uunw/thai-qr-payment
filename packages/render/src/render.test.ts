@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { encodeQR } from '@thai-qr-payment/qr';
 import { renderCard } from './card.js';
-import { escapeXmlAttribute, matrixToPath, renderQrSvg } from './matrix-svg.js';
-import { renderThaiQrPayment, renderThaiQrPaymentMatrix } from './index.js';
+import { escapeXmlAttribute, matrixToPath, renderQRSvg } from './matrix-svg.js';
+import { renderThaiQRPayment, renderThaiQRPaymentMatrix } from './index.js';
 
-describe('renderQrSvg — structural', () => {
+describe('renderQRSvg — structural', () => {
   it('emits a self-contained SVG with the right viewBox', () => {
     const matrix = encodeQR('TEST', { errorCorrectionLevel: 'M' });
-    const svg = renderQrSvg(matrix);
+    const svg = renderQRSvg(matrix);
     const inner = matrix.size + 8; // default quiet zone = 4 on each side
     expect(svg).toContain(`viewBox="0 0 ${inner} ${inner}"`);
     expect(svg).toContain('<path');
@@ -17,60 +17,60 @@ describe('renderQrSvg — structural', () => {
 
   it('honours transparent background', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { background: 'transparent' });
+    const svg = renderQRSvg(matrix, { background: 'transparent' });
     expect(svg).not.toContain('<rect');
   });
 
   it('emits a background rect by default', () => {
     const matrix = encodeQR('HELLO');
-    expect(renderQrSvg(matrix)).toContain('<rect');
+    expect(renderQRSvg(matrix)).toContain('<rect');
   });
 
   it('honours custom foreground colour', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { foreground: '#0055ff' });
+    const svg = renderQRSvg(matrix, { foreground: '#0055ff' });
     expect(svg).toContain('fill="#0055ff"');
   });
 
   it('honours custom background colour', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { background: '#fafafa' });
+    const svg = renderQRSvg(matrix, { background: '#fafafa' });
     expect(svg).toContain('fill="#fafafa"');
   });
 
   it('honours custom size', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { size: 512 });
+    const svg = renderQRSvg(matrix, { size: 512 });
     expect(svg).toContain('width="512"');
     expect(svg).toContain('height="512"');
   });
 
   it('honours quiet zone of 0', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { quietZone: 0 });
+    const svg = renderQRSvg(matrix, { quietZone: 0 });
     expect(svg).toContain(`viewBox="0 0 ${matrix.size} ${matrix.size}"`);
   });
 
   it('honours larger quiet zone', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { quietZone: 8 });
+    const svg = renderQRSvg(matrix, { quietZone: 8 });
     const inner = matrix.size + 16;
     expect(svg).toContain(`viewBox="0 0 ${inner} ${inner}"`);
   });
 
   it('emits crispEdges shape-rendering for sharp QR modules', () => {
-    expect(renderQrSvg(encodeQR('A'))).toContain('shape-rendering="crispEdges"');
+    expect(renderQRSvg(encodeQR('A'))).toContain('shape-rendering="crispEdges"');
   });
 
   it('appends rootAttributes verbatim to <svg>', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { rootAttributes: { 'data-testid': 'qr-1' } });
+    const svg = renderQRSvg(matrix, { rootAttributes: { 'data-testid': 'qr-1' } });
     expect(svg).toContain('data-testid="qr-1"');
   });
 
   it('escapes special chars in rootAttributes', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderQrSvg(matrix, { rootAttributes: { 'data-x': 'a"b<c>' } });
+    const svg = renderQRSvg(matrix, { rootAttributes: { 'data-x': 'a"b<c>' } });
     expect(svg).toContain('data-x="a&quot;b&lt;c&gt;"');
   });
 });
@@ -273,9 +273,9 @@ describe('renderCard', () => {
   });
 });
 
-describe('renderThaiQrPayment (one-shot)', () => {
+describe('renderThaiQRPayment (one-shot)', () => {
   it('builds payload + encodes + renders', () => {
-    const svg = renderThaiQrPayment({
+    const svg = renderThaiQRPayment({
       recipient: '0812345678',
       amount: 50,
       merchantName: 'Acme Coffee',
@@ -286,17 +286,17 @@ describe('renderThaiQrPayment (one-shot)', () => {
   });
 
   it('renders static QR when amount is omitted', () => {
-    const svg = renderThaiQrPayment({ recipient: '0812345678' });
+    const svg = renderThaiQRPayment({ recipient: '0812345678' });
     expect(svg).toContain('<svg');
   });
 
   it('honours errorCorrectionLevel option', () => {
-    const svgM = renderThaiQrPayment({
+    const svgM = renderThaiQRPayment({
       recipient: '0812345678',
       amount: 50,
       errorCorrectionLevel: 'M',
     });
-    const svgH = renderThaiQrPayment({
+    const svgH = renderThaiQRPayment({
       recipient: '0812345678',
       amount: 50,
       errorCorrectionLevel: 'H',
@@ -305,14 +305,14 @@ describe('renderThaiQrPayment (one-shot)', () => {
   });
 
   it('honours fromSatang flag', () => {
-    const svg1 = renderThaiQrPayment({ recipient: '0812345678', amount: 5000, fromSatang: true });
-    const svg2 = renderThaiQrPayment({ recipient: '0812345678', amount: 50 });
+    const svg1 = renderThaiQRPayment({ recipient: '0812345678', amount: 5000, fromSatang: true });
+    const svg2 = renderThaiQRPayment({ recipient: '0812345678', amount: 50 });
     // Same wire payload regardless of satang vs baht expression of 50.00.
     expect(svg1).toBe(svg2);
   });
 
   it('handles nationalId recipient', () => {
-    const svg = renderThaiQrPayment({
+    const svg = renderThaiQRPayment({
       recipient: '1234567890123',
       recipientType: 'nationalId',
       amount: 50,
@@ -321,26 +321,26 @@ describe('renderThaiQrPayment (one-shot)', () => {
   });
 
   it('produces deterministic output for identical input', () => {
-    const a = renderThaiQrPayment({ recipient: '0812345678', amount: 50 });
-    const b = renderThaiQrPayment({ recipient: '0812345678', amount: 50 });
+    const a = renderThaiQRPayment({ recipient: '0812345678', amount: 50 });
+    const b = renderThaiQRPayment({ recipient: '0812345678', amount: 50 });
     expect(a).toBe(b);
   });
 });
 
-describe('renderThaiQrPaymentMatrix (bare QR helper)', () => {
+describe('renderThaiQRPaymentMatrix (bare QR helper)', () => {
   it('returns just the QR', () => {
-    const svg = renderThaiQrPaymentMatrix({ recipient: '0812345678', amount: 50 });
+    const svg = renderThaiQRPaymentMatrix({ recipient: '0812345678', amount: 50 });
     expect(svg).toContain('<path');
     expect(svg).not.toContain('symbol');
   });
 
   it('honours size parameter', () => {
-    const svg = renderThaiQrPaymentMatrix({ recipient: '0812345678', amount: 50, size: 256 });
+    const svg = renderThaiQRPaymentMatrix({ recipient: '0812345678', amount: 50, size: 256 });
     expect(svg).toContain('width="256"');
   });
 
   it('honours quietZone parameter', () => {
-    const svg = renderThaiQrPaymentMatrix({ recipient: '0812345678', amount: 50, quietZone: 8 });
+    const svg = renderThaiQRPaymentMatrix({ recipient: '0812345678', amount: 50, quietZone: 8 });
     expect(svg).toContain('<svg');
   });
 });
@@ -353,15 +353,15 @@ describe('SVG validity', () => {
     expect((svg.match(/<\/svg>/g) ?? []).length).toBe(1);
   });
 
-  it('renderQrSvg output round-trips through XML-ish heuristic', () => {
-    const svg = renderQrSvg(encodeQR('HELLO'));
+  it('renderQRSvg output round-trips through XML-ish heuristic', () => {
+    const svg = renderQRSvg(encodeQR('HELLO'));
     expect((svg.match(/<svg/g) ?? []).length).toBe(1);
     expect((svg.match(/<\/svg>/g) ?? []).length).toBe(1);
   });
 
   it('all SVGs declare the SVG namespace', () => {
     const a = renderCard(encodeQR('A'));
-    const b = renderQrSvg(encodeQR('A'));
+    const b = renderQRSvg(encodeQR('A'));
     expect(a).toContain('xmlns="http://www.w3.org/2000/svg"');
     expect(b).toContain('xmlns="http://www.w3.org/2000/svg"');
   });

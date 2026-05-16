@@ -7,8 +7,8 @@ import { useMemo, useState } from 'react';
 import {
   payloadFor,
   parsePayload,
-  renderThaiQrPayment,
-  renderThaiQrPaymentMatrix,
+  renderThaiQRPayment,
+  renderThaiQRPaymentMatrix,
   type PromptPayRecipientType,
   type ErrorCorrectionLevel,
 } from 'thai-qr-payment';
@@ -44,12 +44,12 @@ export function QrDemo(): JSX.Element {
       const parsed = parsePayload(wire);
       const svg =
         mode === 'card'
-          ? renderThaiQrPayment({
+          ? renderThaiQRPayment({
               ...opts,
               merchantName: merchant || undefined,
               amountLabel: amt != null ? `฿ ${amt.toFixed(2)}` : undefined,
             })
-          : renderThaiQrPaymentMatrix({ ...opts, size: 320, quietZone: 4 });
+          : renderThaiQRPaymentMatrix({ ...opts, size: 320, quietZone: 4 });
       return { ok: true as const, wire, parsed, svg };
     } catch (err) {
       return { ok: false as const, error: (err as Error).message };

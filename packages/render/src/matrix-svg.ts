@@ -6,10 +6,10 @@
  * Payment payload the path is 1-2 KB before compression.
  */
 
-import type { QrMatrix } from '@thai-qr-payment/qr';
+import type { QRMatrix } from '@thai-qr-payment/qr';
 
 /** Build a path-data string covering every dark module in the matrix. */
-export function matrixToPath(matrix: QrMatrix): string {
+export function matrixToPath(matrix: QRMatrix): string {
   const segments: string[] = [];
   for (let y = 0; y < matrix.size; y += 1) {
     const row = matrix.modules[y];
@@ -31,7 +31,7 @@ export function matrixToPath(matrix: QrMatrix): string {
   return segments.join('');
 }
 
-export interface QrSvgOptions {
+export interface QRSvgOptions {
   /** Output width in user units (px by default). Defaults to module count. */
   size?: number;
   /** Quiet-zone width in modules. EMVCo recommends 4. */
@@ -45,7 +45,7 @@ export interface QrSvgOptions {
 }
 
 /** Render a QR matrix to a self-contained `<svg>` string. */
-export function renderQrSvg(matrix: QrMatrix, options: QrSvgOptions = {}): string {
+export function renderQRSvg(matrix: QRMatrix, options: QRSvgOptions = {}): string {
   const quietZone = toSafeUint(options.quietZone, 4);
   const fg = options.foreground ?? '#000';
   const bg = options.background ?? '#fff';

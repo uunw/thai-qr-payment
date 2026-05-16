@@ -41,7 +41,7 @@ Every other Thai QR library on npm wraps the [`qrcode`](https://www.npmjs.com/pa
     payload package alone.
   </Card>
   <Card title="React-ready" icon="seti:react">
-    `<ThaiQrPayment />` and `<ThaiQrPaymentMatrix />` SSR-safe, peer-dep React.
+    `<ThaiQRPayment />` and `<ThaiQRPaymentMatrix />` SSR-safe, peer-dep React.
   </Card>
   <Card title="CLI included" icon="seti:shell">
     `npx thai-qr-payment 0812345678 --amount 50 -o qr.svg`
@@ -56,9 +56,9 @@ Every other Thai QR library on npm wraps the [`qrcode`](https://www.npmjs.com/pa
 ## Quickstart
 
 <Code
-  code={`import { renderThaiQrPayment } from 'thai-qr-payment';
+  code={`import { renderThaiQRPayment } from 'thai-qr-payment';
 
-const svg = renderThaiQrPayment({
+const svg = renderThaiQRPayment({
 recipient: '0812345678',
 amount: 50,
 merchantName: 'Acme Coffee',

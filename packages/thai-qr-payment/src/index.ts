@@ -6,11 +6,11 @@
  * an `import { payloadFor } from 'thai-qr-payment'` doesn't drag the
  * brand SVGs along. Renderer helpers still work — `@thai-qr-payment/render`
  * imports assets directly at runtime; consumers just don't pay for them
- * unless they actually call `renderThaiQrPayment` / `renderCard`.
+ * unless they actually call `renderThaiQRPayment` / `renderCard`.
  *
- *   import { payloadFor, ThaiQrPaymentBuilder } from 'thai-qr-payment';
+ *   import { payloadFor, ThaiQRPaymentBuilder } from 'thai-qr-payment';
  *   import { encodeQR } from 'thai-qr-payment';
- *   import { renderThaiQrPayment } from 'thai-qr-payment';
+ *   import { renderThaiQRPayment } from 'thai-qr-payment';
  *
  * For explicit access to the brand SVGs reach for the sub-path entry:
  *
@@ -18,7 +18,7 @@
  *
  * Sub-paths exist for every slice so you can drop in only what you need:
  *
- *   import { ThaiQrPaymentBuilder } from 'thai-qr-payment/payload';
+ *   import { ThaiQRPaymentBuilder } from 'thai-qr-payment/payload';
  *   import { encodeQR }            from 'thai-qr-payment/qr';
  *   import { renderCard }          from 'thai-qr-payment/render';
  *   import { COLOR_LOGOS }         from 'thai-qr-payment/assets';

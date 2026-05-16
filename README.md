@@ -47,9 +47,9 @@ pnpm add thai-qr-payment
 ```
 
 ```ts
-import { renderThaiQrPayment } from 'thai-qr-payment';
+import { renderThaiQRPayment } from 'thai-qr-payment';
 
-const svg = renderThaiQrPayment({
+const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
   merchantName: 'Acme Coffee',
@@ -58,7 +58,7 @@ const svg = renderThaiQrPayment({
 });
 ```
 
-Want a tighter dep graph? Reach for the scoped packages instead — `@thai-qr-payment/payload`, `@thai-qr-payment/qr`, `@thai-qr-payment/render`, `@thai-qr-payment/assets`, or `@thai-qr-payment/cli`. Sub-path imports also work: `import { ThaiQrPaymentBuilder } from 'thai-qr-payment/payload'`.
+Want a tighter dep graph? Reach for the scoped packages instead — `@thai-qr-payment/payload`, `@thai-qr-payment/qr`, `@thai-qr-payment/render`, `@thai-qr-payment/assets`, or `@thai-qr-payment/cli`. Sub-path imports also work: `import { ThaiQRPaymentBuilder } from 'thai-qr-payment/payload'`.
 
 **Note:** brand logos (`@thai-qr-payment/assets`) are **not re-exported by the default umbrella entry** — that keeps `import { payloadFor } from 'thai-qr-payment'` at ~3 KB. Grab them via the sub-path when you need them: `import { COLOR_LOGOS } from 'thai-qr-payment/assets'`. The renderer helpers still work without changes — they reach for the assets internally on demand.
 
@@ -69,8 +69,8 @@ Skip the bundler — load straight from a CDN. Pre-compressed `.br` + `.gz` file
 ```html
 <!-- unpkg -->
 <script type="module">
-  import { renderThaiQrPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
-  document.body.innerHTML = renderThaiQrPayment({ recipient: '0812345678', amount: 50 });
+  import { renderThaiQRPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
+  document.body.innerHTML = renderThaiQRPayment({ recipient: '0812345678', amount: 50 });
 </script>
 
 <!-- JSDelivr -->

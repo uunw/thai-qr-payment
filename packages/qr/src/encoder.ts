@@ -31,7 +31,7 @@ export interface EncodeOptions {
   forceMask?: number;
 }
 
-export interface QrMatrix {
+export interface QRMatrix {
   readonly size: number;
   readonly modules: boolean[][];
   readonly version: number;
@@ -119,7 +119,7 @@ function pickVersion(
  * The returned matrix is a square 2-D boolean array (`true` = dark
  * module). Render with any output (SVG, canvas, PNG, terminal).
  */
-export function encodeQR(text: string, options: EncodeOptions = {}): QrMatrix {
+export function encodeQR(text: string, options: EncodeOptions = {}): QRMatrix {
   const ecc = options.errorCorrectionLevel ?? 'M';
   const minVersion = options.minVersion ?? 1;
   const maxVersion = options.maxVersion ?? 40;

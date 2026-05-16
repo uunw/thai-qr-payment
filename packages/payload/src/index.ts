@@ -6,18 +6,18 @@
  * runtimes (Cloudflare Workers, Vercel Edge, Netlify, Deno Deploy).
  */
 
-export { ThaiQrPaymentBuilder } from './builder.js';
-export type { AdditionalDataFields, MerchantInfo, TipMode, VatTqrcInput } from './builder.js';
+export { ThaiQRPaymentBuilder } from './builder.js';
+export type { AdditionalDataFields, MerchantInfo, TipMode, VATTQRCInput } from './builder.js';
 
 export { parsePayload } from './parser.js';
 export type {
   ParsedAdditionalData,
   ParsedBillPayment,
-  ParsedCrc,
+  ParsedCRC,
   ParsedPayload,
   ParsedPromptPay,
   ParsedTrueMoney,
-  ParsedVatTqrc,
+  ParsedVATTQRC,
   ParsePayloadOptions,
 } from './parser.js';
 
@@ -44,15 +44,15 @@ export type {
   TrueMoneySlipVerifyInput,
 } from './slip-verify.js';
 
-export { buildBotBarcode, parseBotBarcode } from './barcode.js';
-export type { BotBarcodeInput, ParsedBotBarcode } from './barcode.js';
+export { buildBOTBarcode, parseBOTBarcode } from './barcode.js';
+export type { BOTBarcodeInput, ParsedBOTBarcode } from './barcode.js';
 
 export { encodeField, encodeFields, parseFields, iterateFields } from './tlv.js';
-export type { TlvField } from './tlv.js';
+export type { TLVField } from './tlv.js';
 
 export * as Tags from './tags.js';
 
-import { ThaiQrPaymentBuilder } from './builder.js';
+import { ThaiQRPaymentBuilder } from './builder.js';
 import type { PromptPayRecipientType } from './recipient.js';
 import type { FormatAmountOptions } from './amount.js';
 
@@ -71,7 +71,7 @@ export function payloadFor(input: {
   fromSatang?: boolean;
 }): string {
   const opts: FormatAmountOptions | undefined = input.fromSatang ? { fromSatang: true } : undefined;
-  return new ThaiQrPaymentBuilder()
+  return new ThaiQRPaymentBuilder()
     .promptpay(input.recipient, input.type)
     .amount(input.amount, opts)
     .build();
