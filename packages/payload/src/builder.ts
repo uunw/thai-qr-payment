@@ -326,14 +326,10 @@ export class ThaiQrPaymentBuilder {
       );
     }
     if (input.vatRate != null && (input.vatRate.length < 1 || input.vatRate.length > 5)) {
-      throw new RangeError(
-        `VAT TQRC vatRate must be 1–5 chars (got ${input.vatRate.length})`,
-      );
+      throw new RangeError(`VAT TQRC vatRate must be 1–5 chars (got ${input.vatRate.length})`);
     }
     if (input.vatAmount.length < 1 || input.vatAmount.length > 13) {
-      throw new RangeError(
-        `VAT TQRC vatAmount must be 1–13 chars (got ${input.vatAmount.length})`,
-      );
+      throw new RangeError(`VAT TQRC vatAmount must be 1–13 chars (got ${input.vatAmount.length})`);
     }
     this.vat = { ...input };
     return this;

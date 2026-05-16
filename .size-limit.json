@@ -15,7 +15,7 @@
     "name": "thai-qr-payment (payload sub-path entry)",
     "path": "packages/thai-qr-payment/dist/payload.js",
     "import": "*",
-    "limit": "5 KB"
+    "limit": "6 KB"
   },
   {
     "name": "thai-qr-payment (qr sub-path entry)",
@@ -27,13 +27,13 @@
     "name": "@thai-qr-payment/payload",
     "path": "packages/payload/dist/index.js",
     "import": "*",
-    "limit": "5 KB"
+    "limit": "6 KB"
   },
   {
     "name": "@thai-qr-payment/payload (payloadFor only)",
     "path": "packages/payload/dist/index.js",
     "import": "{ payloadFor }",
-    "limit": "5 KB"
+    "limit": "6 KB"
   },
   {
     "name": "@thai-qr-payment/qr",

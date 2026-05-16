@@ -7,7 +7,7 @@
  */
 
 export { ThaiQrPaymentBuilder } from './builder.js';
-export type { AdditionalDataFields, MerchantInfo, TipMode } from './builder.js';
+export type { AdditionalDataFields, MerchantInfo, TipMode, VatTqrcInput } from './builder.js';
 
 export { parsePayload } from './parser.js';
 export type {
@@ -17,10 +17,11 @@ export type {
   ParsedPayload,
   ParsedPromptPay,
   ParsedTrueMoney,
+  ParsedVatTqrc,
   ParsePayloadOptions,
 } from './parser.js';
 
-export { normaliseRecipient } from './recipient.js';
+export { normaliseBankAccount, normaliseRecipient } from './recipient.js';
 export type { NormalisedRecipient, PromptPayRecipientType } from './recipient.js';
 
 export { formatAmount } from './amount.js';
