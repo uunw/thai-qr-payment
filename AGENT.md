@@ -49,18 +49,18 @@ Each `packages/*/` has its own `rspack.config.ts`, `tsconfig.json`, `vitest.conf
 
 ## Tooling stack (don't substitute without permission)
 
-| Concern       | Tool                                | Version                   |
-| ------------- | ----------------------------------- | ------------------------- |
-| Bundle        | rspack + builtin:swc-loader         | ^2.0                      |
-| Bundle target | `target: ['web', 'es2022']`         | —                         |
-| Format        | **oxfmt** (NOT prettier or biome)   | ^0.48                     |
-| Lint          | **oxlint** (NOT eslint)             | ^1.63                     |
-| Type-check    | TypeScript composite project refs   | ^6.0                      |
-| Tests         | **Vitest**                          | ^4.1                      |
-| Versioning    | Changesets (linked across packages) | ^2.31                     |
-| Monorepo      | pnpm workspaces + Turborepo         | pnpm 10.33.x / turbo ^2.9 |
-| Bundle budget | size-limit + @size-limit/esbuild    | ^12.1                     |
-| Pre-commit    | husky + lint-staged + commitlint    | husky ^9                  |
+| Concern       | Tool                                                                         | Version                   |
+| ------------- | ---------------------------------------------------------------------------- | ------------------------- |
+| Bundle        | rspack + builtin:swc-loader                                                  | ^2.0                      |
+| Bundle target | `target: ['web', 'es2022']`                                                  | —                         |
+| Format        | **oxfmt** (NOT prettier or biome)                                            | ^0.48                     |
+| Lint          | **oxlint** (NOT eslint)                                                      | ^1.63                     |
+| Type-check    | TypeScript composite project refs                                            | ^6.0                      |
+| Tests         | **Vitest**                                                                   | ^4.1                      |
+| Versioning    | Changesets (`fixed` across packages — every release bumps all 7 in lockstep) | ^2.31                     |
+| Monorepo      | pnpm workspaces + Turborepo                                                  | pnpm 10.33.x / turbo ^2.9 |
+| Bundle budget | size-limit + @size-limit/esbuild                                             | ^12.1                     |
+| Pre-commit    | husky + lint-staged + commitlint                                             | husky ^9                  |
 
 **Notes:**
 
@@ -211,14 +211,14 @@ Pre-compressed `.br` + `.gz` ship inside every published package's `dist/`. CDNs
 
 | Where   | What                             | Version                                                      |
 | ------- | -------------------------------- | ------------------------------------------------------------ |
-| npm     | `thai-qr-payment` (umbrella)     | 0.1.4                                                        |
-| npm     | `@thai-qr-payment/payload`       | 0.1.3                                                        |
-| npm     | `@thai-qr-payment/qr`            | 0.1.3                                                        |
-| npm     | `@thai-qr-payment/render`        | 0.1.4                                                        |
-| npm     | `@thai-qr-payment/assets`        | 0.1.3                                                        |
-| npm     | `@thai-qr-payment/react`         | 0.1.3                                                        |
-| npm     | `@thai-qr-payment/cli`           | 0.1.3                                                        |
-| Docs    | <https://thai-qr-payment.js.org> | Astro Starlight, 14 pages, served via js.org → CF → GH Pages |
+| npm     | `thai-qr-payment` (umbrella)     | 1.0.0                                                        |
+| npm     | `@thai-qr-payment/payload`       | 1.0.0                                                        |
+| npm     | `@thai-qr-payment/qr`            | 1.0.0                                                        |
+| npm     | `@thai-qr-payment/render`        | 1.0.0                                                        |
+| npm     | `@thai-qr-payment/assets`        | 1.0.0                                                        |
+| npm     | `@thai-qr-payment/react`         | 1.0.0                                                        |
+| npm     | `@thai-qr-payment/cli`           | 1.0.0                                                        |
+| Docs    | <https://thai-qr-payment.js.org> | Astro Starlight, 16 pages, served via js.org → CF → GH Pages |
 | GitHub  | `uunw/thai-qr-payment`           | public, default branch `main`                                |
 | npm org | `thai-qr-payment`                | free tier (created 2026-05-12)                               |
 
@@ -226,6 +226,7 @@ All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagg
 
 ## Migration history (what's been bumped)
 
+- **Commits `7ae8f9d` + `5a5a62e` + manual dist-tag reset + `e65ca90` → published v1.0.0 (all 7 packages, with 2.0.0 + 3.0.0 ghost versions stranded)** (2026-05-16): Two rounds of feature work shipped seven new wire-format surfaces (`parsePayload({ strict })`, truncated-CRC auto-fix, raw-tag accessors, `.trueMoney()`, `.bankAccount()`, `.ota()`, `.vatTqrc()`, `.billPayment({ crossBorder })`, plus Slip Verify Mini-QR, TrueMoney Slip Verify, BOT 1D barcode). Docs site grew to 16 pages with new guide pages for slip-verify + barcode and an updated reference/spec table covering tag 80 + the new sub-tags. Tests: payload package 290 → 337 + new modules (28 slip-verify + 42 barcode + 7 message codec). Bundle: 5.37 KB brotli payload, 22.42 KB umbrella. **Versions then went chaotic** — see the "linked-changesets cascade" landmine below; final state is all seven packages aligned at 1.0.0 via `npm dist-tag` + a manual qr/assets publish, with 2.0.0 / 3.0.0 left on the registry as un-unpublishable ghosts. Changesets config switched from `linked` → `fixed` to lock future releases in lockstep.
 - **Commits `ba9e8e8` + `7d07f64` → published v0.1.3 (all 7 packages) + v0.1.4 (`thai-qr-payment` + `@thai-qr-payment/render`)** (2026-05-15): Docs site moved from `https://uunw.github.io/thai-qr-payment/` to `https://thai-qr-payment.js.org` (js.org subdomain merged in [js-org/js.org#11306](https://github.com/js-org/js.org/pull/11306)); `astro.config.mjs` dropped its `/thai-qr-payment` base path; every package.json `homepage` repointed at the new domain (sub-packages link to `/guide/<name>/`). rspack configs now ship `.js.map` sourcemaps (`devtool: 'source-map'`) and keep original function/class names through SWC minification (`mangle: { keep_classnames: true, keep_fnames: true }`) — published bundles are now traceable to source and no longer trip Socket's "Obfuscated code" supply-chain alert. `renderQrSvg()` numeric attributes (`size`, `quietZone`, `matrix.size`) routed through a `toSafeUint()` finite-non-negative-integer guard before HTML interpolation — closes 7 CodeQL `js/html-constructed-from-input` alerts on `packages/render/src/matrix-svg.ts`. Bundle sizes unchanged (umbrella 20.82 KB / 25 KB budget).
 - **Commits `c3b199d` + `c46857d` → published v0.1.2** (2026-05-13): Brand-spec card redesign — full-width navy header strip, TQR Maximum Blue (`#00427A`) unified across `Thai_QR_Payment_Logo-01.svg` (replacing vtracer's `#0e3d67` + six auxiliary shades), `PromptPay2` (navy) is now the default sub-mark for `theme: 'color'` shipped as an embedded PNG inside an SVG `<image>` wrapper, QR fill decoupled from accent via new `qrColor` option (defaults to `#000000` for scanner contrast). CI matrix bumped to Node 22 + 24 because the Astro docs build needs Node >= 22.12.
 - **Commit `e4af92f` → published v0.1.1** (2026-05-12): Critical fix — `alignmentCentres()` for QR v2-v40 was returning wrong positions, every scanner rejected the output as "invalid QR". The published v0.1.0 had this bug. Verified post-fix by round-tripping every (version, ECC, mask) combo through `jsQR`.
@@ -261,13 +262,17 @@ All packages signed with **provenance** via Sigstore (GitHub Actions OIDC). Tagg
 - **rspack/swc default `mangle: true` triggers Socket "Obfuscated code" supply-chain alert.** SWC's `SwcJsMinimizerRspackPlugin` with `mangle: true` renames every function and class to single letters; Socket flags this as obfuscation regardless of intent. Two-line fix per `rspack.config.ts`: `devtool: 'source-map'` + `mangle: { keep_classnames: true, keep_fnames: true }`. Bundle size impact is negligible (umbrella 20.82 KB on a 25 KB budget). Published `.tgz` now ships `.js.map` next to every entrypoint — set in commit `ba9e8e8`.
 - **CodeQL `js/html-constructed-from-input` flags numeric values too, not just strings.** Even integers from a typed options object trigger the alert when interpolated into HTML attributes (`width="${size}"`). TypeScript types don't enforce at runtime, so JS callers can still pass `NaN` / `Infinity` / strings. Coerce through `Number.isFinite` + `Math.floor` + non-negative gate at the renderer boundary; CodeQL recognises this as a sanitizer barrier and the alerts auto-close on the next scan. Pattern in `packages/render/src/matrix-svg.ts toSafeUint()`.
 - **js.org PR validator demands the EXACT template — paraphrasing or reordering kills the bot check.** The `jsorg-validation` GitHub Action greps the PR description for literal phrases from `PULL_REQUEST_TEMPLATE.md`; missing-checkbox / missing-content-URL / wrong-format errors all surface as "PR description validation failed". Fetch the template raw (`curl https://raw.githubusercontent.com/js-org/js.org/master/PULL_REQUEST_TEMPLATE.md`) and edit only the fillable bits. Once the bot passes, MattIPv4 reviews → indus / a maintainer merges (turnaround was ~30 min for #11306 after the description fix).
+- **Changesets `linked` cascades into runaway major bumps when a tag-along package lacks a changeset.** With seven packages in one `linked` array, a `minor` changeset that lists only two of them will bump those two AND auto-promote the other five — **but only the linked siblings already at the same version**. Stragglers stay put. The next round trying to "catch up" the straggler then has to bump the entire family past its current peak, so what should have been `0.1.x → 0.2.0` overshot to `1.0.0`, then to `2.0.0`, then to `3.0.0` over three release cycles before we manually reset with `npm dist-tag add latest=1.0.0`. The 2.x and 3.x versions are still on the registry as ghosts — npm policy blocks `npm unpublish` for any version with registry dependents (and our cross-package devDeps trigger that check even after the dependents were unpublished, because the registry's dependent-counter lags). **Permanent fix**: changesets config now uses `fixed` instead of `linked`. `fixed` forces every package in the array to bump together every release whether or not it has a changeset, so no straggler can ever drift. Trade-off: every release publishes all seven packages even when only one changed — slightly noisier release log, but no more cascades. If you ever need to deviate (e.g. patch one package without touching the others), temporarily drop it out of `fixed` for that release.
+- **`npm unpublish` is blocked for any version with registry dependents — including transitive devDependency edges from already-unpublished packages.** Trying to remove `@thai-qr-payment/cli@3.0.0` returned `E405 has dependent packages in the registry` even after the only candidate dependent (umbrella `thai-qr-payment@3.0.0`) was already gone. The registry's dependent-counter lags by an indefinite amount and may never refresh. Don't plan recoveries around `unpublish`; rely on `npm dist-tag add <pkg>@<good-version> latest` to redirect installs, and accept the ghost versions stay live forever for anyone explicitly pinned.
+- **Granular `bypass 2FA` token is required for any non-OTP npm write operation, even with 2FA disabled on the account.** `npm profile set tfa disabled` removes the OTP prompt from `npm login` but does NOT remove it from `npm publish` / `npm unpublish` / `npm dist-tag` — the registry still returns `E403 Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages`. Real path: create a Granular Access Token at <https://www.npmjs.com/settings/uunw/tokens/new> with `Bypass 2FA` checked, export it as `NPM_CONFIG_USERCONFIG=/tmp/npmrc` pointing at a file with `//registry.npmjs.org/:_authToken=npm_…`, do the batch, then revoke immediately. The token is invisible to `npm token list` (CLI only sees classic tokens) so revocation has to go through the web UI.
+- **Manual `npm publish` from local needs `--provenance=false` even though `package.json` has `publishConfig.provenance: true`.** The provenance attestation comes from a GitHub Actions OIDC token — locally there's no provider, so the CLI errors with `EUSAGE Automatic provenance generation not supported for provider: null`. Override per-call with `--provenance=false` or globally with `NPM_CONFIG_PROVENANCE=false`. The CI path (`.github/workflows/release.yml`) always has the OIDC token, so leave the `publishConfig.provenance: true` in `package.json` and only override on local fire-drill publishes.
 
 ## Adding a new package
 
 1. Mkdir `packages/<name>/src/`, copy `tsconfig.json` from a sibling, write `package.json` with `workspace:^` deps + canonical key order (use `scripts/patch-package-meta.mjs` to enforce metadata)
 2. Add a `rspack.config.ts` mirroring the closest sibling
 3. Add to `tsconfig.json` (root) `references` array
-4. Add to `.changeset/config.json` `linked` array if it should version together
+4. Add to `.changeset/config.json` `fixed` array (NOT `linked` — see "linked cascades into runaway major bumps" landmine) so it tracks the family version
 5. `pnpm install` to wire workspace links
 6. Write tests in `src/*.test.ts`
 7. `pnpm build && pnpm test` to verify
