@@ -16,3 +16,6 @@ pnpm test
 
 echo "→ pnpm exec oxlint packages/*/src"
 pnpm exec oxlint packages/*/src
+
+echo "→ pnpm format:check"
+pnpm format:check
