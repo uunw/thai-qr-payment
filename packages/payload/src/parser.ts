@@ -42,6 +42,9 @@ import {
   SUB_PROMPTPAY_MOBILE,
   SUB_PROMPTPAY_NATIONAL_ID,
   SUB_TRUE_MONEY,
+  SUB_VAT_AMOUNT,
+  SUB_VAT_RATE,
+  SUB_VAT_SELLER_TAX_BRANCH_ID,
   TAG_ADDITIONAL_DATA,
   TAG_CHECKSUM,
   TAG_COUNTRY_CODE,
@@ -56,6 +59,7 @@ import {
   TAG_POSTAL_CODE,
   TAG_TRANSACTION_AMOUNT,
   TAG_TRANSACTION_CURRENCY,
+  TAG_VAT_TQRC,
   TRUE_MONEY_PREFIX,
 } from './tags.js';
 import { iterateFields, parseFields, type TlvField } from './tlv.js';
@@ -91,6 +95,13 @@ export interface ParsedAdditionalData {
   consumerDataRequest?: string;
 }
 
+/** Decoded VAT TQRC template (tag 80). */
+export interface ParsedVatTqrc {
+  readonly sellerTaxBranchId: string;
+  readonly vatRate?: string;
+  readonly vatAmount: string;
+}
+
 /** Bookkeeping for the trailing checksum — useful when reporting auto-fix. */
 export interface ParsedCrc {
   /** The CRC text as it appeared on the wire (may be 1–4 chars). */
@@ -113,6 +124,7 @@ export interface ParsedPayload {
   readonly merchantCategoryCode?: string;
   readonly postalCode?: string;
   readonly additionalData?: ParsedAdditionalData;
+  readonly vatTqrc?: ParsedVatTqrc;
   readonly crc: ParsedCrc;
   /** All top-level TLV fields, in wire order. Use for unknown / future tags. */
   readonly rawTags: readonly TlvField[];
@@ -210,6 +222,22 @@ function parseAdditionalDataTemplate(template: string): ParsedAdditionalData {
     purposeOfTransaction: sub.get(SUB_ADD_PURPOSE_OF_TRANSACTION),
     consumerDataRequest: sub.get(SUB_ADD_CONSUMER_DATA_REQUEST),
   };
+}
+
+/**
+ * Parse the VAT TQRC template (tag 80). Returns `null` when the required
+ * `vatAmount` sub-tag (02) is absent — callers in strict mode escalate
+ * that to an exception, lax callers surface it as `vatTqrc: undefined`.
+ */
+function parseVatTqrcTemplate(template: string): ParsedVatTqrc | null {
+  const sub = parseFields(template);
+  const sellerTaxBranchId = sub.get(SUB_VAT_SELLER_TAX_BRANCH_ID);
+  const vatAmount = sub.get(SUB_VAT_AMOUNT);
+  if (sellerTaxBranchId == null || vatAmount == null) return null;
+  const vatRate = sub.get(SUB_VAT_RATE);
+  return vatRate != null
+    ? { sellerTaxBranchId, vatRate, vatAmount }
+    : { sellerTaxBranchId, vatAmount };
 }
 
 /**
@@ -320,6 +348,15 @@ export function parsePayload(payload: string, options: ParsePayloadOptions = {})
 
   const amountText = root.get(TAG_TRANSACTION_AMOUNT);
   const additional = root.get(TAG_ADDITIONAL_DATA);
+  const vatTemplate = root.get(TAG_VAT_TQRC);
+  let vatTqrc: ParsedVatTqrc | undefined;
+  if (vatTemplate != null) {
+    const decoded = parseVatTqrcTemplate(vatTemplate);
+    if (decoded == null && strict) {
+      throw new Error('VAT TQRC template is missing required sub-tags');
+    }
+    vatTqrc = decoded ?? undefined;
+  }
 
   const result: ParsedPayload = {
     payloadFormat: root.get(TAG_PAYLOAD_FORMAT) ?? '',
@@ -333,6 +370,7 @@ export function parsePayload(payload: string, options: ParsePayloadOptions = {})
     merchantCategoryCode: root.get(TAG_MERCHANT_CATEGORY_CODE),
     postalCode: root.get(TAG_POSTAL_CODE),
     additionalData: additional != null ? parseAdditionalDataTemplate(additional) : undefined,
+    vatTqrc,
     crc,
     rawTags,
     getTag(id: string): TlvField | undefined {

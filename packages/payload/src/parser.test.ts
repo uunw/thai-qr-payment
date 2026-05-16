@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ThaiQrPaymentBuilder } from './builder.js';
+import { checksum } from './crc.js';
 import { parsePayload } from './parser.js';
 
 describe('parsePayload — happy paths', () => {
@@ -368,6 +369,59 @@ describe('parsePayload — TrueMoney decoding', () => {
     const wire = new ThaiQrPaymentBuilder().promptpay('012345678901234').build();
     const parsed = parsePayload(wire);
     expect(parsed.merchant?.kind).toBe('promptpay');
+  });
+});
+
+describe('parsePayload — VAT TQRC decoding', () => {
+  it('round-trips all three VAT sub-fields', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .amount(107)
+      .vatTqrc({ sellerTaxBranchId: '0001', vatRate: '7', vatAmount: '7.00' })
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.vatTqrc).toEqual({
+      sellerTaxBranchId: '0001',
+      vatRate: '7',
+      vatAmount: '7.00',
+    });
+  });
+
+  it('round-trips with only the required sellerTaxBranchId + vatAmount', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .vatTqrc({ sellerTaxBranchId: '0001', vatAmount: '7.00' })
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.vatTqrc).toEqual({ sellerTaxBranchId: '0001', vatAmount: '7.00' });
+    expect(parsed.vatTqrc?.vatRate).toBeUndefined();
+  });
+
+  it('returns vatTqrc = undefined when tag 80 is absent', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    expect(parsePayload(wire).vatTqrc).toBeUndefined();
+  });
+
+  it('returns vatTqrc = undefined in lax mode when sub-tag 02 is missing', () => {
+    // Hand-build a payload whose tag 80 only carries sub-tag 00 — i.e.
+    // a malformed VAT block. CRC must still validate so the parser
+    // reaches the VAT decode step.
+    const seedPayload = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const body = seedPayload.slice(0, -8); // strip 6304XXXX
+    // Inject malformed tag 80: only sub-tag 00 present (no 02).
+    const malformedTag80 = '800800040001';
+    const seed = body + malformedTag80 + '6304';
+    const wire = seed + checksum(seed);
+    expect(parsePayload(wire).vatTqrc).toBeUndefined();
+  });
+
+  it('throws in strict mode when sub-tag 02 is missing', () => {
+    const seedPayload = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const body = seedPayload.slice(0, -8);
+    const malformedTag80 = '800800040001';
+    const seed = body + malformedTag80 + '6304';
+    const wire = seed + checksum(seed);
+    expect(() => parsePayload(wire, { strict: true })).toThrow(/VAT TQRC/);
   });
 });
 
