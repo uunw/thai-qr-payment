@@ -36,7 +36,7 @@ const typeDocInstances = packages.map(({ name, dir }) => {
         excludePrivate: true,
         readme: 'none',
         gitRevision: 'main',
-        sourceLinkTemplate: `https://github.com/uunw/thai-qr-payment/blob/main/packages/${name}/{path}#L{line}`,
+        sourceLinkTemplate: `https://github.com/uunw/thai-qr-payment/blob/main/{path}#L{line}`,
       },
     }),
     sidebarGroup: typeDocSidebarGroup,
