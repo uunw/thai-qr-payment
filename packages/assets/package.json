@@ -1,6 +1,6 @@
 {
   "name": "@thai-qr-payment/assets",
-  "version": "4.0.0",
+  "version": "1.1.0",
   "description": "SVG brand assets (Thai QR Payment logo + PromptPay logo) for the @thai-qr-payment ecosystem. Each mark ships as both a color-preserved SVG and a monochrome silhouette.",
   "keywords": [
     "assets",

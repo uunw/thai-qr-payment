@@ -65,7 +65,9 @@
     "release": "turbo run build && changeset publish",
     "size": "size-limit",
     "size:why": "size-limit --why",
-    "prepare": "husky"
+    "prepare": "husky",
+    "release:patch": "node scripts/release.mjs patch",
+    "release:minor": "node scripts/release.mjs minor"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",
