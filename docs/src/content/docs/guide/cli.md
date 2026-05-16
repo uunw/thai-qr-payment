@@ -6,17 +6,34 @@ description: thai-qr-payment / tqp command-line tool for one-off QR generation.
 ![Sample CLI output card](/img/samples/qr-card-hero.svg)
 
 ```bash
-# Zero-install — npx
+# Zero-install — npx (umbrella package, single tarball)
 npx thai-qr-payment 0812345678 --amount 50 -o qr.svg
+npx tqp 0812345678 --amount 50 -o qr.svg
 
 # Global install
 pnpm add -g thai-qr-payment
 thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
 tqp 0812345678 --format payload
-
-# CLI-only (skips the library)
-npx @thai-qr-payment/cli 0812345678 --amount 50
 ```
+
+### npx + scoped CLI package
+
+`@thai-qr-payment/cli` exposes the same two binaries (`thai-qr-payment` and `tqp`), but the **binary names don't match the package name**. npx can't auto-resolve `@thai-qr-payment/cli` to a binary called `thai-qr-payment`, so `npx @thai-qr-payment/cli 0812345678` fails with `command not found`. Pass the binary name explicitly via `--package`:
+
+```bash
+# Wrong — npx looks for a `@thai-qr-payment/cli` binary, finds none
+npx @thai-qr-payment/cli 0812345678 --amount 50
+# → sh: thai-qr-payment: command not found
+
+# Right — use the umbrella (recommended, single tarball)
+npx thai-qr-payment 0812345678 --amount 50
+
+# Right — scoped CLI with --package
+npx --package=@thai-qr-payment/cli thai-qr-payment 0812345678 --amount 50
+npx --package=@thai-qr-payment/cli tqp 0812345678 --amount 50
+```
+
+The umbrella is preferred (one tarball, all deps inlined). Reach for the scoped CLI only if you're pinning specific package versions in an automation script.
 
 ## Modes
 

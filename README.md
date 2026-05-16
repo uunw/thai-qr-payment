@@ -105,17 +105,22 @@ Self-hosting? Serve the `.br` / `.gz` variants directly when the request's `Acce
 ## CLI
 
 ```bash
-# Zero-install one-off
+# Zero-install one-off (umbrella package — recommended)
 npx thai-qr-payment 0812345678 --amount 50 -o qr.svg
+npx tqp 0812345678 --amount 50 -o qr.svg
 
 # Global install
 pnpm add -g thai-qr-payment
 thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
 tqp 0812345678 --format payload
-
-# CLI-only (skips the lib)
-npx @thai-qr-payment/cli 0812345678 --amount 50
 ```
+
+> **`npx @thai-qr-payment/cli …` fails with `command not found`.** The scoped CLI package ships the same binaries (`thai-qr-payment` + `tqp`) but the binary names don't match the scoped package name, so npx can't auto-resolve. Use the umbrella above, or pass the binary explicitly:
+>
+> ```bash
+> npx --package=@thai-qr-payment/cli thai-qr-payment 0812345678 --amount 50
+> npx --package=@thai-qr-payment/cli tqp 0812345678 --amount 50
+> ```
 
 ## Spec coverage
 
