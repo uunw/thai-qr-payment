@@ -34,6 +34,8 @@ export const SUB_GUID = '00';
 export const SUB_PROMPTPAY_MOBILE = '01';
 export const SUB_PROMPTPAY_NATIONAL_ID = '02';
 export const SUB_PROMPTPAY_EWALLET = '03';
+export const SUB_PROMPTPAY_BANK_ACCOUNT = '04';
+export const SUB_PROMPTPAY_OTA = '05';
 
 // ── TrueMoney Wallet (also under tag 29, shares the PromptPay AID) ─────
 // Distinguished from PromptPay e-wallet by the literal "14" prefix in
@@ -66,6 +68,10 @@ export const CURRENCY_THB = '764';
 export const COUNTRY_TH = 'TH';
 export const GUID_PROMPTPAY = 'A000000677010111';
 export const GUID_BILL_PAYMENT = 'A000000677010112';
+// One-Time Authorization rides the PromptPay envelope but swaps the AID
+// so scanners can distinguish a single-use credit transfer from a
+// repeatable PromptPay payment.
+export const GUID_PROMPTPAY_OTA = 'A000000677010114';
 
 // ── Tip handling ────────────────────────────────────────────────────────
 export const TIP_PROMPT = '01';
