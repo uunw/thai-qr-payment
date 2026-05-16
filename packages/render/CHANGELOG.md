@@ -1,5 +1,13 @@
 # @thai-qr-payment/render
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`6107d73`](https://github.com/uunw/thai-qr-payment/commit/6107d73603d1895bb39e6ac1f78c544aca406ee2)]:
+  - @thai-qr-payment/qr@2.0.0
+  - @thai-qr-payment/assets@2.0.0
+
 ## 1.0.0
 
 ### Patch Changes
