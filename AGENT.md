@@ -137,7 +137,7 @@ Auto-installed via `prepare: husky` script.
 | ------------------- | ------------------------------------------------------------------------- | -------- |
 | `.husky/pre-commit` | `lint-staged` (oxfmt + oxlint --fix on staged files) + `pnpm check-types` | ~3 s     |
 | `.husky/commit-msg` | `commitlint` Conventional Commits validate                                | <100 ms  |
-| `.husky/pre-push`   | `check-types` + `build` + `test` + `oxlint` (full suite)                  | ~10-20 s |
+| `.husky/pre-push`   | `check-types` + `build` + `test` + `oxlint` + `format:check` (full suite) | ~10-20 s |
 
 Bypass any: `--no-verify`. Use sparingly.
 
