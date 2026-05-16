@@ -72,6 +72,11 @@ export const GUID_BILL_PAYMENT = 'A000000677010112';
 // so scanners can distinguish a single-use credit transfer from a
 // repeatable PromptPay payment.
 export const GUID_PROMPTPAY_OTA = 'A000000677010114';
+// Cross-border bill payment shares tag 30 with the domestic variant but
+// flags itself with a distinct AID so scanners route the payload through
+// the ASEAN remittance rails (PayNow/DuitNow/QRIS interop) instead of the
+// local PromptPay biller switch.
+export const GUID_BILL_PAYMENT_CROSS_BORDER = 'A000000677012006';
 
 // ── Tip handling ────────────────────────────────────────────────────────
 export const TIP_PROMPT = '01';

@@ -26,6 +26,7 @@ import {
   COUNTRY_TH,
   CURRENCY_THB,
   GUID_BILL_PAYMENT,
+  GUID_BILL_PAYMENT_CROSS_BORDER,
   GUID_PROMPTPAY,
   GUID_PROMPTPAY_OTA,
   PAYLOAD_FORMAT_VERSION,
@@ -235,10 +236,27 @@ export class ThaiQrPaymentBuilder {
     return this;
   }
 
-  /** Configure a BillPayment recipient (Cross-Bank BillPayment / R-Bill). */
-  billPayment(input: { billerId: string; reference1?: string; reference2?: string }): this {
+  /**
+   * Configure a BillPayment recipient (Cross-Bank BillPayment / R-Bill).
+   *
+   * Pass `crossBorder: true` to emit the ASEAN-region remittance AID
+   * (`A000000677012006`) instead of the domestic one (`A000000677010112`).
+   * The template layout is otherwise identical — same sub-tags, same
+   * value rules. Pair with the `purposeOfTransaction` additional-data
+   * field (tag 62 sub-tag 08), which carries an 18-char triple in this
+   * mode: currencyCode (3 digits) + localAmount (13 digits) +
+   * countryCode (2 digits). The builder treats that field as opaque;
+   * compose / parse the triple at the call site.
+   */
+  billPayment(input: {
+    billerId: string;
+    reference1?: string;
+    reference2?: string;
+    crossBorder?: boolean;
+  }): this {
+    const aid = input.crossBorder === true ? GUID_BILL_PAYMENT_CROSS_BORDER : GUID_BILL_PAYMENT;
     const template = encodeFields([
-      [SUB_GUID, GUID_BILL_PAYMENT],
+      [SUB_GUID, aid],
       [SUB_BILL_BILLER_ID, input.billerId],
       [SUB_BILL_REFERENCE_1, input.reference1],
       [SUB_BILL_REFERENCE_2, input.reference2],
