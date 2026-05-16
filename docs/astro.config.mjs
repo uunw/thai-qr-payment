@@ -124,6 +124,27 @@ export default defineConfig({
           collapsed: false,
           items: typeDocInstances.map((t) => t.sidebarGroup),
         },
+        {
+          label: 'For LLMs',
+          collapsed: true,
+          items: [
+            {
+              label: 'llms.txt — index',
+              link: '/llms.txt',
+              attrs: { target: '_blank', rel: 'noopener' },
+            },
+            {
+              label: 'llms-full.txt — full docs',
+              link: '/llms-full.txt',
+              attrs: { target: '_blank', rel: 'noopener' },
+            },
+            {
+              label: 'llms-small.txt — abridged',
+              link: '/llms-small.txt',
+              attrs: { target: '_blank', rel: 'noopener' },
+            },
+          ],
+        },
       ],
     }),
   ],
