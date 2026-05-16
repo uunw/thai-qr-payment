@@ -46,6 +46,9 @@ import {
   SUB_GUID,
   SUB_PROMPTPAY_OTA,
   SUB_TRUE_MONEY,
+  SUB_VAT_AMOUNT,
+  SUB_VAT_RATE,
+  SUB_VAT_SELLER_TAX_BRANCH_ID,
   TAG_ADDITIONAL_DATA,
   TAG_CHECKSUM,
   TAG_COUNTRY_CODE,
@@ -63,6 +66,7 @@ import {
   TAG_TIP_PERCENTAGE,
   TAG_TRANSACTION_AMOUNT,
   TAG_TRANSACTION_CURRENCY,
+  TAG_VAT_TQRC,
   TIP_FIXED,
   TIP_PERCENTAGE,
   TIP_PROMPT,
@@ -100,6 +104,15 @@ export interface MerchantInfo {
   categoryCode?: string;
 }
 
+export interface VatTqrcInput {
+  /** Seller's tax branch identifier — exactly 4 characters. */
+  sellerTaxBranchId: string;
+  /** VAT rate as displayed on the receipt (e.g. "7" or "7.00"); 1–5 chars. */
+  vatRate?: string;
+  /** VAT amount as displayed on the receipt; 1–13 chars, required. */
+  vatAmount: string;
+}
+
 /**
  * Thai QR Payment payload builder.
  *
@@ -117,6 +130,7 @@ export class ThaiQrPaymentBuilder {
   private personalMessage: string | undefined;
   private promptPayRecipient: NormalisedRecipient | undefined;
   private otaCode: string | undefined;
+  private vat: VatTqrcInput | undefined;
 
   constructor() {
     this.fields.set(TAG_PAYLOAD_FORMAT, PAYLOAD_FORMAT_VERSION);
@@ -274,6 +288,39 @@ export class ThaiQrPaymentBuilder {
     return this;
   }
 
+  /**
+   * Attach the Bank of Thailand VAT TQRC extension (tag 80). Promotes the
+   * payment QR to an e-tax-receipt source. Pass `undefined` to clear.
+   *
+   * Field-length rules come from the BOT extension spec:
+   *  - `sellerTaxBranchId` is exactly 4 characters
+   *  - `vatRate` is 1–5 characters when present (e.g. "7" or "7.00")
+   *  - `vatAmount` is 1–13 characters and required
+   */
+  vatTqrc(input: VatTqrcInput | undefined): this {
+    if (input == null) {
+      this.vat = undefined;
+      return this;
+    }
+    if (input.sellerTaxBranchId.length !== 4) {
+      throw new RangeError(
+        `VAT TQRC sellerTaxBranchId must be exactly 4 chars (got ${input.sellerTaxBranchId.length})`,
+      );
+    }
+    if (input.vatRate != null && (input.vatRate.length < 1 || input.vatRate.length > 5)) {
+      throw new RangeError(
+        `VAT TQRC vatRate must be 1–5 chars (got ${input.vatRate.length})`,
+      );
+    }
+    if (input.vatAmount.length < 1 || input.vatAmount.length > 13) {
+      throw new RangeError(
+        `VAT TQRC vatAmount must be 1–13 chars (got ${input.vatAmount.length})`,
+      );
+    }
+    this.vat = { ...input };
+    return this;
+  }
+
   /** Force the point-of-initiation flag regardless of amount presence. */
   pointOfInitiation(method: 'static' | 'dynamic'): this {
     this.fields.set(TAG_POINT_OF_INITIATION, method === 'static' ? POI_STATIC : POI_DYNAMIC);
@@ -343,9 +390,25 @@ export class ThaiQrPaymentBuilder {
     } else {
       this.fields.delete(TAG_PERSONAL_MESSAGE);
     }
+    if (this.vat != null) {
+      // Sub-tag order inside tag 80 is 00 → 01 → 02 per the BOT
+      // supplement; `encodeFields` drops the optional rate cleanly.
+      this.fields.set(
+        TAG_VAT_TQRC,
+        encodeFields([
+          [SUB_VAT_SELLER_TAX_BRANCH_ID, this.vat.sellerTaxBranchId],
+          [SUB_VAT_RATE, this.vat.vatRate],
+          [SUB_VAT_AMOUNT, this.vat.vatAmount],
+        ]),
+      );
+    } else {
+      this.fields.delete(TAG_VAT_TQRC);
+    }
 
     // Spec mandates ascending tag order on the wire. Map iteration
     // preserves insertion order, so we sort explicitly here instead.
+    // Tag 80 (VAT TQRC) sorts naturally after tag 64; the CRC tag 63 is
+    // appended below regardless of sort order so it always lands last.
     const sorted = [...this.fields.entries()]
       .filter(([tag]) => tag !== TAG_CHECKSUM)
       .toSorted(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));

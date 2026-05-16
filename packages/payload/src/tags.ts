@@ -77,3 +77,12 @@ export const GUID_PROMPTPAY_OTA = 'A000000677010114';
 export const TIP_PROMPT = '01';
 export const TIP_FIXED = '02';
 export const TIP_PERCENTAGE = '03';
+
+// ── VAT TQRC template (Bank of Thailand Tax-Qualified QR extension) ────
+// Tag 80 carries a nested TLV that turns a regular payment QR into an
+// e-tax-receipt source. The "ascending tag id" wire rule places it after
+// tag 64 and before tag 63 — the CRC-last rule wins over ordering.
+export const TAG_VAT_TQRC = '80';
+export const SUB_VAT_SELLER_TAX_BRANCH_ID = '00';
+export const SUB_VAT_RATE = '01';
+export const SUB_VAT_AMOUNT = '02';

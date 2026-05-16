@@ -708,6 +708,87 @@ describe('ThaiQrPaymentBuilder — OTA credit transfer', () => {
   });
 });
 
+describe('ThaiQrPaymentBuilder — VAT TQRC', () => {
+  it('emits tag 80 with all three sub-fields in 00 → 01 → 02 order', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .amount(107)
+      .vatTqrc({ sellerTaxBranchId: '0001', vatRate: '7', vatAmount: '7.00' })
+      .build();
+    // Sub-template: 0004 0001 0101 7 0204 7.00 = 21 chars → tag header 8021.
+    expect(payload).toContain('8021000400010101702047.00');
+  });
+
+  it('omits sub-tag 01 when vatRate is not supplied', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .vatTqrc({ sellerTaxBranchId: '0001', vatAmount: '7.00' })
+      .build();
+    // Sub-template without rate: 0004 0001 0204 7.00 = 16 chars → header 8016.
+    expect(payload).toContain('8016000400010204');
+    expect(payload).not.toMatch(/8016000400010101/);
+  });
+
+  it('places tag 80 between tag 64-range fields and the CRC', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .vatTqrc({ sellerTaxBranchId: '0001', vatAmount: '7.00' })
+      .build();
+    const vatStart = payload.indexOf('8016');
+    const crcStart = payload.lastIndexOf('6304');
+    expect(vatStart).toBeGreaterThan(0);
+    expect(crcStart).toBeGreaterThan(vatStart);
+  });
+
+  it('keeps the trailing CRC valid after appending tag 80', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .amount(107)
+      .vatTqrc({ sellerTaxBranchId: '0001', vatRate: '7', vatAmount: '7.00' })
+      .build();
+    expect(() => parsePayload(payload, { strict: true })).not.toThrow();
+  });
+
+  it('clears tag 80 when vatTqrc is set to undefined', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .vatTqrc({ sellerTaxBranchId: '0001', vatAmount: '7.00' })
+      .vatTqrc(undefined)
+      .build();
+    expect(payload).not.toMatch(/^.*80[0-9]{2}0004.*/);
+  });
+
+  it('rejects sellerTaxBranchId not exactly 4 chars', () => {
+    const builder = new ThaiQrPaymentBuilder().promptpay('0812345678');
+    expect(() => builder.vatTqrc({ sellerTaxBranchId: '001', vatAmount: '7.00' })).toThrow(
+      /exactly 4 chars/,
+    );
+    expect(() => builder.vatTqrc({ sellerTaxBranchId: '00012', vatAmount: '7.00' })).toThrow(
+      /exactly 4 chars/,
+    );
+  });
+
+  it('rejects vatRate outside the 1–5 char range', () => {
+    const builder = new ThaiQrPaymentBuilder().promptpay('0812345678');
+    expect(() =>
+      builder.vatTqrc({ sellerTaxBranchId: '0001', vatRate: '', vatAmount: '7.00' }),
+    ).toThrow(/1–5 chars/);
+    expect(() =>
+      builder.vatTqrc({ sellerTaxBranchId: '0001', vatRate: '123456', vatAmount: '7.00' }),
+    ).toThrow(/1–5 chars/);
+  });
+
+  it('rejects vatAmount outside the 1–13 char range', () => {
+    const builder = new ThaiQrPaymentBuilder().promptpay('0812345678');
+    expect(() => builder.vatTqrc({ sellerTaxBranchId: '0001', vatAmount: '' })).toThrow(
+      /1–13 chars/,
+    );
+    expect(() =>
+      builder.vatTqrc({ sellerTaxBranchId: '0001', vatAmount: '12345678901234' }),
+    ).toThrow(/1–13 chars/);
+  });
+});
+
 describe('ThaiQrPaymentBuilder — combined real-world flows', () => {
   it('builds a complete dynamic merchant payment QR', () => {
     const payload = new ThaiQrPaymentBuilder()
