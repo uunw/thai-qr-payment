@@ -3,6 +3,8 @@ title: QR encoder
 description: ISO/IEC 18004 QR Code encoder — Reed-Solomon + Galois field, zero dependencies.
 ---
 
+![Bare QR matrix output](/img/samples/qr-matrix.svg)
+
 The `@thai-qr-payment/qr` package implements ISO/IEC 18004 Model-2 QR Code generation. Reed-Solomon error correction over GF(2^8) is hand-rolled — no `qrcode`, no native bindings.
 
 ## Quickstart

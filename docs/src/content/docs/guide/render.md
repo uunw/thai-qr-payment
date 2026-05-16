@@ -3,6 +3,8 @@ title: SVG renderer
 description: Compose a Thai QR Payment SVG card or bare matrix from a wire payload.
 ---
 
+![Sample card with brand-spec layout](/img/samples/qr-card-hero.svg)
+
 `@thai-qr-payment/render` ties together the payload builder, QR encoder, and brand assets into a single SVG string. No DOM, no canvas — works in every runtime.
 
 ## One-shot card

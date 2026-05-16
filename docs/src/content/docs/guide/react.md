@@ -3,6 +3,8 @@ title: React component
 description: <ThaiQrPayment /> and <ThaiQrPaymentMatrix /> for React 18+ apps.
 ---
 
+![Rendered React component output](/img/samples/qr-card-merchant.svg)
+
 `@thai-qr-payment/react` wires the renderer into a typed React component. Works in CSR + SSR (Next.js, Remix, TanStack Start, vanilla Vite) — no jsdom needed, no `useEffect` rigging.
 
 ## Install

@@ -3,6 +3,8 @@ title: Payload (EMVCo TLV)
 description: Build + parse Thai QR Payment wire payloads with @thai-qr-payment/payload.
 ---
 
+![Sample Thai QR Payment card](/img/samples/qr-card-merchant.svg)
+
 `@thai-qr-payment/payload` implements the **EMVCo Merchant-Presented-Mode v1.1** TLV grammar plus the **Bank of Thailand Thai QR Payment supplement** (PromptPay, BillPayment, TrueMoney, OTA, VAT TQRC, cross-border ASEAN remittance). Zero dependencies, every JS runtime.
 
 ## One-shot helper

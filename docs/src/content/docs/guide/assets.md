@@ -3,7 +3,11 @@ title: Brand assets
 description: Thai QR Payment + PromptPay SVG marks in color + silhouette flavors.
 ---
 
+![Thai QR Payment color logo](/img/brand/logo-color.svg)
+
 `@thai-qr-payment/assets` ships true vector SVGs for the canonical Thai QR Payment and PromptPay marks. Traced via [vtracer](https://github.com/visioncortex/vtracer) (color) and [potrace](http://potrace.sourceforge.net/) (silhouette), then SVGO-optimized.
+
+![PromptPay color logo](/img/brand/promptpay1.svg)
 
 ## Available marks
 

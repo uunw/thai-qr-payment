@@ -1,10 +1,11 @@
 ---
 title: thai-qr-payment
-description: Zero-dependency Thai QR Payment (EMVCo MPM) toolkit — payload builder, QR encoder, SVG card renderer, brand assets, React bindings, CLI.
+description: Zero-dependency Thai QR Payment toolkit — payload, QR encoder, SVG card, React, CLI.
 template: splash
 hero:
-  tagline: |
-    Zero-dependency, browser + Node + edge-runtime-compatible toolkit for **Thai QR Payment** (PromptPay, BillPayment, KShop). Builds the EMVCo Merchant-Presented-Mode wire payload, encodes it as a QR Code (no `qrcode` peer dep), renders the official SVG card, and ships a CLI.
+  tagline: Spec-faithful Thai QR Payment for JS — payload, QR, SVG card, React, CLI. Zero deps.
+  image:
+    file: ../../../public/img/samples/qr-card-hero.svg
   actions:
     - text: Install
       link: /install/
@@ -67,5 +68,7 @@ errorCorrectionLevel: 'H',
 lang="ts"
 title="example.ts"
 />
+
+![Sample QR card output](../../../public/img/samples/qr-card-merchant.svg)
 
 [→ Try it without installing](/demo/)

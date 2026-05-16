@@ -3,6 +3,8 @@ title: CLI
 description: thai-qr-payment / tqp command-line tool for one-off QR generation.
 ---
 
+![Sample CLI output card](/img/samples/qr-card-hero.svg)
+
 ```bash
 # Zero-install — npx
 npx thai-qr-payment 0812345678 --amount 50 -o qr.svg
