@@ -198,6 +198,179 @@ describe('parsePayload — edge cases', () => {
   });
 });
 
+describe('parsePayload — strict mode', () => {
+  it('still passes a valid payload in strict mode', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
+    const parsed = parsePayload(wire, { strict: true });
+    expect(parsed.amount).toBe(50);
+    expect(parsed.crc.valid).toBe(true);
+    expect(parsed.crc.truncated).toBe(false);
+  });
+
+  it('throws "Invalid CRC" when CRC tag is missing in strict mode', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    // Strip the entire CRC tag (last 8 chars: 6304XXXX).
+    const stripped = wire.slice(0, -8);
+    expect(() => parsePayload(stripped, { strict: true })).toThrow(/Invalid CRC/);
+  });
+
+  it('throws "Invalid CRC" when CRC value is wrong in strict mode', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const tampered = `${wire.slice(0, -4)}0000`;
+    expect(() => parsePayload(tampered, { strict: true })).toThrow(/Invalid CRC/);
+  });
+
+  it('throws "Invalid CRC" on truncated CRC in strict mode (no auto-fix)', () => {
+    // Build any payload; strip a hex char from the CRC to simulate the
+    // bank-app drop-leading-zero bug. Strict mode refuses the fix-up
+    // even if the fix would have succeeded.
+    for (let i = 0; i < 100; i += 1) {
+      const phone = `08${(i * 7919 + 1).toString(10).padStart(8, '0').slice(0, 8)}`;
+      const wire = new ThaiQrPaymentBuilder().promptpay(phone).build();
+      if (wire.slice(-4, -3) === '0') {
+        const truncated = wire.slice(0, -4) + wire.slice(-3);
+        expect(() => parsePayload(truncated, { strict: true })).toThrow(/Invalid CRC/);
+        return;
+      }
+    }
+    throw new Error('No sample with a leading-zero CRC found in sweep');
+  });
+});
+
+describe('parsePayload — truncated-CRC auto-fix', () => {
+  it('recovers a payload that lost one leading zero from its CRC', () => {
+    // Locate a sample whose CRC starts with "0" — chopping the leading
+    // char mimics the bank-app bug where the CRC is hex-serialised
+    // without zero-padding.
+    for (let i = 0; i < 100; i += 1) {
+      const phone = `08${(i * 7919 + 1).toString(10).padStart(8, '0').slice(0, 8)}`;
+      const wire = new ThaiQrPaymentBuilder().promptpay(phone).build();
+      if (wire.slice(-4, -3) === '0') {
+        // Wire ends "6304" + 4 hex chars; drop the first hex char so
+        // only 3 follow the length header.
+        const truncated = wire.slice(0, -4) + wire.slice(-3);
+        const parsed = parsePayload(truncated);
+        expect(parsed.crc.valid).toBe(true);
+        expect(parsed.crc.truncated).toBe(true);
+        expect(parsed.crc.value).toBe(wire.slice(-3));
+        expect(parsed.merchant?.kind).toBe('promptpay');
+        return;
+      }
+    }
+    throw new Error('No sample with a leading-zero CRC found in sweep');
+  });
+
+  it('recovers a payload that lost two leading zeros from its CRC', () => {
+    for (let i = 0; i < 5000; i += 1) {
+      const phone = `08${(i * 7919 + 1).toString(10).padStart(8, '0').slice(0, 8)}`;
+      const wire = new ThaiQrPaymentBuilder().promptpay(phone).build();
+      if (wire.slice(-4, -2) === '00') {
+        const truncated = wire.slice(0, -4) + wire.slice(-2);
+        const parsed = parsePayload(truncated);
+        expect(parsed.crc.valid).toBe(true);
+        expect(parsed.crc.truncated).toBe(true);
+        expect(parsed.crc.value).toBe(wire.slice(-2));
+        return;
+      }
+    }
+    throw new Error('No sample with a "00..." CRC prefix found in sweep');
+  });
+
+  it('reports the canonical CRC value on a non-truncated payload', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.crc.value).toBe(wire.slice(-4));
+    expect(parsed.crc.valid).toBe(true);
+    expect(parsed.crc.truncated).toBe(false);
+  });
+});
+
+describe('parsePayload — raw tag accessors', () => {
+  it('exposes rawTags in wire order', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').amount(50).build();
+    const parsed = parsePayload(wire);
+    const tagIds = parsed.rawTags.map((field) => field.tag);
+    expect(tagIds[0]).toBe('00');
+    expect(tagIds).toContain('29');
+    expect(tagIds).toContain('53');
+    expect(tagIds).toContain('54');
+    expect(tagIds).toContain('58');
+    expect(tagIds).toContain('63');
+  });
+
+  it('getTag returns the matching TLV field', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.getTag('00')?.value).toBe('01');
+    expect(parsed.getTag('01')?.value).toBe('11');
+    expect(parsed.getTag('58')?.value).toBe('TH');
+    expect(parsed.getTag('99')).toBeUndefined();
+  });
+
+  it('getTagValue returns the top-level value when no subId is passed', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.getTagValue('53')).toBe('764');
+    expect(parsed.getTagValue('58')).toBe('TH');
+    expect(parsed.getTagValue('99')).toBeUndefined();
+  });
+
+  it('getTagValue descends one level for nested templates', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.getTagValue('29', '00')).toBe('A000000677010111');
+    expect(parsed.getTagValue('29', '01')).toBe('0066812345678');
+    expect(parsed.getTagValue('29', '99')).toBeUndefined();
+    expect(parsed.getTagValue('99', '00')).toBeUndefined();
+  });
+
+  it('getTagValue resolves additional-data sub-fields', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .additionalData({ billNumber: 'BILL01', terminalLabel: 'T01' })
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.getTagValue('62', '01')).toBe('BILL01');
+    expect(parsed.getTagValue('62', '07')).toBe('T01');
+  });
+});
+
+describe('parsePayload — TrueMoney decoding', () => {
+  it('decodes a static TrueMoney payload (no amount, no message)', () => {
+    const wire = new ThaiQrPaymentBuilder().trueMoney('0801111111').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({ kind: 'trueMoney', mobileNo: '0801111111' });
+    expect(parsed.amount).toBeNull();
+    expect(parsed.pointOfInitiation).toBe('static');
+  });
+
+  it('decodes a dynamic TrueMoney payload with amount', () => {
+    const wire = new ThaiQrPaymentBuilder().trueMoney('0801111111', { amount: 10 }).build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({ kind: 'trueMoney', mobileNo: '0801111111' });
+    expect(parsed.amount).toBe(10);
+    expect(parsed.pointOfInitiation).toBe('dynamic');
+  });
+
+  it('decodes a TrueMoney personal message from tag 81', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .trueMoney('0801111111', { amount: 10, message: 'Hello World!' })
+      .build();
+    const parsed = parsePayload(wire);
+    if (parsed.merchant?.kind === 'trueMoney') {
+      expect(parsed.merchant.message).toBe('Hello World!');
+    } else {
+      expect.fail('Expected TrueMoney merchant kind');
+    }
+  });
+
+  it('still parses a plain PromptPay e-wallet (sub 03 without 14 prefix) as e-wallet', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('012345678901234').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant?.kind).toBe('promptpay');
+  });
+});
+
 describe('parsePayload — fuzz on random builder configs', () => {
   it('parses every output the builder produces (mobile sweep)', () => {
     for (let i = 0; i < 30; i += 1) {

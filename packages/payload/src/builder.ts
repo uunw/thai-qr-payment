@@ -15,6 +15,7 @@
 
 import { formatAmount, type FormatAmountOptions } from './amount.js';
 import { checksum } from './crc.js';
+import { encodePersonalMessage } from './message.js';
 import { normaliseRecipient, type PromptPayRecipientType } from './recipient.js';
 import {
   COUNTRY_TH,
@@ -37,6 +38,7 @@ import {
   SUB_BILL_REFERENCE_1,
   SUB_BILL_REFERENCE_2,
   SUB_GUID,
+  SUB_TRUE_MONEY,
   TAG_ADDITIONAL_DATA,
   TAG_CHECKSUM,
   TAG_COUNTRY_CODE,
@@ -46,6 +48,7 @@ import {
   TAG_MERCHANT_CITY,
   TAG_MERCHANT_NAME,
   TAG_PAYLOAD_FORMAT,
+  TAG_PERSONAL_MESSAGE,
   TAG_POINT_OF_INITIATION,
   TAG_POSTAL_CODE,
   TAG_TIP_FIXED,
@@ -56,6 +59,7 @@ import {
   TIP_FIXED,
   TIP_PERCENTAGE,
   TIP_PROMPT,
+  TRUE_MONEY_PREFIX,
 } from './tags.js';
 import { encodeField, encodeFields } from './tlv.js';
 
@@ -101,6 +105,7 @@ export class ThaiQrPaymentBuilder {
   private readonly fields = new Map<string, string>();
   private readonly additional: AdditionalDataFields = {};
   private tip: TipMode | undefined;
+  private personalMessage: string | undefined;
 
   constructor() {
     this.fields.set(TAG_PAYLOAD_FORMAT, PAYLOAD_FORMAT_VERSION);
@@ -121,6 +126,40 @@ export class ThaiQrPaymentBuilder {
     ]);
     this.fields.set(TAG_MERCHANT_ACCOUNT_PROMPTPAY, template);
     this.fields.delete(TAG_MERCHANT_ACCOUNT_BILL_PAYMENT);
+    return this;
+  }
+
+  /**
+   * Configure a TrueMoney Wallet recipient. Same merchant template tag
+   * (29) as PromptPay but with the literal `14` prefix on sub-tag 03 so
+   * the TrueMoney app can disambiguate its own payloads from a plain
+   * e-wallet QR. The mobile is zero-padded on the left to 13 digits
+   * before the prefix is added (final value length is always 15).
+   *
+   * The optional `message` is carried in tag 81 (UTF-16BE hex) and is
+   * surfaced inside the TrueMoney app only; other scanners ignore it.
+   */
+  trueMoney(mobileNo: string, options: { amount?: number; message?: string } = {}): this {
+    const digits = mobileNo.replace(/\D/g, '');
+    if (digits.length === 0) {
+      throw new TypeError('TrueMoney mobile number must contain at least one digit');
+    }
+    if (digits.length > 13) {
+      throw new RangeError(`TrueMoney mobile number too long (${digits.length} digits)`);
+    }
+    const wireMobile = TRUE_MONEY_PREFIX + digits.padStart(13, '0');
+    const template = encodeFields([
+      [SUB_GUID, GUID_PROMPTPAY],
+      [SUB_TRUE_MONEY, wireMobile],
+    ]);
+    this.fields.set(TAG_MERCHANT_ACCOUNT_PROMPTPAY, template);
+    this.fields.delete(TAG_MERCHANT_ACCOUNT_BILL_PAYMENT);
+    this.personalMessage = options.message;
+    if (options.amount != null) {
+      this.amount(options.amount);
+    } else {
+      this.amount(undefined);
+    }
     return this;
   }
 
@@ -238,6 +277,11 @@ export class ThaiQrPaymentBuilder {
       this.fields.set(TAG_ADDITIONAL_DATA, additional);
     } else {
       this.fields.delete(TAG_ADDITIONAL_DATA);
+    }
+    if (this.personalMessage != null && this.personalMessage !== '') {
+      this.fields.set(TAG_PERSONAL_MESSAGE, encodePersonalMessage(this.personalMessage));
+    } else {
+      this.fields.delete(TAG_PERSONAL_MESSAGE);
     }
 
     // Spec mandates ascending tag order on the wire. Map iteration

@@ -420,6 +420,105 @@ describe('ThaiQrPaymentBuilder — CRC integrity', () => {
   });
 });
 
+describe('ThaiQrPaymentBuilder — TrueMoney Wallet', () => {
+  it('emits a static TrueMoney QR (no amount) with the spec-derived wire bytes', () => {
+    const payload = new ThaiQrPaymentBuilder().trueMoney('0801111111').build();
+    expect(payload).toBe(
+      '00020101021129390016A000000677010111031514000080111111153037645802TH63047C0F',
+    );
+  });
+
+  it('emits a dynamic TrueMoney QR (with amount) — POI flips to 12', () => {
+    const payload = new ThaiQrPaymentBuilder().trueMoney('0801111111', { amount: 10 }).build();
+    expect(payload.startsWith('00020101021229')).toBe(true);
+    expect(payload).toContain('540510.00');
+  });
+
+  it('emits tag 29 with the literal "14" prefix on sub-tag 03', () => {
+    const payload = new ThaiQrPaymentBuilder().trueMoney('0801111111').build();
+    expect(payload).toContain('0315140000801111111');
+  });
+
+  it('pads a short mobile to the 15-char wire width', () => {
+    const payload = new ThaiQrPaymentBuilder().trueMoney('801111111').build();
+    // 9-digit input → padded to 13 in the wire value → final wire value
+    // is '14' + '0000801111111' = '140000801111111'.
+    expect(payload).toContain('0315140000801111111');
+  });
+
+  it('strips non-digits from the input mobile', () => {
+    const payload = new ThaiQrPaymentBuilder().trueMoney('080-111-1111').build();
+    expect(payload).toContain('0315140000801111111');
+  });
+
+  it('appends tag 81 when a personal message is supplied', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .trueMoney('0801111111', { message: 'Hello' })
+      .build();
+    // "Hello" → 5 UTF-16BE code units → 20 hex chars → length header "20".
+    expect(payload).toContain('812000480065006C006C006F');
+  });
+
+  it('encodes "Hello World!" personal message to the spec-derived hex', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .trueMoney('0801111111', { amount: 10, message: 'Hello World!' })
+      .build();
+    expect(payload).toContain('814800480065006C006C006F00200057006F0072006C00640021');
+  });
+
+  it('rejects an empty mobile number', () => {
+    expect(() => new ThaiQrPaymentBuilder().trueMoney('---')).toThrow(/at least one digit/);
+  });
+
+  it('rejects a mobile number longer than 13 digits', () => {
+    expect(() => new ThaiQrPaymentBuilder().trueMoney('1234567890123456')).toThrow(/too long/);
+  });
+
+  it('switching from PromptPay to TrueMoney clears the previous e-wallet template', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .trueMoney('0801111111')
+      .build();
+    expect(payload).toContain('0315140000801111111');
+    expect(payload).not.toContain('0066812345678');
+  });
+
+  it('switching from TrueMoney to BillPayment swaps the merchant template', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .trueMoney('0801111111')
+      .billPayment({ billerId: '123456789012345' })
+      .build();
+    expect(payload).not.toContain('A000000677010111');
+    expect(payload).toContain('A000000677010112');
+  });
+
+  it('round-trips static TrueMoney through parse → build', () => {
+    const original = new ThaiQrPaymentBuilder().trueMoney('0801111111').build();
+    const parsed = parsePayload(original);
+    expect(parsed.merchant).toMatchObject({ kind: 'trueMoney', mobileNo: '0801111111' });
+    const rebuilt = new ThaiQrPaymentBuilder().trueMoney('0801111111').build();
+    expect(rebuilt).toBe(original);
+  });
+
+  it('round-trips TrueMoney with amount and message', () => {
+    const original = new ThaiQrPaymentBuilder()
+      .trueMoney('0801111111', { amount: 10, message: 'Hello World!' })
+      .build();
+    const parsed = parsePayload(original);
+    expect(parsed.amount).toBe(10);
+    if (parsed.merchant?.kind === 'trueMoney') {
+      expect(parsed.merchant.mobileNo).toBe('0801111111');
+      expect(parsed.merchant.message).toBe('Hello World!');
+    } else {
+      expect.fail('Expected TrueMoney merchant kind');
+    }
+    const rebuilt = new ThaiQrPaymentBuilder()
+      .trueMoney('0801111111', { amount: 10, message: 'Hello World!' })
+      .build();
+    expect(rebuilt).toBe(original);
+  });
+});
+
 describe('ThaiQrPaymentBuilder — combined real-world flows', () => {
   it('builds a complete dynamic merchant payment QR', () => {
     const payload = new ThaiQrPaymentBuilder()

@@ -13,8 +13,11 @@ export { parsePayload } from './parser.js';
 export type {
   ParsedAdditionalData,
   ParsedBillPayment,
+  ParsedCrc,
   ParsedPayload,
   ParsedPromptPay,
+  ParsedTrueMoney,
+  ParsePayloadOptions,
 } from './parser.js';
 
 export { normaliseRecipient } from './recipient.js';
@@ -24,6 +27,24 @@ export { formatAmount } from './amount.js';
 export type { FormatAmountOptions } from './amount.js';
 
 export { checksum } from './crc.js';
+
+export { decodePersonalMessage, encodePersonalMessage } from './message.js';
+
+export {
+  buildSlipVerify,
+  buildTrueMoneySlipVerify,
+  parseSlipVerify,
+  parseTrueMoneySlipVerify,
+} from './slip-verify.js';
+export type {
+  ParsedSlipVerify,
+  ParsedTrueMoneySlipVerify,
+  SlipVerifyInput,
+  TrueMoneySlipVerifyInput,
+} from './slip-verify.js';
+
+export { buildBotBarcode, parseBotBarcode } from './barcode.js';
+export type { BotBarcodeInput, ParsedBotBarcode } from './barcode.js';
 
 export { encodeField, encodeFields, parseFields, iterateFields } from './tlv.js';
 export type { TlvField } from './tlv.js';

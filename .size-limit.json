@@ -33,7 +33,7 @@
     "name": "@thai-qr-payment/payload (payloadFor only)",
     "path": "packages/payload/dist/index.js",
     "import": "{ payloadFor }",
-    "limit": "4 KB"
+    "limit": "5 KB"
   },
   {
     "name": "@thai-qr-payment/qr",

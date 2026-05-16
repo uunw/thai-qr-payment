@@ -27,12 +27,20 @@ export const TAG_POSTAL_CODE = '61';
 export const TAG_ADDITIONAL_DATA = '62';
 export const TAG_CHECKSUM = '63';
 export const TAG_LANGUAGE_TEMPLATE = '64';
+export const TAG_PERSONAL_MESSAGE = '81';
 
 // ── PromptPay merchant template (under tag 29) sub-fields ──────────────
 export const SUB_GUID = '00';
 export const SUB_PROMPTPAY_MOBILE = '01';
 export const SUB_PROMPTPAY_NATIONAL_ID = '02';
 export const SUB_PROMPTPAY_EWALLET = '03';
+
+// ── TrueMoney Wallet (also under tag 29, shares the PromptPay AID) ─────
+// Distinguished from PromptPay e-wallet by the literal "14" prefix in
+// sub-tag 03's value. The remaining 13 chars are the merchant's mobile,
+// zero-padded on the left.
+export const SUB_TRUE_MONEY = '03';
+export const TRUE_MONEY_PREFIX = '14';
 
 // ── BillPayment merchant template (under tag 30) sub-fields ────────────
 export const SUB_BILL_BILLER_ID = '01';
