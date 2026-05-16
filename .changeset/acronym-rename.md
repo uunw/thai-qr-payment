@@ -12,26 +12,26 @@
 
 Treating this as a `minor` bump instead of `major` because the lib is fresh — there are effectively no external consumers yet, and a same-day `2.0.0` after the `1.0.0` reset would be cosmetic noise.
 
-| Before | After |
-| --- | --- |
-| `ThaiQrPaymentBuilder` | `ThaiQRPaymentBuilder` |
-| `ParsedCrc` | `ParsedCRC` |
-| `TlvField` | `TLVField` |
-| `QrMatrix` | `QRMatrix` |
-| `QrSvgOptions` | `QRSvgOptions` |
-| `VatTqrcInput` | `VATTQRCInput` |
-| `ParsedVatTqrc` | `ParsedVATTQRC` |
-| `BotBarcodeInput` | `BOTBarcodeInput` |
-| `ParsedBotBarcode` | `ParsedBOTBarcode` |
-| `ThaiQrPayment` (React) | `ThaiQRPayment` |
-| `ThaiQrPaymentMatrix` (React) | `ThaiQRPaymentMatrix` |
-| `ThaiQrPaymentProps` (React) | `ThaiQRPaymentProps` |
-| `ThaiQrPaymentMatrixProps` (React) | `ThaiQRPaymentMatrixProps` |
-| `renderThaiQrPayment` | `renderThaiQRPayment` |
-| `renderThaiQrPaymentMatrix` | `renderThaiQRPaymentMatrix` |
-| `renderQrSvg` | `renderQRSvg` |
-| `buildBotBarcode` | `buildBOTBarcode` |
-| `parseBotBarcode` | `parseBOTBarcode` |
+| Before                             | After                       |
+| ---------------------------------- | --------------------------- |
+| `ThaiQrPaymentBuilder`             | `ThaiQRPaymentBuilder`      |
+| `ParsedCrc`                        | `ParsedCRC`                 |
+| `TlvField`                         | `TLVField`                  |
+| `QrMatrix`                         | `QRMatrix`                  |
+| `QrSvgOptions`                     | `QRSvgOptions`              |
+| `VatTqrcInput`                     | `VATTQRCInput`              |
+| `ParsedVatTqrc`                    | `ParsedVATTQRC`             |
+| `BotBarcodeInput`                  | `BOTBarcodeInput`           |
+| `ParsedBotBarcode`                 | `ParsedBOTBarcode`          |
+| `ThaiQrPayment` (React)            | `ThaiQRPayment`             |
+| `ThaiQrPaymentMatrix` (React)      | `ThaiQRPaymentMatrix`       |
+| `ThaiQrPaymentProps` (React)       | `ThaiQRPaymentProps`        |
+| `ThaiQrPaymentMatrixProps` (React) | `ThaiQRPaymentMatrixProps`  |
+| `renderThaiQrPayment`              | `renderThaiQRPayment`       |
+| `renderThaiQrPaymentMatrix`        | `renderThaiQRPaymentMatrix` |
+| `renderQrSvg`                      | `renderQRSvg`               |
+| `buildBotBarcode`                  | `buildBOTBarcode`           |
+| `parseBotBarcode`                  | `parseBOTBarcode`           |
 
 Methods on the builder (`.vatTqrc()`, `.bankAccount()`, `.ota()`, …) keep camelCase per TypeScript's standard library convention (`.toString`, `.getElementById`). Constants (`TAG_VAT_TQRC`, `GUID_PROMPTPAY`, …) were already SCREAMING_SNAKE so they didn't move.
 
