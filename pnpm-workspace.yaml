@@ -1,6 +1,7 @@
 packages:
   - 'packages/*'
   - 'docs'
+  - 'examples/node'
 
 allowBuilds:
   esbuild: set this to true or false

@@ -1,0 +1,16 @@
+{
+  "name": "@thai-qr-payment-examples/node",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Runnable Node.js examples covering every public API.",
+  "type": "module",
+  "scripts": {
+    "all": "for f in *.mjs; do echo \"== $f ==\" && node \"$f\" && echo; done"
+  },
+  "dependencies": {
+    "@thai-qr-payment/react": "workspace:*",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "thai-qr-payment": "workspace:*"
+  }
+}

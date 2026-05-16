@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>thai-qr-payment — import map</title>
+  </head>
+  <body>
+    <h1>Bare import via <code>&lt;script type="importmap"&gt;</code></h1>
+    <div id="out"></div>
+
+    <!--
+      Map the bare specifier to a CDN URL once. Every <script
+      type="module"> on the page can then `import "thai-qr-payment"` as
+      if it were locally installed.
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "thai-qr-payment": "https://unpkg.com/thai-qr-payment/dist/index.js",
+          "thai-qr-payment/payload": "https://unpkg.com/thai-qr-payment/dist/payload.js",
+          "thai-qr-payment/qr": "https://unpkg.com/thai-qr-payment/dist/qr.js",
+          "thai-qr-payment/render": "https://unpkg.com/thai-qr-payment/dist/render.js",
+          "thai-qr-payment/assets": "https://unpkg.com/thai-qr-payment/dist/assets.js"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import { renderThaiQRPayment } from 'thai-qr-payment';
+      import { Tags } from 'thai-qr-payment/payload';
+
+      document.getElementById('out').innerHTML = renderThaiQRPayment({
+        recipient: '0812345678',
+        amount: 50,
+        merchantName: 'Acme Coffee',
+        amountLabel: '฿ 50.00',
+      });
+
+      console.log('Tag constant TAG_PAYLOAD_FORMAT =', Tags.TAG_PAYLOAD_FORMAT);
+    </script>
+  </body>
+</html>

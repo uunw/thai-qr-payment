@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>thai-qr-payment — unpkg ESM</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 480px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      label {
+        display: grid;
+        gap: 4px;
+        margin-bottom: 12px;
+        font-size: 14px;
+      }
+      input {
+        padding: 8px 12px;
+        font: inherit;
+      }
+      #out {
+        display: flex;
+        justify-content: center;
+        padding: 16px;
+        background: #fff;
+        border-radius: 12px;
+      }
+      #out svg {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Live QR (unpkg)</h1>
+    <label>
+      <span>Recipient</span>
+      <input id="recipient" type="text" value="0812345678" />
+    </label>
+    <label>
+      <span>Amount (THB)</span>
+      <input id="amount" type="number" step="0.01" value="50" />
+    </label>
+    <div id="out"></div>
+
+    <!--
+      Pull the umbrella as native ESM from unpkg. No bundler, no build
+      step — just <script type="module">.
+    -->
+    <script type="module">
+      import { renderThaiQRPayment } from 'https://unpkg.com/thai-qr-payment/dist/index.js';
+
+      const recipient = document.getElementById('recipient');
+      const amount = document.getElementById('amount');
+      const out = document.getElementById('out');
+
+      function render() {
+        const amt = Number.parseFloat(amount.value);
+        out.innerHTML = renderThaiQRPayment({
+          recipient: recipient.value,
+          amount: Number.isFinite(amt) && amt > 0 ? amt : undefined,
+          merchantName: 'Acme Coffee',
+          amountLabel: Number.isFinite(amt) ? `฿ ${amt.toFixed(2)}` : undefined,
+          errorCorrectionLevel: 'H',
+        });
+      }
+
+      recipient.addEventListener('input', render);
+      amount.addEventListener('input', render);
+      render();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>thai-qr-payment — esm.sh</title>
+  </head>
+  <body>
+    <h1>esm.sh delivery + pre-compressed brotli</h1>
+    <p>
+      <a href="https://esm.sh">esm.sh</a> serves the package with brotli pre-compression and the
+      right CORS headers. No bundler step.
+    </p>
+    <div id="card"></div>
+
+    <script type="module">
+      // Version-pinned import. Use @latest for the moving target, or pin
+      // to a specific 1.x for reproducibility.
+      import { renderThaiQRPayment } from 'https://esm.sh/[email protected]';
+
+      document.getElementById('card').innerHTML = renderThaiQRPayment({
+        recipient: '0812345678',
+        amount: 50,
+        merchantName: 'Acme Coffee',
+        amountLabel: '฿ 50.00',
+        errorCorrectionLevel: 'H',
+      });
+    </script>
+  </body>
+</html>

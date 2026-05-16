@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>thai-qr-payment — JSDelivr sub-path</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 12px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Payload-only via JSDelivr sub-path</h1>
+    <p>
+      Pull just the payload builder (~3 KB brotli) — no QR encoder, no renderer, no brand assets.
+      Useful when you only need the wire string (e.g. you have your own QR generator).
+    </p>
+    <pre id="out">…</pre>
+
+    <script type="module">
+      // Sub-path import — tree-shakes everything except payload.
+      import {
+        payloadFor,
+        ThaiQRPaymentBuilder,
+        parsePayload,
+      } from 'https://cdn.jsdelivr.net/npm/thai-qr-payment/dist/payload.js';
+
+      const wire = payloadFor({ recipient: '0812345678', amount: 50 });
+
+      const richer = new ThaiQRPaymentBuilder()
+        .promptpay('0812345678')
+        .amount(250)
+        .merchant({ name: 'Acme Coffee', city: 'BANGKOK' })
+        .additionalData({ billNumber: 'INV-001', terminalLabel: 'POS-A' })
+        .build();
+
+      const parsed = parsePayload(richer);
+
+      document.getElementById('out').textContent = JSON.stringify(
+        { simple: wire, richer, parsed },
+        null,
+        2,
+      );
+    </script>
+  </body>
+</html>
