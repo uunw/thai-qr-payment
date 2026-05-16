@@ -9,10 +9,10 @@
  */
 import { useMemo, useState, type ReactNode } from 'react';
 import {
-  payloadFor,
   parsePayload,
-  renderThaiQRPayment,
-  renderThaiQRPaymentMatrix,
+  renderCard,
+  renderQRSvg,
+  encodeQR,
   ThaiQRPaymentBuilder,
   buildSlipVerify,
   parseSlipVerify,
@@ -171,21 +171,18 @@ function PaymentTab(): ReactNode {
 
       const wire = builder.build();
       const parsed = parsePayload(wire);
-
+      // Render directly from the wire so every application path
+      // (PromptPay / BankAccount / BillPayment / TrueMoney) shows the
+      // exact bytes the builder produced. The card overlay still uses
+      // the human inputs above for the title strip.
+      const matrix = encodeQR(wire, { errorCorrectionLevel: ecc });
       const svg =
         mode === 'card'
-          ? renderThaiQRPayment({
-              wire,
+          ? renderCard(matrix, {
               merchantName: merchantName || undefined,
               amountLabel: amt != null ? `฿ ${amt.toFixed(2)}` : undefined,
-              errorCorrectionLevel: ecc,
             })
-          : renderThaiQRPaymentMatrix({
-              wire,
-              errorCorrectionLevel: ecc,
-              size: 320,
-              quietZone: 4,
-            });
+          : renderQRSvg(matrix, { size: 320, quietZone: 4 });
 
       return { ok: true as const, wire, parsed, svg };
     } catch (err) {
