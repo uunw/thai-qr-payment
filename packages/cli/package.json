@@ -1,6 +1,6 @@
 {
   "name": "@thai-qr-payment/cli",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "Command-line tool to generate Thai QR Payment SVGs from a PromptPay recipient + amount",
   "keywords": [
     "billpayment",
