@@ -1,5 +1,13 @@
 # @thai-qr-payment/cli
 
+## 3.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`7a2226f`](https://github.com/uunw/thai-qr-payment/commit/7a2226fa9c29a3490249b933a67f043f83b52e7b)]:
+  - @thai-qr-payment/payload@3.0.0
+  - @thai-qr-payment/render@3.0.0
+
 ## 2.0.0
 
 ### Patch Changes

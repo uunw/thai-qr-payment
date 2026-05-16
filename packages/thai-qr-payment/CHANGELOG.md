@@ -1,5 +1,11 @@
 # thai-qr-payment
 
+## 3.0.0
+
+### Major Changes
+
+- [`7a2226f`](https://github.com/uunw/thai-qr-payment/commit/7a2226fa9c29a3490249b933a67f043f83b52e7b) Thanks [@uunw](https://github.com/uunw)! - Bump `thai-qr-payment` (umbrella) and `@thai-qr-payment/payload` to `2.0.0` so every package in the linked `@thai-qr-payment/*` family advertises the same major. Last release split the family across two majors (qr/assets/render/cli/react at 2.0.0 vs payload/umbrella at 1.0.0) because the changesets `linked` rule only realigns packages that themselves have a changeset attached — empty changesets are still required for tag-along packages. This catches the two stragglers up. No source changes, version metadata only.
+
 ## 1.0.0
 
 ### Minor Changes
