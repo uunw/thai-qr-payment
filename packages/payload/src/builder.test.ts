@@ -117,6 +117,79 @@ describe('ThaiQrPaymentBuilder — BillPayment', () => {
   });
 });
 
+describe('ThaiQrPaymentBuilder — BillPayment cross-border', () => {
+  it('emits the ASEAN AID instead of the domestic one when crossBorder is true', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', reference1: '123456789012', crossBorder: true })
+      .amount(100)
+      .build();
+    expect(payload).toContain('A000000677012006');
+    expect(payload).not.toContain('A000000677010112');
+  });
+
+  it('still emits the domestic AID when crossBorder is omitted', () => {
+    const payload = new ThaiQrPaymentBuilder().billPayment({ billerId: '099400016550100' }).build();
+    expect(payload).toContain('A000000677010112');
+    expect(payload).not.toContain('A000000677012006');
+  });
+
+  it('still emits the domestic AID when crossBorder is explicitly false', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', crossBorder: false })
+      .build();
+    expect(payload).toContain('A000000677010112');
+    expect(payload).not.toContain('A000000677012006');
+  });
+
+  it('produces the expected wire bytes for a documented sample', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', reference1: '123456789012', crossBorder: true })
+      .amount(100)
+      .build();
+    expect(payload).toBe(
+      '00020101021230550016A0000006770120060115099400016550100021212345678901253037645406100.005802TH63049D1C',
+    );
+  });
+
+  it('round-trips a cross-border payload through parse', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', reference1: '123456789012', crossBorder: true })
+      .amount(100)
+      .build();
+    const parsed = parsePayload(payload);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'billPayment',
+      billerId: '099400016550100',
+      reference1: '123456789012',
+      crossBorder: true,
+    });
+    expect(parsed.amount).toBe(100);
+  });
+
+  it('round-trips the purposeOfTransaction triple unmodified', () => {
+    // Spec triple: currencyCode (3 digits "702") + localAmount (13 digits
+    // "0000000010000") + countryCode (2 chars "SG") = 18 chars. The
+    // builder treats the field opaquely; this only checks it survives.
+    const purpose = '7020000000010000SG';
+    const payload = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', crossBorder: true })
+      .amount(100)
+      .additionalData({ purposeOfTransaction: purpose })
+      .build();
+    const parsed = parsePayload(payload);
+    expect(parsed.additionalData?.purposeOfTransaction).toBe(purpose);
+  });
+
+  it('allows switching between domestic and cross-border on the same builder', () => {
+    const payload = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', crossBorder: true })
+      .billPayment({ billerId: '099400016550100', crossBorder: false })
+      .build();
+    expect(payload).toContain('A000000677010112');
+    expect(payload).not.toContain('A000000677012006');
+  });
+});
+
 describe('ThaiQrPaymentBuilder — merchant info', () => {
   it('truncates merchant name to 25 chars', () => {
     const long = 'A'.repeat(40);

@@ -66,6 +66,7 @@ export const CURRENCY_THB = '764';
 export const COUNTRY_TH = 'TH';
 export const GUID_PROMPTPAY = 'A000000677010111';
 export const GUID_BILL_PAYMENT = 'A000000677010112';
+export const GUID_BILL_PAYMENT_CROSS_BORDER = 'A000000677012006';
 
 // ── Tip handling ────────────────────────────────────────────────────────
 export const TIP_PROMPT = '01';

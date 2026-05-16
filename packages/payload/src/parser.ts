@@ -23,6 +23,7 @@ import {
   COUNTRY_TH,
   CURRENCY_THB,
   GUID_BILL_PAYMENT,
+  GUID_BILL_PAYMENT_CROSS_BORDER,
   GUID_PROMPTPAY,
   POI_DYNAMIC,
   SUB_ADD_BILL_NUMBER,
@@ -71,6 +72,14 @@ export interface ParsedBillPayment {
   readonly billerId: string;
   readonly reference1?: string;
   readonly reference2?: string;
+  /**
+   * `true` when the merchant template uses the ASEAN cross-border AID
+   * (`A000000677012006`). In that mode the `purposeOfTransaction` field
+   * (tag 62 sub-tag 08) carries an 18-char triple of currency + local
+   * amount + country; the parser surfaces it verbatim under
+   * `additionalData.purposeOfTransaction`.
+   */
+  readonly crossBorder: boolean;
 }
 
 export interface ParsedTrueMoney {
@@ -186,7 +195,18 @@ function parseTrueMoneyTemplate(template: string): ParsedTrueMoney | null {
 function parseBillPaymentTemplate(template: string): ParsedBillPayment | null {
   const sub = parseFields(template);
   const guid = sub.get(SUB_GUID);
-  if (guid !== GUID_BILL_PAYMENT) return null;
+  // Two recognised AIDs: domestic and cross-border (ASEAN remittance).
+  // Anything else is an unknown AID — return null so the parser leaves
+  // `merchant` as null, matching how the PromptPay branch handles a
+  // strange GUID.
+  let crossBorder: boolean;
+  if (guid === GUID_BILL_PAYMENT) {
+    crossBorder = false;
+  } else if (guid === GUID_BILL_PAYMENT_CROSS_BORDER) {
+    crossBorder = true;
+  } else {
+    return null;
+  }
   const billerId = sub.get(SUB_BILL_BILLER_ID);
   if (billerId == null) return null;
   return {
@@ -194,6 +214,7 @@ function parseBillPaymentTemplate(template: string): ParsedBillPayment | null {
     billerId,
     reference1: sub.get(SUB_BILL_REFERENCE_1) ?? undefined,
     reference2: sub.get(SUB_BILL_REFERENCE_2) ?? undefined,
+    crossBorder,
   };
 }
 

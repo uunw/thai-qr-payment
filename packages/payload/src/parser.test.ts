@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ThaiQrPaymentBuilder } from './builder.js';
+import { checksum } from './crc.js';
 import { parsePayload } from './parser.js';
 
 describe('parsePayload — happy paths', () => {
@@ -104,6 +105,76 @@ describe('parsePayload — happy paths', () => {
       const parsed = parsePayload(wire);
       expect((parsed.merchant as { recipientType: string })?.recipientType).toBe(expected[i]);
     });
+  });
+});
+
+describe('parsePayload — BillPayment cross-border', () => {
+  it('flags cross-border AID with crossBorder: true', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', reference1: '123456789012', crossBorder: true })
+      .amount(100)
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'billPayment',
+      billerId: '099400016550100',
+      reference1: '123456789012',
+      crossBorder: true,
+    });
+  });
+
+  it('flags domestic AID with crossBorder: false', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', reference1: '123456789012' })
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'billPayment',
+      crossBorder: false,
+    });
+  });
+
+  it('returns merchant: null on an unknown AID (tamper protection)', () => {
+    // Construct a payload with a made-up bill-payment AID by swapping the
+    // domestic AID inside the tag-30 template, then recomputing the CRC.
+    const valid = new ThaiQrPaymentBuilder().billPayment({ billerId: '099400016550100' }).build();
+    const tamperedBody = valid.slice(0, -4).replace('A000000677010112', 'A000000677012007');
+    // Strip the trailing "6304" header from the body before re-hashing —
+    // checksum() expects the seed to include that header, same as the
+    // builder.
+    const reCrc = checksum(tamperedBody);
+    const tampered = tamperedBody + reCrc;
+    const parsed = parsePayload(tampered);
+    expect(parsed.merchant).toBeNull();
+  });
+
+  it('round-trips the purposeOfTransaction triple verbatim', () => {
+    // Spec triple: 3-digit currency ("702") + 13-digit local amount
+    // ("0000000010000") + 2-char country ("SG") = 18 chars. Parser must
+    // not interpret the inner structure.
+    const purpose = '7020000000010000SG';
+    const wire = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', crossBorder: true })
+      .amount(100)
+      .additionalData({ purposeOfTransaction: purpose })
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.additionalData?.purposeOfTransaction).toBe(purpose);
+    expect(parsed.additionalData?.purposeOfTransaction).toHaveLength(18);
+  });
+
+  it('parses biller-only cross-border payloads', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .billPayment({ billerId: '099400016550100', crossBorder: true })
+      .build();
+    const parsed = parsePayload(wire);
+    if (parsed.merchant?.kind === 'billPayment') {
+      expect(parsed.merchant.crossBorder).toBe(true);
+      expect(parsed.merchant.reference1).toBeUndefined();
+      expect(parsed.merchant.reference2).toBeUndefined();
+    } else {
+      expect.fail('Expected billPayment merchant kind');
+    }
   });
 });
 
