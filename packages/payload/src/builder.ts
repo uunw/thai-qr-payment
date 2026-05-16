@@ -16,12 +16,18 @@
 import { formatAmount, type FormatAmountOptions } from './amount.js';
 import { checksum } from './crc.js';
 import { encodePersonalMessage } from './message.js';
-import { normaliseRecipient, type PromptPayRecipientType } from './recipient.js';
+import {
+  normaliseBankAccount,
+  normaliseRecipient,
+  type NormalisedRecipient,
+  type PromptPayRecipientType,
+} from './recipient.js';
 import {
   COUNTRY_TH,
   CURRENCY_THB,
   GUID_BILL_PAYMENT,
   GUID_PROMPTPAY,
+  GUID_PROMPTPAY_OTA,
   PAYLOAD_FORMAT_VERSION,
   POI_DYNAMIC,
   POI_STATIC,
@@ -38,6 +44,7 @@ import {
   SUB_BILL_REFERENCE_1,
   SUB_BILL_REFERENCE_2,
   SUB_GUID,
+  SUB_PROMPTPAY_OTA,
   SUB_TRUE_MONEY,
   TAG_ADDITIONAL_DATA,
   TAG_CHECKSUM,
@@ -62,6 +69,8 @@ import {
   TRUE_MONEY_PREFIX,
 } from './tags.js';
 import { encodeField, encodeFields } from './tlv.js';
+
+const OTA_CODE_LENGTH = 10;
 
 export interface AdditionalDataFields {
   billNumber?: string;
@@ -106,6 +115,8 @@ export class ThaiQrPaymentBuilder {
   private readonly additional: AdditionalDataFields = {};
   private tip: TipMode | undefined;
   private personalMessage: string | undefined;
+  private promptPayRecipient: NormalisedRecipient | undefined;
+  private otaCode: string | undefined;
 
   constructor() {
     this.fields.set(TAG_PAYLOAD_FORMAT, PAYLOAD_FORMAT_VERSION);
@@ -116,17 +127,62 @@ export class ThaiQrPaymentBuilder {
 
   /**
    * Configure a PromptPay recipient (mobile, national ID, or e-wallet).
-   * Overrides any previously-set BillPayment / KShop template.
+   * Overrides any previously-set BillPayment / KShop template. Use
+   * `.bankAccount()` for credit-transfer payloads — its wire value needs
+   * the (bankCode, accountNo) split this single-string form cannot carry.
    */
   promptpay(recipient: string, type?: PromptPayRecipientType): this {
-    const normalised = normaliseRecipient(recipient, type);
-    const template = encodeFields([
-      [SUB_GUID, GUID_PROMPTPAY],
-      [normalised.subTag, normalised.value],
-    ]);
-    this.fields.set(TAG_MERCHANT_ACCOUNT_PROMPTPAY, template);
+    if (type === 'bankAccount') {
+      throw new TypeError('Use .bankAccount(bankCode, accountNo) for bank-account recipients');
+    }
+    this.promptPayRecipient = normaliseRecipient(recipient, type);
+    this.refreshPromptPayTemplate();
     this.fields.delete(TAG_MERCHANT_ACCOUNT_BILL_PAYMENT);
     return this;
+  }
+
+  /**
+   * Configure a PromptPay credit transfer to a bank account (sub-tag 04).
+   * `bankCode` is the 3-digit BoT bank identifier; `accountNo` is the
+   * variable-length numeric account.
+   *
+   * @example
+   *   new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').amount(100).build()
+   */
+  bankAccount(bankCode: string, accountNo: string): this {
+    this.promptPayRecipient = normaliseBankAccount(bankCode, accountNo);
+    this.refreshPromptPayTemplate();
+    this.fields.delete(TAG_MERCHANT_ACCOUNT_BILL_PAYMENT);
+    return this;
+  }
+
+  /**
+   * Attach a One-Time Authorization code (sub-tag 05, fixed 10 chars).
+   * Flips the merchant template's AID from the standard PromptPay GUID to
+   * the OTA GUID so scanners route the payload to the single-use flow.
+   *
+   * @example
+   *   new ThaiQrPaymentBuilder().promptpay('0812345678').ota('1234567890').amount(50).build()
+   */
+  ota(otaCode: string): this {
+    if (otaCode.length !== OTA_CODE_LENGTH) {
+      throw new RangeError(`OTA code must be ${OTA_CODE_LENGTH} chars, got ${otaCode.length}`);
+    }
+    this.otaCode = otaCode;
+    this.refreshPromptPayTemplate();
+    return this;
+  }
+
+  /** Re-emit tag 29 from the current recipient + OTA state. */
+  private refreshPromptPayTemplate(): void {
+    if (this.promptPayRecipient == null) return;
+    const aid = this.otaCode != null ? GUID_PROMPTPAY_OTA : GUID_PROMPTPAY;
+    const template = encodeFields([
+      [SUB_GUID, aid],
+      [this.promptPayRecipient.subTag, this.promptPayRecipient.value],
+      [SUB_PROMPTPAY_OTA, this.otaCode],
+    ]);
+    this.fields.set(TAG_MERCHANT_ACCOUNT_PROMPTPAY, template);
   }
 
   /**
@@ -154,6 +210,8 @@ export class ThaiQrPaymentBuilder {
     ]);
     this.fields.set(TAG_MERCHANT_ACCOUNT_PROMPTPAY, template);
     this.fields.delete(TAG_MERCHANT_ACCOUNT_BILL_PAYMENT);
+    this.promptPayRecipient = undefined;
+    this.otaCode = undefined;
     this.personalMessage = options.message;
     if (options.amount != null) {
       this.amount(options.amount);
@@ -173,6 +231,8 @@ export class ThaiQrPaymentBuilder {
     ]);
     this.fields.set(TAG_MERCHANT_ACCOUNT_BILL_PAYMENT, template);
     this.fields.delete(TAG_MERCHANT_ACCOUNT_PROMPTPAY);
+    this.promptPayRecipient = undefined;
+    this.otaCode = undefined;
     return this;
   }
 

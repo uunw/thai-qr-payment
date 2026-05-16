@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ThaiQrPaymentBuilder } from './builder.js';
+import { checksum } from './crc.js';
 import { parsePayload } from './parser.js';
 
 describe('parsePayload — happy paths', () => {
@@ -368,6 +369,134 @@ describe('parsePayload — TrueMoney decoding', () => {
     const wire = new ThaiQrPaymentBuilder().promptpay('012345678901234').build();
     const parsed = parsePayload(wire);
     expect(parsed.merchant?.kind).toBe('promptpay');
+  });
+});
+
+describe('parsePayload — bankAccount recipient', () => {
+  it('parses a static bankAccount payload', () => {
+    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'promptpay',
+      recipientType: 'bankAccount',
+      recipient: '0141234567890',
+      bankCode: '014',
+      accountNo: '1234567890',
+    });
+    expect(parsed.amount).toBeNull();
+    expect(parsed.pointOfInitiation).toBe('static');
+  });
+
+  it('parses a dynamic bankAccount payload with an amount', () => {
+    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').amount(100).build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'promptpay',
+      recipientType: 'bankAccount',
+      bankCode: '014',
+      accountNo: '1234567890',
+    });
+    expect(parsed.amount).toBe(100);
+  });
+
+  it('does not set ota when the standard AID is used', () => {
+    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').build();
+    const parsed = parsePayload(wire);
+    if (parsed.merchant?.kind !== 'promptpay') expect.fail('Expected promptpay merchant');
+    expect(parsed.merchant.ota).toBeUndefined();
+  });
+
+  it('handles long account numbers up to the EMVCo cap', () => {
+    const longAccount = '1'.repeat(40);
+    const wire = new ThaiQrPaymentBuilder().bankAccount('014', longAccount).build();
+    const parsed = parsePayload(wire);
+    if (parsed.merchant?.kind !== 'promptpay') expect.fail('Expected promptpay merchant');
+    expect(parsed.merchant.accountNo).toBe(longAccount);
+  });
+
+  it('exposes sub-tag 04 through getTagValue', () => {
+    const wire = new ThaiQrPaymentBuilder().bankAccount('014', '1234567890').build();
+    expect(parsePayload(wire).getTagValue('29', '04')).toBe('0141234567890');
+  });
+});
+
+describe('parsePayload — OTA credit transfer', () => {
+  it('parses a dynamic OTA payload with a mobile recipient', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .promptpay('0812345678')
+      .ota('1234567890')
+      .amount(50)
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'promptpay',
+      recipientType: 'mobile',
+      recipient: '0812345678',
+      ota: '1234567890',
+    });
+    expect(parsed.amount).toBe(50);
+  });
+
+  it('parses an OTA payload that targets a bankAccount', () => {
+    const wire = new ThaiQrPaymentBuilder()
+      .bankAccount('014', '1234567890')
+      .ota('1234567890')
+      .build();
+    const parsed = parsePayload(wire);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'promptpay',
+      recipientType: 'bankAccount',
+      bankCode: '014',
+      accountNo: '1234567890',
+      ota: '1234567890',
+    });
+  });
+
+  it('exposes the OTA sub-tag through getTagValue', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').ota('1234567890').build();
+    const parsed = parsePayload(wire);
+    expect(parsed.getTagValue('29', '00')).toBe('A000000677010114');
+    expect(parsed.getTagValue('29', '05')).toBe('1234567890');
+  });
+
+  it('returns null merchant when the AID is tampered to a value that is neither …0111 nor …0114', () => {
+    // Replace the standard PromptPay AID with a bogus 16-char string,
+    // then re-checksum so the CRC layer accepts the payload and we can
+    // exercise the parser's discriminator path.
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const tampered = wire.replace('A000000677010111', 'A000000677010199');
+    const body = tampered.slice(0, -4);
+    const repaired = body + checksum(body);
+    expect(parsePayload(repaired).merchant).toBeNull();
+  });
+
+  it('treats the OTA AID alone (with no sub-tag 05) as a promptpay merchant with no ota', () => {
+    // Builder always pairs the OTA AID with sub-tag 05. Hand-craft a
+    // payload that carries the OTA AID but omits the sub-tag to exercise
+    // the discriminator on its own.
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').ota('1234567890').build();
+    const stripped = wire.replace('05101234567890', '');
+    const body = stripped.slice(0, -4);
+    // Need to also patch the tag-29 length header to reflect the missing
+    // 14 chars of sub-tag 05. Find "2951" → drop 14 → "2937".
+    const adjustedBody = body.replace('2951', '2937');
+    const repaired = adjustedBody + checksum(adjustedBody);
+    const parsed = parsePayload(repaired);
+    expect(parsed.merchant).toMatchObject({
+      kind: 'promptpay',
+      recipientType: 'mobile',
+      recipient: '0812345678',
+    });
+    if (parsed.merchant?.kind === 'promptpay') {
+      expect(parsed.merchant.ota).toBeUndefined();
+    }
+  });
+
+  it('a standard payload reports ota === undefined', () => {
+    const wire = new ThaiQrPaymentBuilder().promptpay('0812345678').build();
+    const parsed = parsePayload(wire);
+    if (parsed.merchant?.kind !== 'promptpay') expect.fail('Expected promptpay merchant');
+    expect(parsed.merchant.ota).toBeUndefined();
   });
 });
 

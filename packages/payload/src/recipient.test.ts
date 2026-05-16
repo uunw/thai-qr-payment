@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normaliseRecipient } from './recipient.js';
+import { normaliseBankAccount, normaliseRecipient } from './recipient.js';
 
 describe('normaliseRecipient — mobile', () => {
   it('maps a leading-0 phone to 0066xxxxxxxxxx', () => {
@@ -138,6 +138,36 @@ describe('normaliseRecipient — error cases', () => {
 
   it('throws TypeError for empty input', () => {
     expect(() => normaliseRecipient('')).toThrow(TypeError);
+  });
+});
+
+describe('normaliseBankAccount', () => {
+  it('concatenates bank code and account number into sub-tag 04', () => {
+    const r = normaliseBankAccount('014', '1234567890');
+    expect(r.subTag).toBe('04');
+    expect(r.value).toBe('0141234567890');
+    expect(r.type).toBe('bankAccount');
+  });
+
+  it('strips dashes and spaces from both inputs', () => {
+    const r = normaliseBankAccount('0-1-4', '123 456 7890');
+    expect(r.value).toBe('0141234567890');
+  });
+
+  it('rejects a bank code that is not exactly 3 digits', () => {
+    expect(() => normaliseBankAccount('01', '1234567890')).toThrow(/3 digits/);
+    expect(() => normaliseBankAccount('0140', '1234567890')).toThrow(/3 digits/);
+    expect(() => normaliseBankAccount('', '1234567890')).toThrow(/3 digits/);
+  });
+
+  it('rejects an empty account number', () => {
+    expect(() => normaliseBankAccount('014', '')).toThrow(/at least one digit/);
+    expect(() => normaliseBankAccount('014', '---')).toThrow(/at least one digit/);
+  });
+
+  it('rejects values exceeding the 43-char wire cap', () => {
+    const tooLong = '1'.repeat(41);
+    expect(() => normaliseBankAccount('014', tooLong)).toThrow(/exceeds 43/);
   });
 });
 

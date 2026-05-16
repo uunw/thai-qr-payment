@@ -24,6 +24,7 @@ import {
   CURRENCY_THB,
   GUID_BILL_PAYMENT,
   GUID_PROMPTPAY,
+  GUID_PROMPTPAY_OTA,
   POI_DYNAMIC,
   SUB_ADD_BILL_NUMBER,
   SUB_ADD_CONSUMER_DATA_REQUEST,
@@ -38,9 +39,11 @@ import {
   SUB_BILL_REFERENCE_1,
   SUB_BILL_REFERENCE_2,
   SUB_GUID,
+  SUB_PROMPTPAY_BANK_ACCOUNT,
   SUB_PROMPTPAY_EWALLET,
   SUB_PROMPTPAY_MOBILE,
   SUB_PROMPTPAY_NATIONAL_ID,
+  SUB_PROMPTPAY_OTA,
   SUB_TRUE_MONEY,
   TAG_ADDITIONAL_DATA,
   TAG_CHECKSUM,
@@ -60,10 +63,23 @@ import {
 } from './tags.js';
 import { iterateFields, parseFields, type TlvField } from './tlv.js';
 
+const BANK_CODE_LENGTH = 3;
+
 export interface ParsedPromptPay {
   readonly kind: 'promptpay';
   readonly recipientType: PromptPayRecipientType;
+  /**
+   * Wire value for the recipient sub-tag. For `bankAccount` this is the
+   * full `bankCode + accountNo` concatenation — split fields are exposed
+   * separately below.
+   */
   readonly recipient: string;
+  /** Bank code (3 digits). Present only when `recipientType === 'bankAccount'`. */
+  readonly bankCode?: string;
+  /** Account number. Present only when `recipientType === 'bankAccount'`. */
+  readonly accountNo?: string;
+  /** One-Time Authorization code from sub-tag 05. Present only on OTA payloads. */
+  readonly ota?: string;
 }
 
 export interface ParsedBillPayment {
@@ -157,18 +173,50 @@ function fromTrueMoneyWire(wire: string): string {
 function parsePromptPayTemplate(template: string): ParsedPromptPay | null {
   const sub = parseFields(template);
   const guid = sub.get(SUB_GUID);
-  if (guid !== GUID_PROMPTPAY) return null;
+  // OTA payloads use the `…0114` AID; everything else rides the standard
+  // PromptPay `…0111` AID. The AID is the sole discriminator — sub-tags
+  // 01-04 carry the same recipient shapes in either envelope.
+  const isOta = guid === GUID_PROMPTPAY_OTA;
+  if (guid !== GUID_PROMPTPAY && !isOta) return null;
+  const ota = isOta ? sub.get(SUB_PROMPTPAY_OTA) : undefined;
+
+  const bankAccount = sub.get(SUB_PROMPTPAY_BANK_ACCOUNT);
+  if (bankAccount != null) {
+    return {
+      kind: 'promptpay',
+      recipientType: 'bankAccount',
+      recipient: bankAccount,
+      bankCode: bankAccount.slice(0, BANK_CODE_LENGTH),
+      accountNo: bankAccount.slice(BANK_CODE_LENGTH),
+      ...(ota != null ? { ota } : {}),
+    };
+  }
   const mobile = sub.get(SUB_PROMPTPAY_MOBILE);
   if (mobile != null) {
-    return { kind: 'promptpay', recipientType: 'mobile', recipient: fromMobileWire(mobile) };
+    return {
+      kind: 'promptpay',
+      recipientType: 'mobile',
+      recipient: fromMobileWire(mobile),
+      ...(ota != null ? { ota } : {}),
+    };
   }
   const nationalId = sub.get(SUB_PROMPTPAY_NATIONAL_ID);
   if (nationalId != null) {
-    return { kind: 'promptpay', recipientType: 'nationalId', recipient: nationalId };
+    return {
+      kind: 'promptpay',
+      recipientType: 'nationalId',
+      recipient: nationalId,
+      ...(ota != null ? { ota } : {}),
+    };
   }
   const eWallet = sub.get(SUB_PROMPTPAY_EWALLET);
   if (eWallet != null) {
-    return { kind: 'promptpay', recipientType: 'eWallet', recipient: eWallet };
+    return {
+      kind: 'promptpay',
+      recipientType: 'eWallet',
+      recipient: eWallet,
+      ...(ota != null ? { ota } : {}),
+    };
   }
   return null;
 }

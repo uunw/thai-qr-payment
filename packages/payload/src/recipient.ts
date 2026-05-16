@@ -1,23 +1,34 @@
 /**
  * Recipient normalisation for the PromptPay merchant template.
  *
- * The wire format under tag 29 has three sub-tags (01 phone, 02 national ID,
- * 03 e-wallet). The expected length determines which sub-tag the value
- * lands in, and phone numbers get the country prefix swap `0` → `66`.
+ * The wire format under tag 29 has four sub-tags (01 phone, 02 national
+ * ID, 03 e-wallet, 04 bank account). The expected length determines which
+ * sub-tag a single-string recipient lands in, and phone numbers get the
+ * country prefix swap `0` → `66`. Bank account values are composed from
+ * two pieces (bank code + account number) and have their own helper.
  */
 
-import { SUB_PROMPTPAY_EWALLET, SUB_PROMPTPAY_MOBILE, SUB_PROMPTPAY_NATIONAL_ID } from './tags.js';
+import {
+  SUB_PROMPTPAY_BANK_ACCOUNT,
+  SUB_PROMPTPAY_EWALLET,
+  SUB_PROMPTPAY_MOBILE,
+  SUB_PROMPTPAY_NATIONAL_ID,
+} from './tags.js';
 
-export type PromptPayRecipientType = 'mobile' | 'nationalId' | 'eWallet';
+export type PromptPayRecipientType = 'mobile' | 'nationalId' | 'eWallet' | 'bankAccount';
 
 export interface NormalisedRecipient {
   readonly subTag:
     | typeof SUB_PROMPTPAY_MOBILE
     | typeof SUB_PROMPTPAY_NATIONAL_ID
-    | typeof SUB_PROMPTPAY_EWALLET;
+    | typeof SUB_PROMPTPAY_EWALLET
+    | typeof SUB_PROMPTPAY_BANK_ACCOUNT;
   readonly value: string;
   readonly type: PromptPayRecipientType;
 }
+
+const BANK_CODE_LENGTH = 3;
+const BANK_ACCOUNT_MAX_LENGTH = 43;
 
 /** Strip every non-digit character. */
 function stripNonDigits(input: string): string {
@@ -41,17 +52,19 @@ function toMobileWire(digits: string): string {
  * Decide the recipient type from the digit count, then format the wire
  * value. Explicit `type` arg overrides the inference — useful if a
  * national ID happens to look like a long e-wallet id or vice versa.
+ * Pass `'bankAccount'` to `normaliseBankAccount` instead; it needs two
+ * pieces (bank code + account number) the single-string form can't carry.
  */
 export function normaliseRecipient(
   raw: string,
-  explicit?: PromptPayRecipientType,
+  explicit?: Exclude<PromptPayRecipientType, 'bankAccount'>,
 ): NormalisedRecipient {
   const digits = stripNonDigits(raw);
   if (digits.length === 0) {
     throw new TypeError('PromptPay recipient must contain at least one digit');
   }
 
-  const inferred: PromptPayRecipientType =
+  const inferred: Exclude<PromptPayRecipientType, 'bankAccount'> =
     explicit ?? (digits.length >= 15 ? 'eWallet' : digits.length >= 13 ? 'nationalId' : 'mobile');
 
   switch (inferred) {
@@ -68,4 +81,32 @@ export function normaliseRecipient(
       }
       return { subTag: SUB_PROMPTPAY_EWALLET, value: digits, type: 'eWallet' };
   }
+}
+
+/**
+ * Format a bank-account recipient for sub-tag 04 under the PromptPay
+ * merchant template. The wire value is the 3-digit bank code followed by
+ * the (variable-length, numeric) account number; total length must fit
+ * EMVCo's 1–43-character cap on the sub-tag.
+ *
+ * @example
+ *   normaliseBankAccount('014', '1234567890')
+ *   // → { subTag: '04', value: '0141234567890', type: 'bankAccount' }
+ */
+export function normaliseBankAccount(bankCode: string, accountNo: string): NormalisedRecipient {
+  const codeDigits = stripNonDigits(bankCode);
+  const accountDigits = stripNonDigits(accountNo);
+  if (codeDigits.length !== BANK_CODE_LENGTH) {
+    throw new RangeError(`Bank code must be ${BANK_CODE_LENGTH} digits, got ${codeDigits.length}`);
+  }
+  if (accountDigits.length === 0) {
+    throw new TypeError('Bank account number must contain at least one digit');
+  }
+  const value = codeDigits + accountDigits;
+  if (value.length > BANK_ACCOUNT_MAX_LENGTH) {
+    throw new RangeError(
+      `Bank account wire value exceeds ${BANK_ACCOUNT_MAX_LENGTH} chars (got ${value.length})`,
+    );
+  }
+  return { subTag: SUB_PROMPTPAY_BANK_ACCOUNT, value, type: 'bankAccount' };
 }
