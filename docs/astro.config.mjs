@@ -35,6 +35,8 @@ export default defineConfig({
           label: 'Guide',
           items: [
             { label: 'Payload (EMVCo TLV)', slug: 'guide/payload' },
+            { label: 'Slip Verify', slug: 'guide/slip-verify' },
+            { label: 'BOT barcode', slug: 'guide/barcode' },
             { label: 'QR encoder', slug: 'guide/qr' },
             { label: 'SVG renderer', slug: 'guide/render' },
             { label: 'Brand assets', slug: 'guide/assets' },

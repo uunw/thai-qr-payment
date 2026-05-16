@@ -36,13 +36,19 @@ Every other Thai QR library on npm wraps the [`qrcode`](https://www.npmjs.com/pa
     Full bundle 13.6 KB brotli. Payload-only sub-path 3 KB.
   </Card>
   <Card title="Spec-faithful" icon="approve-check">
-    EMVCo MPM 1.1 + Bank of Thailand supplement, ISO/IEC 18004 QR Model 2, 489 vitest assertions.
+    EMVCo MPM 1.1 + Bank of Thailand supplement, ISO/IEC 18004 QR Model 2, 337 vitest tests in the
+    payload package alone.
   </Card>
   <Card title="React-ready" icon="seti:react">
     `<ThaiQrPayment />` and `<ThaiQrPaymentMatrix />` SSR-safe, peer-dep React.
   </Card>
   <Card title="CLI included" icon="seti:shell">
     `npx thai-qr-payment 0812345678 --amount 50 -o qr.svg`
+  </Card>
+  <Card title="Beyond PromptPay" icon="puzzle">
+    Bank-account PromptPay, OTA credit transfer, [TrueMoney Wallet QR](/guide/payload/), [VAT
+    TQRC](/reference/spec/#vat-tqrc-template-under-tag-80), cross-border bill payment, [Slip Verify
+    Mini-QR](/guide/slip-verify/), [BOT 1D barcode](/guide/barcode/).
   </Card>
 </CardGrid>
 
