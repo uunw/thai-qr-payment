@@ -1,0 +1,148 @@
+/*
+ * Brand-spec theme overrides. Uses the Bank of Thailand Thai QR Payment
+ * palette as documented in AGENT.md — TQR Maximum Blue (#00427A) as the
+ * primary accent + #00A796 as the secondary green. Variable names follow
+ * Starlight's exported CSS custom properties so future Starlight upgrades
+ * only need a swap of token names if any.
+ */
+
+:root {
+  /* Brand */
+  --tqr-blue-500: #00427a;
+  --tqr-blue-600: #00366a;
+  --tqr-blue-700: #002a55;
+  --tqr-blue-300: #4d83b1;
+  --tqr-teal-500: #00a796;
+  --tqr-teal-600: #008376;
+  --tqr-teal-300: #4dc2b5;
+  --tqr-bg-grad-from: #f3f7fb;
+  --tqr-bg-grad-to: #eef4fa;
+
+  /* Typography */
+  --sl-font:
+    'Inter', 'IBM Plex Sans Thai', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --sl-font-mono: 'JetBrains Mono', 'Fira Code', 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+/* Light theme — uses navy as the accent so chrome reads as "official". */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #d6e6f5;
+  --sl-color-accent: var(--tqr-blue-500);
+  --sl-color-accent-high: var(--tqr-blue-700);
+  --sl-color-text-accent: var(--tqr-blue-700);
+  --sl-color-bg-sidebar: #fafbfc;
+  --sl-color-bg-nav: #ffffff;
+}
+
+/* Dark theme — lift the navy to a paler shade so it stays legible. */
+:root[data-theme='dark'] {
+  --sl-color-accent-low: rgba(0, 66, 122, 0.25);
+  --sl-color-accent: var(--tqr-blue-300);
+  --sl-color-accent-high: #cfe1f1;
+  --sl-color-text-accent: var(--tqr-blue-300);
+}
+
+/* Splash hero — soft brand gradient + tighter typography */
+.hero {
+  background: linear-gradient(135deg, var(--tqr-bg-grad-from), var(--tqr-bg-grad-to));
+  border-radius: 16px;
+  padding: clamp(1.5rem, 4vw, 3rem) !important;
+}
+:root[data-theme='dark'] .hero {
+  background: linear-gradient(135deg, rgba(0, 66, 122, 0.18), rgba(0, 167, 150, 0.08));
+}
+.hero h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.hero .tagline {
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  opacity: 0.85;
+}
+
+/* Card grid polish — subtle hover lift + accent border on focus. */
+.card {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 12px;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    border-color 120ms ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -15px rgba(0, 66, 122, 0.35);
+  border-color: var(--tqr-blue-500);
+}
+:root[data-theme='dark'] .card:hover {
+  border-color: var(--tqr-blue-300);
+  box-shadow: 0 10px 25px -15px rgba(0, 167, 150, 0.45);
+}
+
+/* Inline code chips read as labels, not afterthoughts. */
+:not(pre) > code {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-text-accent);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.92em;
+}
+
+/* Code blocks — subtle border instead of borderless monolith */
+pre.expressive-code {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 8px;
+}
+
+/* Sidebar — slightly tighter, accent highlight on active link */
+.sidebar nav ul li > a[aria-current='page'] {
+  background: var(--sl-color-accent-low);
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* Site header — thin bottom border picks up brand */
+header.header {
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+header.header::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(90deg, var(--tqr-blue-500), var(--tqr-teal-500));
+  opacity: 0.85;
+}
+
+/* Tables — alternating rows, less visual weight */
+table {
+  border-collapse: collapse;
+}
+table tr:nth-child(even) {
+  background: var(--sl-color-bg-nav);
+}
+
+/* Anchored headings — show the link icon on hover only */
+.sl-markdown-content :is(h2, h3, h4) > a.sl-anchor-link {
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.sl-markdown-content :is(h2, h3, h4):hover > a.sl-anchor-link {
+  opacity: 1;
+}
+
+/* Sample QR card images shouldn't dwarf the prose */
+.sl-markdown-content img[src*='/img/samples/'] {
+  max-width: min(420px, 100%);
+  display: block;
+  margin: 1.25rem auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px -8px rgba(0, 66, 122, 0.25);
+}
+
+/* Thai script — pull in Noto Sans Thai Looped so Thai prose doesn't
+   inherit Latin metrics. Loaded via @font-face in `head` injection
+   from astro.config so the docs stay style-tag-free here. */
+:lang(th) {
+  font-family: 'Noto Sans Thai Looped', 'IBM Plex Sans Thai', var(--sl-font);
+}

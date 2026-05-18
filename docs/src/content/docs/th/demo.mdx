@@ -1,0 +1,24 @@
+---
+title: ลองใช้สด ๆ
+description: ลองใช้ thai-qr-payment ในเบราว์เซอร์ — พิมพ์ผู้รับและยอดเงิน รับ Thai QR Payment SVG ที่สแกนได้
+---
+
+import { QrDemo } from '../../../components/QrDemo.tsx';
+
+หน้า demo ด้านล่าง import `thai-qr-payment` มาจาก bundle ของเว็บนี้ตรง ๆ แล้ว render SVG ใหม่ทุกครั้งที่กดแป้นพิมพ์ ใส่เบอร์ PromptPay ลงในฟอร์ม กำหนดยอดเงิน แล้ว **สแกนด้วยแอปธนาคารของคุณ**
+
+<QrDemo client:load />
+
+## เมื่อกี้เกิดอะไรขึ้น
+
+1. `payloadFor()` สร้าง wire string ตามมาตรฐาน EMVCo MPM จาก input ของคุณ
+2. `parsePayload()` ทำ round-trip กลับเพื่อตรวจ CRC และถอด merchant template ออกมา
+3. `encodeQR()` ทำ Reed-Solomon ECC ตาม ISO/IEC 18004 และเลือก mask
+4. `renderThaiQRPayment()` ประกอบ SVG สุดท้าย (โหมด card) หรือ `renderThaiQRPaymentMatrix()` ส่งออกแค่ QR matrix
+
+ทุกขั้นตอนทำงานฝั่ง client ไม่มีการเรียก network ไม่มี server ใช้ code-path เดียวกับแอป production
+
+## ข้อจำกัดที่ทราบของ demo
+
+- เบอร์ตัวอย่าง `0812345678` ไม่ใช่บัญชี PromptPay จริง — แอปธนาคารของคุณจะสแกนได้ถูกต้อง แต่จะปฏิเสธผู้รับในขั้นตอน "ยืนยัน"
+- โหมด card ฝัง mark ของ Thai QR Payment + PromptPay ไว้ แอป production ต้องปฏิบัติตาม [official brand guidelines](https://www.bot.or.th/) เมื่อใช้โลโก้เหล่านี้

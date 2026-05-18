@@ -1,0 +1,75 @@
+---
+title: thai-qr-payment
+description: ชุดเครื่องมือสำหรับ Thai QR Payment ที่ไม่มี dependency — payload, QR encoder, SVG card, React, CLI
+template: splash
+hero:
+  tagline: Thai QR Payment สำหรับ JS ที่ทำตามสเปกอย่างซื่อสัตย์ — payload, QR, SVG card, React, CLI. ไม่มี deps.
+  image:
+    file: ../../../../public/img/samples/qr-card-hero.svg
+  actions:
+    - text: ติดตั้ง
+      link: /install/
+      icon: download
+      variant: primary
+    - text: ลองใช้สด ๆ
+      link: /demo/
+      icon: rocket
+    - text: GitHub
+      link: https://github.com/uunw/thai-qr-payment
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, Code } from '@astrojs/starlight/components';
+
+## ทำไมต้องมีไลบรารีนี้
+
+ไลบรารี Thai QR ตัวอื่น ๆ บน npm ล้วน wrap แพ็กเกจ [`qrcode`](https://www.npmjs.com/package/qrcode) มัดคุณไว้กับ API เฉพาะ Node หรือไม่ก็ส่งมาเป็น blob ขนาด 30 KB ไลบรารีนี้เขียนด้วย TypeScript เองตั้งแต่ต้นจนจบ:
+
+<CardGrid>
+  <Card title="ไม่มี runtime deps" icon="seti:typescript">
+    ไม่มี `qrcode` ไม่มี `canvas` ไม่มี `crc16` `npm install thai-qr-payment` ดึงมาเพียง **tarball
+    เดียว**
+  </Card>
+  <Card title="ใช้ได้ทุกที่" icon="open-book">
+    Browsers, Node ≥ 18, Bun, Deno, Cloudflare Workers, Vercel Edge — bundle เดียวกัน
+  </Card>
+  <Card title="ขนาดเล็ก" icon="rocket">
+    Bundle เต็ม 13.6 KB brotli sub-path เฉพาะ payload 3 KB
+  </Card>
+  <Card title="ตรงตามสเปก" icon="approve-check">
+    EMVCo MPM 1.1 + Bank of Thailand supplement, ISO/IEC 18004 QR Model 2, 337 vitest test
+    เฉพาะในแพ็กเกจ payload อย่างเดียว
+  </Card>
+  <Card title="พร้อมใช้กับ React" icon="seti:react">
+    `<ThaiQRPayment />` และ `<ThaiQRPaymentMatrix />` SSR-safe โดย React เป็น peer-dep
+  </Card>
+  <Card title="มี CLI ให้ด้วย" icon="seti:shell">
+    `npx thai-qr-payment 0812345678 --amount 50 -o qr.svg`
+  </Card>
+  <Card title="มากกว่า PromptPay" icon="puzzle">
+    PromptPay แบบบัญชีธนาคาร, OTA credit transfer, [TrueMoney Wallet QR](/guide/payload/), [VAT
+    TQRC](/reference/spec/#vat-tqrc-template-under-tag-80), bill payment ข้ามประเทศ, [Slip Verify
+    Mini-QR](/guide/slip-verify/), [BOT 1D barcode](/guide/barcode/).
+  </Card>
+</CardGrid>
+
+## เริ่มต้นใช้งานอย่างรวดเร็ว
+
+<Code
+  code={`import { renderThaiQRPayment } from 'thai-qr-payment';
+
+const svg = renderThaiQRPayment({
+recipient: '0812345678',
+amount: 50,
+merchantName: 'Acme Coffee',
+amountLabel: '฿ 50.00',
+errorCorrectionLevel: 'H',
+});`}
+lang="ts"
+title="example.ts"
+/>
+
+![ตัวอย่าง QR card ที่ render ออกมา](../../../../public/img/samples/qr-card-merchant.svg)
+
+[→ ลองใช้โดยไม่ต้องติดตั้ง](/demo/)

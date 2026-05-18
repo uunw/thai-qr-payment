@@ -48,9 +48,36 @@ export default defineConfig({
   integrations: [
     react(),
     starlight({
-      title: 'thai-qr-payment',
+      title: {
+        en: 'thai-qr-payment',
+        th: 'thai-qr-payment',
+      },
       description:
         'Zero-dependency Thai QR Payment (EMVCo MPM) toolkit — payload builder, QR encoder, SVG card renderer, brand assets, React bindings, CLI.',
+      defaultLocale: 'root',
+      locales: {
+        root: { label: 'English', lang: 'en' },
+        th: { label: 'ไทย', lang: 'th' },
+      },
+      customCss: ['./src/styles/brand.css'],
+      head: [
+        // Inter (Latin) + Noto Sans Thai Looped (Thai) — Google Fonts CDN.
+        {
+          tag: 'link',
+          attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        },
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'stylesheet',
+            href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Thai+Looped:wght@400;500;600;700&display=swap',
+          },
+        },
+      ],
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/uunw/thai-qr-payment' },
       ],
