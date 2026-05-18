@@ -59,24 +59,21 @@ export default defineConfig({
         root: { label: 'English', lang: 'en' },
         th: { label: 'ไทย', lang: 'th' },
       },
-      customCss: ['./src/styles/brand.css'],
-      head: [
-        // Inter (Latin) + Noto Sans Thai Looped (Thai) — Google Fonts CDN.
-        {
-          tag: 'link',
-          attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        },
-        {
-          tag: 'link',
-          attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        },
-        {
-          tag: 'link',
-          attrs: {
-            rel: 'stylesheet',
-            href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Thai+Looped:wght@400;500;600;700&display=swap',
-          },
-        },
+      // Fontsource self-hosts the WOFF2 files so we avoid FOUT and a
+      // round-trip to Google's CDN. Order matters — fonts before
+      // brand.css so the @font-face rules exist when we reference them.
+      customCss: [
+        '@fontsource/inter/400.css',
+        '@fontsource/inter/500.css',
+        '@fontsource/inter/600.css',
+        '@fontsource/inter/700.css',
+        '@fontsource/jetbrains-mono/400.css',
+        '@fontsource/jetbrains-mono/500.css',
+        '@fontsource/noto-sans-thai-looped/400.css',
+        '@fontsource/noto-sans-thai-looped/500.css',
+        '@fontsource/noto-sans-thai-looped/600.css',
+        '@fontsource/noto-sans-thai-looped/700.css',
+        './src/styles/brand.css',
       ],
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/uunw/thai-qr-payment' },

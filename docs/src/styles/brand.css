@@ -18,12 +18,14 @@
   --tqr-bg-grad-from: #f3f7fb;
   --tqr-bg-grad-to: #eef4fa;
 
-  /* Typography — only override the body font; leave the monospace
-     stack to Starlight's defaults so code blocks keep system-mono
-     rendering. */
-  --sl-font:
-    'Inter', 'IBM Plex Sans Thai', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    sans-serif;
+  /* Typography — body in Inter (self-hosted via @fontsource/inter),
+     code in JetBrains Mono (@fontsource/jetbrains-mono). Both fall
+     back to a system stack so the page stays legible even if the
+     WOFF2 fetch fails. Body + mono are independent stacks; only
+     prose inherits --sl-font, code blocks inherit --sl-font-mono. */
+  --sl-font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --sl-font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 }
 
 /* Light theme — uses navy as the accent so chrome reads as "official". */
