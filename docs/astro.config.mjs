@@ -4,6 +4,13 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import starlightLinksValidator from 'starlight-links-validator';
 import starlightLlmsTxt from 'starlight-llms-txt';
+import starlightImageZoom from 'starlight-image-zoom';
+import starlightSidebarTopics from 'starlight-sidebar-topics';
+import starlightHeadingBadges from 'starlight-heading-badges';
+import starlightChangelogs from 'starlight-changelogs';
+import starlightScrollToTop from 'starlight-scroll-to-top';
+import starlightGitHubAlerts from 'starlight-github-alerts';
+import { ion } from 'starlight-ion-theme';
 import { createStarlightTypeDocPlugin } from 'starlight-typedoc';
 
 // Custom domain via js.org — Pages serves at root of `thai-qr-payment.js.org`.
@@ -60,8 +67,8 @@ export default defineConfig({
         th: { label: 'ไทย', lang: 'th' },
       },
       // Fontsource self-hosts the WOFF2 files so we avoid FOUT and a
-      // round-trip to Google's CDN. Order matters — fonts before
-      // brand.css so the @font-face rules exist when we reference them.
+      // round-trip to Google's CDN. Order matters — fonts first, brand.css
+      // last so brand vars override fontsource's bare @font-face.
       customCss: [
         '@fontsource/inter/400.css',
         '@fontsource/inter/500.css',
@@ -86,13 +93,128 @@ export default defineConfig({
       pagination: true,
       tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 4 },
       plugins: [
+        // Ion theme — base layout / typography. brand.css still overrides
+        // the accent colors so the BoT navy stays the primary cue.
+        ion(),
+        // Click QR sample images to zoom — they're shrunk in body and the
+        // user often wants to scan with a phone.
+        starlightImageZoom(),
+        // GitHub-flavoured `> [!NOTE]` / `[!WARNING]` callouts render as
+        // proper Starlight asides without the `:::note` MDX syntax.
+        starlightGitHubAlerts(),
+        // Mark `new in 1.1`, `deprecated`, etc. badges on headings via
+        // `## My heading [!badge primary New]` syntax.
+        starlightHeadingBadges(),
+        // Floating "↑ Top" button on long pages.
+        starlightScrollToTop(),
+        // Auto-render `/changelog/<pkg>/` from each package's CHANGELOG.md.
+        // Loader config lives in `src/content.config.ts` per the plugin's
+        // design — call signature here is zero-arg.
+        starlightChangelogs(),
+        // Topic-grouped sidebar — replaces the flat sidebar with switchable
+        // tabs (Lib docs / Reference / API / LLMs) so the nav stops being
+        // a wall of 16+ pages.
+        starlightSidebarTopics(
+          [
+            {
+              label: 'Lib docs',
+              link: '/install/',
+              id: 'guide',
+              icon: 'open-book',
+              items: [
+                {
+                  label: 'Start here',
+                  items: [
+                    { label: 'Overview', slug: 'index' },
+                    { label: 'Install', slug: 'install' },
+                    { label: 'Live demo', slug: 'demo' },
+                  ],
+                },
+                {
+                  label: 'Guide',
+                  items: [
+                    { label: 'Payload (EMVCo TLV)', slug: 'guide/payload' },
+                    { label: 'Slip Verify', slug: 'guide/slip-verify' },
+                    { label: 'BOT barcode', slug: 'guide/barcode' },
+                    { label: 'QR encoder', slug: 'guide/qr' },
+                    { label: 'SVG renderer', slug: 'guide/render' },
+                    { label: 'Brand assets', slug: 'guide/assets' },
+                    { label: 'React component', slug: 'guide/react' },
+                    { label: 'CLI', slug: 'guide/cli' },
+                  ],
+                },
+              ],
+            },
+            {
+              label: 'Reference',
+              link: '/reference/spec/',
+              id: 'reference',
+              icon: 'document',
+              items: [
+                { label: 'Spec coverage', slug: 'reference/spec' },
+                { label: 'Bundle sizes', slug: 'reference/sizes' },
+                { label: 'CDN usage', slug: 'reference/cdn' },
+                { label: 'Edge runtimes', slug: 'reference/edge' },
+              ],
+            },
+            {
+              label: 'API reference',
+              link: '/api/payload/readme/',
+              id: 'api',
+              icon: 'puzzle',
+              items: typeDocInstances.map((t) => t.sidebarGroup),
+            },
+            {
+              label: 'Changelog',
+              link: '/changelog/payload/',
+              id: 'changelog',
+              icon: 'list-format',
+              items: packages.map(({ name }) => ({
+                label: `@thai-qr-payment/${name}`,
+                link: `/changelog/${name}/`,
+              })),
+            },
+            {
+              label: 'For LLMs',
+              link: '/llms.txt',
+              id: 'llms',
+              icon: 'rocket',
+              items: [
+                {
+                  label: 'llms.txt — index',
+                  link: '/llms.txt',
+                  attrs: { target: '_blank', rel: 'noopener' },
+                },
+                {
+                  label: 'llms-full.txt — full docs',
+                  link: '/llms-full.txt',
+                  attrs: { target: '_blank', rel: 'noopener' },
+                },
+                {
+                  label: 'llms-small.txt — abridged',
+                  link: '/llms-small.txt',
+                  attrs: { target: '_blank', rel: 'noopener' },
+                },
+              ],
+            },
+          ],
+          {
+            // Typedoc + Changelogs pages aren't in the static `items` arrays
+            // above — map their slug globs to the right topic id so the
+            // plugin doesn't error on "unlisted" pages.
+            topics: {
+              api: ['/api/**', '/th/api/**', 'api/**'],
+              changelog: ['/changelog/**', '/th/changelog/**', 'changelog/**'],
+            },
+          },
+        ),
         // Validate every internal link at build time so we don't ship 404s.
         // Skip typedoc output — its case-insensitive slugifier emits links
         // that don't match the on-disk paths for namespaces / scoped pkgs;
         // we trust typedoc's own routing inside those trees.
         starlightLinksValidator({
           errorOnInvalidHashes: false,
-          exclude: ['/api/**'],
+          exclude: ['/api/**', '/changelog/**'],
         }),
         // Emit /llms.txt + /llms-full.txt for LLM ingestion. Defaults are
         // sane: full doc dump under /llms-full.txt, brief index at /llms.txt.
@@ -112,64 +234,6 @@ export default defineConfig({
         }),
         // One plugin per package so each gets its own sidebar group + slug.
         ...typeDocInstances.map((t) => t.plugin),
-      ],
-      sidebar: [
-        {
-          label: 'Start here',
-          items: [
-            { label: 'Overview', slug: 'index' },
-            { label: 'Install', slug: 'install' },
-            { label: 'Live demo', slug: 'demo' },
-          ],
-        },
-        {
-          label: 'Guide',
-          items: [
-            { label: 'Payload (EMVCo TLV)', slug: 'guide/payload' },
-            { label: 'Slip Verify', slug: 'guide/slip-verify' },
-            { label: 'BOT barcode', slug: 'guide/barcode' },
-            { label: 'QR encoder', slug: 'guide/qr' },
-            { label: 'SVG renderer', slug: 'guide/render' },
-            { label: 'Brand assets', slug: 'guide/assets' },
-            { label: 'React component', slug: 'guide/react' },
-            { label: 'CLI', slug: 'guide/cli' },
-          ],
-        },
-        {
-          label: 'Reference',
-          items: [
-            { label: 'Spec coverage', slug: 'reference/spec' },
-            { label: 'Bundle sizes', slug: 'reference/sizes' },
-            { label: 'CDN usage', slug: 'reference/cdn' },
-            { label: 'Edge runtimes', slug: 'reference/edge' },
-          ],
-        },
-        {
-          label: 'API reference',
-          collapsed: false,
-          items: typeDocInstances.map((t) => t.sidebarGroup),
-        },
-        {
-          label: 'For LLMs',
-          collapsed: true,
-          items: [
-            {
-              label: 'llms.txt — index',
-              link: '/llms.txt',
-              attrs: { target: '_blank', rel: 'noopener' },
-            },
-            {
-              label: 'llms-full.txt — full docs',
-              link: '/llms-full.txt',
-              attrs: { target: '_blank', rel: 'noopener' },
-            },
-            {
-              label: 'llms-small.txt — abridged',
-              link: '/llms-small.txt',
-              attrs: { target: '_blank', rel: 'noopener' },
-            },
-          ],
-        },
       ],
     }),
   ],
