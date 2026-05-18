@@ -21,6 +21,7 @@ import { createStarlightTypeDocPlugin } from 'starlight-typedoc';
 // across packages collapses the output into one folder with cross-linking
 // problems; per-package keeps boundaries clean.
 const packages = [
+  { name: 'thai-qr-payment', dir: 'thai-qr-payment' },
   { name: 'payload', dir: '@thai-qr-payment/payload' },
   { name: 'qr', dir: '@thai-qr-payment/qr' },
   { name: 'render', dir: '@thai-qr-payment/render' },
@@ -44,6 +45,12 @@ const typeDocInstances = packages.map(({ name, dir }) => {
         readme: 'none',
         gitRevision: 'main',
         sourceLinkTemplate: `https://github.com/uunw/thai-qr-payment/blob/main/{path}#L{line}`,
+        // typedoc-plugin-markdown emits namespace folders with `@` and
+        // PascalCase that Astro's content-collection slugifier rewrites
+        // case-insensitively, breaking inter-page links. Flatten the
+        // output into a single directory keyed by member name so links
+        // resolve regardless of case / `@` quirks.
+        flattenOutputFiles: true,
       },
     }),
     sidebarGroup: typeDocSidebarGroup,
@@ -92,10 +99,21 @@ export default defineConfig({
       lastUpdated: true,
       pagination: true,
       tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 4 },
+      components: {
+        // Force sidebar-topics' Sidebar override regardless of plugin
+        // ordering — Ion + Starlight default both try to claim Sidebar.
+        Sidebar: 'starlight-sidebar-topics/overrides/Sidebar.astro',
+        // Hide the "content not available in your language" banner on
+        // auto-generated API + changelog routes — they're code-derived,
+        // never translated by humans.
+        FallbackContentNotice: './src/overrides/FallbackContentNotice.astro',
+      },
       plugins: [
         // Ion theme — base layout / typography. brand.css still overrides
         // the accent colors so the BoT navy stays the primary cue.
-        ion(),
+        // overrides.Sidebar disabled so starlight-sidebar-topics' Sidebar
+        // wins; otherwise Ion's Sidebar wipes out the topic switcher.
+        ion({ icons: {}, overrides: { Sidebar: false } }),
         // Click QR sample images to zoom — they're shrunk in body and the
         // user often wants to scan with a phone.
         starlightImageZoom(),
@@ -111,6 +129,10 @@ export default defineConfig({
         // Loader config lives in `src/content.config.ts` per the plugin's
         // design — call signature here is zero-arg.
         starlightChangelogs(),
+        // One plugin per package so each gets its own sidebar group + slug.
+        // Must run BEFORE sidebar-topics so typedoc's sidebar pushes don't
+        // wipe out the topic switcher.
+        ...typeDocInstances.map((t) => t.plugin),
         // Topic-grouped sidebar — replaces the flat sidebar with switchable
         // tabs (Lib docs / Reference / API / LLMs) so the nav stops being
         // a wall of 16+ pages.
@@ -162,37 +184,54 @@ export default defineConfig({
               link: '/api/payload/readme/',
               id: 'api',
               icon: 'puzzle',
-              items: typeDocInstances.map((t) => t.sidebarGroup),
+              // typedoc's sidebarGroup is a JS Symbol the plugin patches
+              // back into Starlight's flat sidebar — sidebar-topics
+              // doesn't honour that patch, so we hardcode one readme entry
+              // per package and let typedoc's own in-page nav handle the
+              // sub-tree.
+              items: packages.map(({ name }) => ({
+                label:
+                  name === 'thai-qr-payment'
+                    ? 'thai-qr-payment (umbrella)'
+                    : `@thai-qr-payment/${name}`,
+                link: `/api/${name}/readme/`,
+              })),
             },
             {
               label: 'Changelog',
-              link: '/changelog/payload/',
+              link: '/changelog/thai-qr-payment/',
               id: 'changelog',
               icon: 'list-format',
               items: packages.map(({ name }) => ({
-                label: `@thai-qr-payment/${name}`,
+                label:
+                  name === 'thai-qr-payment'
+                    ? 'thai-qr-payment (umbrella)'
+                    : `@thai-qr-payment/${name}`,
                 link: `/changelog/${name}/`,
               })),
             },
             {
               label: 'For LLMs',
-              link: '/llms.txt',
+              link: '/llms/',
               id: 'llms',
               icon: 'rocket',
               items: [
+                { label: 'Overview', slug: 'llms' },
                 {
                   label: 'llms.txt — index',
-                  link: '/llms.txt',
+                  // Absolute URL so Starlight i18n doesn't prepend /th/ on
+                  // Thai pages; .txt files are emitted once at the root.
+                  link: 'https://thai-qr-payment.js.org/llms.txt',
                   attrs: { target: '_blank', rel: 'noopener' },
                 },
                 {
                   label: 'llms-full.txt — full docs',
-                  link: '/llms-full.txt',
+                  link: 'https://thai-qr-payment.js.org/llms-full.txt',
                   attrs: { target: '_blank', rel: 'noopener' },
                 },
                 {
                   label: 'llms-small.txt — abridged',
-                  link: '/llms-small.txt',
+                  link: 'https://thai-qr-payment.js.org/llms-small.txt',
                   attrs: { target: '_blank', rel: 'noopener' },
                 },
               ],
@@ -232,8 +271,6 @@ export default defineConfig({
           rawContent: true,
           exclude: ['demo'],
         }),
-        // One plugin per package so each gets its own sidebar group + slug.
-        ...typeDocInstances.map((t) => t.plugin),
       ],
     }),
   ],

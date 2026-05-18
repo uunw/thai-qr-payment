@@ -98,16 +98,76 @@ pre.expressive-code {
   border-radius: 8px;
 }
 
-/* Sidebar — accent highlight on active link with explicit colors so
-   text stays readable against the tinted background in both themes. */
-.sidebar nav ul li > a[aria-current='page'] {
+/* Sidebar links + topic switcher — accent highlight on active item.
+   sidebar-topics' topic switcher uses `aria-current="true"` (not the
+   Starlight default `="page"`), and the cells live inside `.topics`
+   not `#starlight__sidebar`, so both selectors are needed. */
+#starlight__sidebar a[aria-current='page'],
+.sidebar a[aria-current='page'],
+.topics a[aria-current='true'],
+.topics a[aria-current='page'] {
   background: var(--sl-color-accent-low);
-  color: var(--sl-color-text-accent);
+  color: var(--sl-color-text-accent) !important;
   font-weight: 600;
   border-radius: 6px;
 }
-:root[data-theme='dark'] .sidebar nav ul li > a[aria-current='page'] {
-  color: var(--sl-color-white);
+:root[data-theme='dark'] #starlight__sidebar a[aria-current='page'],
+:root[data-theme='dark'] .sidebar a[aria-current='page'],
+:root[data-theme='dark'] .topics a[aria-current='true'],
+:root[data-theme='dark'] .topics a[aria-current='page'] {
+  background-color: var(--tqr-teal-500) !important;
+  color: #ffffff !important;
+}
+:root[data-theme='dark'] #starlight__sidebar a[aria-current='page']:hover,
+:root[data-theme='dark'] #starlight__sidebar a[aria-current='page']:focus,
+:root[data-theme='dark'] .sidebar a[aria-current='page']:hover,
+:root[data-theme='dark'] .sidebar a[aria-current='page']:focus {
+  background-color: var(--tqr-teal-600) !important;
+  color: #ffffff !important;
+}
+
+/* Topic switcher — active + hover both want a high-contrast teal bubble
+   + white icon in dark mode. Starlight's default uses --sl-color-text-
+   accent which we've themed to a pale navy → barely visible white SVG.
+   Active state extends to the text color too. */
+:root[data-theme='dark'] .topics a:hover,
+:root[data-theme='dark'] .topics a:focus-visible,
+:root[data-theme='dark'] .topics a.starlight-sidebar-topics-current,
+:root[data-theme='dark'] .topics a[aria-current='true'],
+:root[data-theme='dark'] .topics a[aria-current='page'] {
+  color: #ffffff !important;
+}
+:root[data-theme='dark'] .topics a:hover .starlight-sidebar-topics-icon,
+:root[data-theme='dark'] .topics a:focus-visible .starlight-sidebar-topics-icon,
+:root[data-theme='dark'] .topics a.starlight-sidebar-topics-current .starlight-sidebar-topics-icon,
+:root[data-theme='dark'] .topics a[aria-current='true'] .starlight-sidebar-topics-icon,
+:root[data-theme='dark'] .topics a[aria-current='page'] .starlight-sidebar-topics-icon {
+  background-color: var(--tqr-teal-500) !important;
+  border-color: var(--tqr-teal-500) !important;
+  color: #ffffff !important;
+}
+:root[data-theme='dark'] .topics a:hover .starlight-sidebar-topics-icon svg,
+:root[data-theme='dark'] .topics a:focus-visible .starlight-sidebar-topics-icon svg,
+:root[data-theme='dark']
+  .topics
+  a.starlight-sidebar-topics-current
+  .starlight-sidebar-topics-icon
+  svg,
+:root[data-theme='dark'] .topics a[aria-current='true'] .starlight-sidebar-topics-icon svg,
+:root[data-theme='dark'] .topics a[aria-current='page'] .starlight-sidebar-topics-icon svg {
+  color: #ffffff;
+  fill: currentColor;
+}
+
+/* Same treatment for light mode — sidebar-topics' default hover/current
+   uses --sl-color-accent which is our deep navy. Icon bubble bg + white
+   icon contrast is already fine; just normalise the colour so hover and
+   active match. */
+:root[data-theme='light'] .topics a:hover .starlight-sidebar-topics-icon,
+:root[data-theme='light'] .topics a:focus-visible .starlight-sidebar-topics-icon {
+  background-color: var(--tqr-blue-500);
+  border-color: var(--tqr-blue-500);
+  color: #ffffff;
 }
 
 /* Site header — clean bottom border, no decorative strip */
@@ -139,6 +199,17 @@ table tr:nth-child(even) {
   margin: 1.25rem auto;
   border-radius: 12px;
   box-shadow: 0 4px 14px -8px rgba(0, 66, 122, 0.25);
+}
+
+/* Live demo output panel — cap the QR preview so the controls stay
+   the focus instead of being shoved off-screen by a giant SVG. */
+.qr-demo__svg {
+  max-width: 320px;
+  margin: 0 auto;
+}
+.qr-demo__svg svg {
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 /* Thai script — pull in Noto Sans Thai Looped so Thai prose doesn't

@@ -1,28 +1,28 @@
 ---
-title: ลองใช้สด ๆ
-description: ลองใช้ thai-qr-payment ในเบราว์เซอร์ — พิมพ์ผู้รับและยอดเงิน รับ Thai QR Payment SVG ที่สแกนได้
+title: ทดลองใช้งาน
+description: ทดลองใช้ thai-qr-payment ผ่านเบราว์เซอร์ — กรอกผู้รับและยอดเงิน เพื่อรับ Thai QR Payment SVG ที่สแกนได้จริง
 template: splash
 hero:
-  title: ลองใช้สด ๆ
-  tagline: ครอบคลุมทุก wire format ทุกตัวเลือก — playground เต็มรูปแบบของทั้ง public API รันในเบราว์เซอร์ของคุณ
+  title: ทดลองใช้งาน
+  tagline: ครอบคลุมทุก wire format และทุกตัวเลือก — playground เต็มรูปแบบของ public API ทั้งหมด ทำงานในเบราว์เซอร์ของคุณ
 ---
 
 import { QrDemo } from '../../../components/QrDemo.tsx';
 
-หน้า demo ด้านล่าง import `thai-qr-payment` มาจาก bundle ของเว็บนี้ตรง ๆ แล้ว render SVG ใหม่ทุกครั้งที่กดแป้นพิมพ์ ใส่เบอร์ PromptPay ลงในฟอร์ม กำหนดยอดเงิน แล้ว **สแกนด้วยแอปธนาคารของคุณ**
+หน้า demo ด้านล่าง import `thai-qr-payment` มาจาก bundle ของเว็บนี้โดยตรง และ render SVG ใหม่ทุกครั้งที่กดแป้นพิมพ์ กรอกเบอร์ PromptPay ลงในฟอร์ม กำหนดยอดเงิน แล้ว **สแกนด้วยแอปธนาคารของคุณ**
 
 <QrDemo client:load />
 
-## เมื่อกี้เกิดอะไรขึ้น
+## ขั้นตอนการทำงาน
 
-1. `payloadFor()` สร้าง wire string ตามมาตรฐาน EMVCo MPM จาก input ของคุณ
-2. `parsePayload()` ทำ round-trip กลับเพื่อตรวจ CRC และถอด merchant template ออกมา
-3. `encodeQR()` ทำ Reed-Solomon ECC ตาม ISO/IEC 18004 และเลือก mask
-4. `renderThaiQRPayment()` ประกอบ SVG สุดท้าย (โหมด card) หรือ `renderThaiQRPaymentMatrix()` ส่งออกแค่ QR matrix
+1. `payloadFor()` สร้าง wire string ตามมาตรฐาน EMVCo MPM จาก input ที่ระบุ
+2. `parsePayload()` ทำ round-trip กลับเพื่อตรวจสอบ CRC และถอด merchant template
+3. `encodeQR()` ดำเนินการ Reed-Solomon ECC ตาม ISO/IEC 18004 และเลือก mask
+4. `renderThaiQRPayment()` ประกอบ SVG สุดท้าย (โหมด card) ส่วน `renderThaiQRPaymentMatrix()` ส่งออกเฉพาะ QR matrix
 
-ทุกขั้นตอนทำงานฝั่ง client ไม่มีการเรียก network ไม่มี server ใช้ code-path เดียวกับแอป production
+ทุกขั้นตอนทำงานฝั่ง client โดยไม่มีการเรียก network และไม่มี server — ใช้ code path เดียวกับแอปใน production
 
-## ข้อจำกัดที่ทราบของ demo
+## ข้อจำกัดของ demo
 
-- เบอร์ตัวอย่าง `0812345678` ไม่ใช่บัญชี PromptPay จริง — แอปธนาคารของคุณจะสแกนได้ถูกต้อง แต่จะปฏิเสธผู้รับในขั้นตอน "ยืนยัน"
-- โหมด card ฝัง mark ของ Thai QR Payment + PromptPay ไว้ แอป production ต้องปฏิบัติตาม [official brand guidelines](https://www.bot.or.th/) เมื่อใช้โลโก้เหล่านี้
+- เบอร์ตัวอย่าง `0812345678` ไม่ใช่บัญชี PromptPay จริง — แอปธนาคารจะสแกนได้ถูกต้อง แต่จะปฏิเสธผู้รับในขั้นตอน "ยืนยัน"
+- โหมด card มีการฝัง mark ของ Thai QR Payment + PromptPay ไว้ แอปใน production ต้องปฏิบัติตาม [official brand guidelines](https://www.bot.or.th/) เมื่อใช้โลโก้เหล่านี้

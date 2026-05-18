@@ -1,9 +1,9 @@
 ---
 title: การใช้งานผ่าน CDN
-description: โหลด thai-qr-payment ตรงจาก unpkg หรือ JSDelivr ได้เลย — ไม่ต้องใช้ bundler
+description: โหลด thai-qr-payment ตรงจาก unpkg หรือ JSDelivr ได้ทันที โดยไม่ต้องใช้ bundler
 ---
 
-ทุกไฟล์ `dist/*.js` ที่เผยแพร่จะมาพร้อมไฟล์คู่ `.br` + `.gz` ที่ pre-compressed ไว้ CDN ที่เคารพ `Accept-Encoding` (unpkg, JSDelivr) จะ serve ไฟล์ที่เล็กกว่าโดยอัตโนมัติ — ไม่มีการบีบอัดตอน runtime ไม่มี round-trip เพิ่ม
+ทุกไฟล์ `dist/*.js` ที่เผยแพร่จะมาพร้อมไฟล์คู่ `.br` + `.gz` ที่ pre-compressed ไว้ CDN ที่เคารพ `Accept-Encoding` (unpkg, JSDelivr) จะ serve ไฟล์ที่เล็กกว่าโดยอัตโนมัติ — ไม่มีการบีบอัดตอน runtime และไม่มี round-trip เพิ่ม
 
 ## unpkg
 
@@ -35,9 +35,9 @@ description: โหลด thai-qr-payment ตรงจาก unpkg หรือ 
 </script>
 ```
 
-## Sub-paths ผ่าน CDN
+## Sub-path ผ่าน CDN
 
-sub-path export ของ umbrella (`payload`, `qr`, `render`, `assets`) ก็ใช้ได้เช่นกัน:
+sub-path export ของ umbrella (`payload`, `qr`, `render`, `assets`) ก็สามารถใช้งานได้เช่นกัน:
 
 ```html
 <script type="module">
@@ -48,7 +48,7 @@ sub-path export ของ umbrella (`payload`, `qr`, `render`, `assets`) ก็�
 
 ## path ของไฟล์ pre-compressed
 
-หาก self-host ให้ serve variant ต่าง ๆ ตรง ๆ พร้อมตั้ง header `Content-Encoding` ให้ถูก:
+หาก self-host ให้ serve variant ต่าง ๆ โดยตรง พร้อมตั้ง header `Content-Encoding` ให้ถูกต้อง:
 
 | ไฟล์               | Content-Encoding |
 | ------------------ | ---------------- |
@@ -70,7 +70,7 @@ Cloudflare Workers / Pages จัดการให้อัตโนมัต�
 
 ## React ผ่าน CDN
 
-adapter ของ React พึ่ง React ที่เป็น peer-dep สำหรับใช้งานผ่าน CDN ให้ mount ผ่าน ESM:
+adapter ของ React อาศัย React ที่เป็น peer dependency สำหรับใช้งานผ่าน CDN ให้ mount ผ่าน ESM:
 
 ```html
 <script type="importmap">

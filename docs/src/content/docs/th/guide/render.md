@@ -1,11 +1,11 @@
 ---
 title: SVG renderer
-description: ประกอบ Thai QR Payment SVG card หรือ matrix แบบเปลือยจาก wire payload
+description: ประกอบ Thai QR Payment SVG card หรือ matrix อย่างเดียวจาก wire payload
 ---
 
 ![ตัวอย่าง card ที่ใช้ layout ตาม brand-spec](/img/samples/qr-card-hero.svg)
 
-`@thai-qr-payment/render` ผูก payload builder, QR encoder และ brand assets เข้าไว้ใน SVG string เดียว ไม่มี DOM ไม่มี canvas — ทำงานได้ทุก runtime
+`@thai-qr-payment/render` ผูก payload builder, QR encoder และ brand assets เข้าด้วยกันเป็น SVG string เดียว ไม่ต้องใช้ DOM และไม่ต้องใช้ canvas — ทำงานได้บนทุก runtime
 
 ## Card แบบ one-shot
 
@@ -21,11 +21,11 @@ const svg = renderThaiQRPayment({
 });
 ```
 
-คืน SVG card เต็ม: header band ของ Thai QR Payment + sub-mark ของ PromptPay + QR ที่มีกรอบ + label ยอดเงิน
+คืน SVG card เต็มรูปแบบ ประกอบด้วย header band ของ Thai QR Payment + sub-mark ของ PromptPay + QR ที่มีกรอบ + label ยอดเงิน
 
-## Matrix แบบเปลือย
+## Matrix อย่างเดียว
 
-เมื่อคุณอยากห่อ QR ด้วย design system ของคุณเอง:
+เมื่อต้องการห่อ QR ด้วย design system ของตนเอง:
 
 ```ts
 import { renderThaiQRPaymentMatrix } from 'thai-qr-payment';
@@ -59,14 +59,14 @@ import { renderCard, renderQRSvg, matrixToPath } from 'thai-qr-payment';
 const matrix = encodeQR(wireString, { errorCorrectionLevel: 'H' });
 const svg = renderCard(matrix, { merchantName: 'Acme', amountLabel: '฿ 50' });
 
-// หรือต่ำลงไปอีก:
+// หรือลงลึกอีกระดับ:
 const justTheQr = renderQRSvg(matrix, { size: 512, quietZone: 4 });
 const pathData = matrixToPath(matrix);
 ```
 
-## ปลอดภัยจาก XSS โดยโครงสร้าง
+## ปลอดภัยจาก XSS โดยการออกแบบ
 
-ทุก string ที่ถูก interpolate จะผ่าน `escapeXmlAttribute` ก่อนลงไปอยู่ใน SVG markup ค่าอย่าง `<script>alert(1)</script>` ใน `merchantName` จึงออกมาเป็นรูป escape ที่ไม่เป็นอันตราย ตรวจสอบไว้แล้วด้วย test fixture เฉพาะในแพ็กเกจ render
+ทุก string ที่ถูก interpolate จะผ่าน `escapeXmlAttribute` ก่อนเขียนลง SVG markup ดังนั้นค่าอย่าง `<script>alert(1)</script>` ใน `merchantName` จะถูกแปลงเป็นรูป escape ที่ปลอดภัย พฤติกรรมนี้ได้รับการตรวจสอบด้วย test fixture เฉพาะในแพ็กเกจ render
 
 ## Response ของ server
 
@@ -76,4 +76,4 @@ return new Response(svg, {
 });
 ```
 
-ใช้ได้โดยตรงจาก Cloudflare Workers, Vercel Edge, Bun, Deno, Node — ไม่ต้องมี glue เฉพาะ runtime
+ใช้งานได้โดยตรงจาก Cloudflare Workers, Vercel Edge, Bun, Deno และ Node โดยไม่ต้องมี glue สำหรับ runtime แต่ละตัว

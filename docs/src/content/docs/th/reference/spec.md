@@ -10,7 +10,7 @@ description: สถานะการ implement ราย tag ของ EMVCo + 
 | Tag | ฟิลด์                                  | สถานะ           | หมายเหตุ                                                                               |
 | --- | -------------------------------------- | --------------- | -------------------------------------------------------------------------------------- |
 | 00  | Payload Format Indicator               | ✓               | เป็น `01` เสมอ                                                                         |
-| 01  | Point of Initiation                    | ✓               | `11` static / `12` dynamic, สลับอัตโนมัติตามว่ามี amount หรือไม่                       |
+| 01  | Point of Initiation                    | ✓               | `11` static / `12` dynamic, สลับอัตโนมัติตามการมี amount                               |
 | 29  | Merchant Account Info — PromptPay      | ✓               | GUID `…0111` (มาตรฐาน), `…0114` (OTA); ใช้ร่วมกับ TrueMoney Wallet QR                  |
 | 30  | Merchant Account Info — BillPayment    | ✓               | GUID `…0112` (ในประเทศ), `…012006` (ข้ามประเทศ)                                        |
 | 31  | Merchant Account Info — KShop          | reserved        | export constant ไว้แล้ว; ยังไม่มี builder helper                                       |
@@ -26,7 +26,7 @@ description: สถานะการ implement ราย tag ของ EMVCo + 
 | 61  | Postal Code                            | ✓               | สูงสุด 10 ตัวอักษร                                                                     |
 | 62  | Additional Data Field Template         | ✓               | ครบทั้ง 9 sub-fields                                                                   |
 | 63  | CRC-16/CCITT-FALSE                     | ✓               | poly `0x1021`, init `0xFFFF`, ไม่ reflect, ไม่ XOR out                                 |
-| 64  | Merchant Information Language Template | not implemented | เปิด issue ได้ถ้าต้องใช้                                                               |
+| 64  | Merchant Information Language Template | not implemented | เปิด issue ได้หากต้องใช้                                                               |
 | 80  | VAT TQRC (BoT tax-qualified extension) | ✓               | 3 sub-fields — ยกระดับ payment QR ให้กลายเป็นแหล่งของใบกำกับภาษีอิเล็กทรอนิกส์ (e-tax) |
 | 81  | Personal message                       | ✓               | เป็น UTF-16BE-as-hex; พกพาโดย TrueMoney Wallet QR                                      |
 
@@ -50,7 +50,7 @@ AID แบบ OTA จะถูกเลือกอัตโนมัติเ�
 
 ### TrueMoney Wallet layout (อยู่ภายใต้ tag 29 เช่นกัน)
 
-ใช้ PromptPay AID ตัวเดียวกัน (`A000000677010111`) แต่ sub-tag 03 ของ e-wallet จะบรรจุ identifier ขนาด 15 ตัวอักษรที่ขึ้นต้นด้วย `14` (`14` + เบอร์มือถือ 13 หลักเติม 0 ข้างหน้า) prefix `14` ตรง ๆ คือเครื่องหมายเดียวที่ใช้แยกแยะตอน parse ส่วน personal message (เลือกได้) จะอยู่บน tag 81 ในรูป UTF-16BE-encoded hex
+ใช้ PromptPay AID เดียวกัน (`A000000677010111`) แต่ sub-tag 03 ของ e-wallet บรรจุ identifier ขนาด 15 ตัวอักษรที่ขึ้นต้นด้วย `14` (`14` + เบอร์มือถือ 13 หลักเติม 0 ข้างหน้า) prefix `14` คือเครื่องหมายเดียวที่ใช้แยกแยะตอน parse ส่วน personal message (เลือกได้) จะอยู่บน tag 81 ในรูป UTF-16BE-encoded hex
 
 ## BillPayment merchant template (ภายใต้ tag 30)
 
@@ -59,7 +59,7 @@ Sub-tag 00 บรรจุ AID หนึ่งในสองค่า:
 - `A000000677010112` — bill payment ข้ามธนาคารภายในประเทศ
 - `A000000677012006` — bill payment ข้ามประเทศ (interop กับ ASEAN PayNow / DuitNow / QRIS)
 
-เมื่อกำหนด AID แบบข้ามประเทศ ฟิลด์ `purposeOfTransaction` ใน additional-data (tag 62 sub-tag 08) จะบรรจุ triple แบบ opaque ความยาว 18 ตัวอักษร — currencyCode (3) + localAmount (13) + countryCode (2) builder ปฏิบัติกับมันเป็น string ดิบ ให้ประกอบ / parse เองที่ฝั่งผู้เรียก
+เมื่อใช้ AID แบบข้ามประเทศ ฟิลด์ `purposeOfTransaction` ใน additional-data (tag 62 sub-tag 08) จะบรรจุ triple แบบ opaque ความยาว 18 ตัวอักษร — currencyCode (3) + localAmount (13) + countryCode (2) builder จัดการกับค่านี้เป็น string ดิบ ให้ประกอบและ parse เองที่ฝั่งผู้เรียก
 
 | Sub-tag | ฟิลด์                                                          | สถานะ |
 | ------- | -------------------------------------------------------------- | ----- |
@@ -70,7 +70,7 @@ Sub-tag 00 บรรจุ AID หนึ่งในสองค่า:
 
 ## VAT TQRC template (ภายใต้ tag 80)
 
-ส่วนขยาย tax-qualified ของ Bank of Thailand ยกระดับ payment QR รอบ ๆ ให้กลายเป็นแหล่งของใบกำกับภาษีอิเล็กทรอนิกส์ (e-tax-receipt) ลำดับ sub-tag บน wire คือ 00 → 01 → 02
+ส่วนขยาย tax-qualified ของ Bank of Thailand ยกระดับ payment QR โดยรอบให้กลายเป็นแหล่งของใบกำกับภาษีอิเล็กทรอนิกส์ (e-tax-receipt) ลำดับ sub-tag บน wire คือ 00 → 01 → 02
 
 | Sub-tag | ฟิลด์             | หมายเหตุ             |
 | ------- | ----------------- | -------------------- |
@@ -94,7 +94,7 @@ Sub-tag 00 บรรจุ AID หนึ่งในสองค่า:
 
 ## สเปก QR Code (ISO/IEC 18004 Model 2)
 
-| แง่มุม                                         | สถานะ                                            |
+| รายการ                                         | สถานะ                                            |
 | ---------------------------------------------- | ------------------------------------------------ |
 | Versions 1-40                                  | ✓ ครบทุกเวอร์ชัน                                 |
 | Error correction L / M / Q / H                 | ✓ ครบทุกระดับ                                    |
@@ -108,11 +108,11 @@ Sub-tag 00 บรรจุ AID หนึ่งในสองค่า:
 
 ## Envelope ที่ไม่ใช่ EMVCo
 
-wire format เหล่านี้ไม่ได้ใช้ tag space ร่วมกับ payment QR — คนละ envelope, คนละ CRC tag (หรือไม่มีเลย) อยู่ใน `@thai-qr-payment/payload` ร่วมกับเครื่องจักร TLV หลัก
+wire format เหล่านี้ไม่ได้ใช้ tag space ร่วมกับ payment QR — เป็นคนละ envelope, คนละ CRC tag (หรือไม่มีเลย) แต่อยู่ใน `@thai-qr-payment/payload` ร่วมกับ engine TLV หลัก
 
 ### Slip Verify Mini-QR
 
-พิมพ์อยู่บน slip โอนเงินของธนาคาร ใช้ resolve transaction ผ่าน bank Open APIs หลังจาก OCR slip ใช้ grammar TLV ของ EMVCo เหมือนกัน แต่ root tag ต่างกัน
+พิมพ์อยู่บนสลิปโอนเงินของธนาคาร ใช้ resolve transaction ผ่าน bank Open API หลังจาก OCR สลิป ใช้ grammar TLV ของ EMVCo เหมือนกัน แต่ root tag ต่างกัน
 
 | Tag | ฟิลด์                  | หมายเหตุ                                                        |
 | --- | ---------------------- | --------------------------------------------------------------- |
@@ -120,11 +120,11 @@ wire format เหล่านี้ไม่ได้ใช้ tag space ร่
 | 51  | Country code           | เป็น `TH` เสมอ                                                  |
 | 91  | CRC-16/CCITT-FALSE     | อัลกอริทึมเดียวกับ tag 63 แต่อยู่ที่ตำแหน่ง tag 91              |
 
-variant ของ TrueMoney ใช้ layout sub-field ภายใต้ tag 00 ต่างออกไป และ emit hex CRC เป็น **ตัวพิมพ์เล็ก** ดูที่ [Slip Verify](/guide/slip-verify/) สำหรับ API ของ builder / parser
+variant ของ TrueMoney ใช้ layout sub-field ภายใต้ tag 00 ต่างออกไป และ emit hex CRC เป็น **ตัวพิมพ์เล็ก** ดู [Slip Verify](/guide/slip-verify/) สำหรับ API ของ builder / parser
 
 ### Bank of Thailand 1D bill-payment barcode
 
-barcode สำหรับจ่ายเงินที่เคาน์เตอร์ สแกนที่เทลเลอร์ของธนาคารและจุดชำระเงิน 7-Eleven **ไม่ใช่ EMVCo TLV** — เป็น ASCII string ขึ้นต้นด้วย `|` คั่นด้วย `\r` และไม่มี CRC
+barcode สำหรับจ่ายเงินที่เคาน์เตอร์ สแกนที่เทลเลอร์ของธนาคารและจุดชำระเงิน 7-Eleven **ไม่ใช่ EMVCo TLV** — เป็น ASCII string ที่ขึ้นต้นด้วย `|` คั่นด้วย `\r` และไม่มี CRC
 
 ```
 |<billerId>\r<ref1>\r<ref2>\r<amount>
@@ -132,13 +132,13 @@ barcode สำหรับจ่ายเงินที่เคาน์เต
 
 - `billerId` — 15 ตัวอักษร (Tax ID + suffix) เติม 0 ข้างหน้าตอน emit
 - `ref1` — reference ของลูกค้า / invoice (บังคับ)
-- `ref2` — เป็น empty string เมื่อไม่ใช้
-- `amount` — จำนวนเงินเป็น satang แบบ integer หรือใส่ `0` ตรง ๆ เมื่อให้แคชเชียร์เคาะเอง
+- `ref2` — เป็น empty string เมื่อไม่ใช้งาน
+- `amount` — จำนวนเงินเป็น satang แบบ integer หรือใส่ `0` เมื่อให้แคชเชียร์กรอกเอง
 
-ดูที่ [BOT barcode](/guide/barcode/) สำหรับ API ของ builder / parser
+ดู [BOT barcode](/guide/barcode/) สำหรับ API ของ builder / parser
 
 ## มาตรฐานอ้างอิง
 
 - [EMVCo QR Code Specification for Payment Systems — Merchant Presented Mode v1.1](https://www.emvco.com/specifications/)
 - [ISO/IEC 18004:2015 — Information technology — Automatic identification and data capture techniques — QR Code bar code symbology specification](https://www.iso.org/standard/62021.html)
-- "Thai QR Payment" supplement ของ Bank of Thailand (อ้างผ่าน KBank API portal — ไม่ได้ทำดัชนีสาธารณะ)
+- "Thai QR Payment" supplement ของ Bank of Thailand (อ้างอิงผ่าน KBank API portal — ไม่มีดัชนีสาธารณะ)

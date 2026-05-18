@@ -1,60 +1,31 @@
 # @thai-qr-payment/react
 
-## 4.0.0
+## 1.1.0
 
 ### Minor Changes
 
-- [`948c126`](https://github.com/uunw/thai-qr-payment/commit/948c12621c972d877e30d3ef0a121b3d81829cb4) Thanks [@uunw](https://github.com/uunw)! - **Breaking rename** of every public type, class, interface, and exported function whose name contained a lowercase acronym (`Qr`, `Crc`, `Tlv`, `Svg`, `Vat`, `Tqrc`, `Bot`). Acronyms are now uppercased in the standalone-name position to match the BoT / EMVCo / ISO spec writing convention and the JavaScript native style for acronym types (`URL`, `JSON`, `XMLHttpRequest`).
+- [`948c126`](https://github.com/uunw/thai-qr-payment/commit/948c12621c972d877e30d3ef0a121b3d81829cb4) Thanks [@uunw](https://github.com/uunw)! - **Acronym rename across the public surface.** Every PascalCase identifier whose leading or trailing token was a 2–4 letter acronym (`Qr`, `Crc`, `Tlv`, `Svg`, `Vat`, `Tqrc`, `Bot`) now renders the acronym in all-caps to match the BoT / EMVCo / ISO spec convention and the JS native style for acronym types (`URL`, `JSON`, `XMLHttpRequest`).
 
-  Treating this as a `minor` bump instead of `major` because the lib is fresh — there are effectively no external consumers yet, and a same-day `2.0.0` after the `1.0.0` reset would be cosmetic noise.
+  | Before                        | After                       |
+  | ----------------------------- | --------------------------- |
+  | `ThaiQrPaymentBuilder`        | `ThaiQRPaymentBuilder`      |
+  | `ParsedCrc`                   | `ParsedCRC`                 |
+  | `TlvField`                    | `TLVField`                  |
+  | `QrMatrix`                    | `QRMatrix`                  |
+  | `QrSvgOptions`                | `QRSvgOptions`              |
+  | `VatTqrcInput`                | `VATTQRCInput`              |
+  | `ParsedVatTqrc`               | `ParsedVATTQRC`             |
+  | `BotBarcodeInput`             | `BOTBarcodeInput`           |
+  | `ParsedBotBarcode`            | `ParsedBOTBarcode`          |
+  | `ThaiQrPayment` (React)       | `ThaiQRPayment`             |
+  | `ThaiQrPaymentMatrix` (React) | `ThaiQRPaymentMatrix`       |
+  | `renderThaiQrPayment`         | `renderThaiQRPayment`       |
+  | `renderThaiQrPaymentMatrix`   | `renderThaiQRPaymentMatrix` |
+  | `renderQrSvg`                 | `renderQRSvg`               |
+  | `buildBotBarcode`             | `buildBOTBarcode`           |
+  | `parseBotBarcode`             | `parseBOTBarcode`           |
 
-  | Before                             | After                       |
-  | ---------------------------------- | --------------------------- |
-  | `ThaiQrPaymentBuilder`             | `ThaiQRPaymentBuilder`      |
-  | `ParsedCrc`                        | `ParsedCRC`                 |
-  | `TlvField`                         | `TLVField`                  |
-  | `QrMatrix`                         | `QRMatrix`                  |
-  | `QrSvgOptions`                     | `QRSvgOptions`              |
-  | `VatTqrcInput`                     | `VATTQRCInput`              |
-  | `ParsedVatTqrc`                    | `ParsedVATTQRC`             |
-  | `BotBarcodeInput`                  | `BOTBarcodeInput`           |
-  | `ParsedBotBarcode`                 | `ParsedBOTBarcode`          |
-  | `ThaiQrPayment` (React)            | `ThaiQRPayment`             |
-  | `ThaiQrPaymentMatrix` (React)      | `ThaiQRPaymentMatrix`       |
-  | `ThaiQrPaymentProps` (React)       | `ThaiQRPaymentProps`        |
-  | `ThaiQrPaymentMatrixProps` (React) | `ThaiQRPaymentMatrixProps`  |
-  | `renderThaiQrPayment`              | `renderThaiQRPayment`       |
-  | `renderThaiQrPaymentMatrix`        | `renderThaiQRPaymentMatrix` |
-  | `renderQrSvg`                      | `renderQRSvg`               |
-  | `buildBotBarcode`                  | `buildBOTBarcode`           |
-  | `parseBotBarcode`                  | `parseBOTBarcode`           |
-
-  Methods on the builder (`.vatTqrc()`, `.bankAccount()`, `.ota()`, …) keep camelCase per TypeScript's standard library convention (`.toString`, `.getElementById`). Constants (`TAG_VAT_TQRC`, `GUID_PROMPTPAY`, …) were already SCREAMING_SNAKE so they didn't move.
-
-  To migrate, run a single regex pass on your codebase using the table above. No behaviour or wire-format changes.
-
-### Patch Changes
-
-- Updated dependencies [[`948c126`](https://github.com/uunw/thai-qr-payment/commit/948c12621c972d877e30d3ef0a121b3d81829cb4)]:
-  - @thai-qr-payment/payload@4.0.0
-  - @thai-qr-payment/qr@4.0.0
-  - @thai-qr-payment/render@4.0.0
-
-## 3.0.0
-
-### Patch Changes
-
-- Updated dependencies [[`7a2226f`](https://github.com/uunw/thai-qr-payment/commit/7a2226fa9c29a3490249b933a67f043f83b52e7b)]:
-  - @thai-qr-payment/payload@3.0.0
-  - @thai-qr-payment/render@3.0.0
-
-## 2.0.0
-
-### Patch Changes
-
-- Updated dependencies [[`6107d73`](https://github.com/uunw/thai-qr-payment/commit/6107d73603d1895bb39e6ac1f78c544aca406ee2)]:
-  - @thai-qr-payment/qr@2.0.0
-  - @thai-qr-payment/render@2.0.0
+  Methods on the builder (`.vatTqrc()`, `.bankAccount()`, `.ota()`, …) keep camelCase per TypeScript's standard library convention. Constants (`TAG_VAT_TQRC`, `GUID_PROMPTPAY`, …) were already SCREAMING_SNAKE. To migrate, run a single regex pass on your codebase using the table above. No behaviour or wire-format changes.
 
 ## 1.0.0
 

@@ -1,0 +1,18 @@
+---
+/**
+ * Override of Starlight's default FallbackContentNotice.
+ *
+ * The auto-generated /api/** pages come from TypeDoc — they have no
+ * per-locale translation and never will (the source is code, not prose).
+ * Suppress the "เนื้อหานี้ยังไม่มีในภาษาของคุณ" banner for those routes
+ * so Thai visitors aren't told the API ref is missing a translation it
+ * was never meant to have. All other pages keep the default banner.
+ */
+import Default from '@astrojs/starlight/components/FallbackContentNotice.astro';
+
+const path = Astro.url.pathname;
+const isAutogenAPI = /^\/(?:[a-z]{2}\/)?api\//.test(path);
+const isAutogenChangelog = /^\/(?:[a-z]{2}\/)?changelog\//.test(path);
+---
+
+{!isAutogenAPI && !isAutogenChangelog && <Default />}

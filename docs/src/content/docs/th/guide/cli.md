@@ -18,7 +18,7 @@ tqp 0812345678 --format payload
 
 ### npx + scoped CLI package
 
-`@thai-qr-payment/cli` มีไบนารีสองตัวเหมือนกัน (`thai-qr-payment` และ `tqp`) แต่ **ชื่อไบนารีไม่ตรงกับชื่อแพ็กเกจ** npx จึงไม่สามารถ resolve `@thai-qr-payment/cli` ไปเป็นไบนารีชื่อ `thai-qr-payment` ได้อัตโนมัติ ทำให้ `npx @thai-qr-payment/cli 0812345678` ล้มเหลวด้วย `command not found` ต้องระบุชื่อไบนารีอย่างชัดเจนผ่าน `--package`:
+`@thai-qr-payment/cli` มีไบนารีสองตัว (`thai-qr-payment` และ `tqp`) แต่ **ชื่อไบนารีไม่ตรงกับชื่อแพ็กเกจ** npx จึงไม่สามารถ resolve `@thai-qr-payment/cli` ไปเป็นไบนารีชื่อ `thai-qr-payment` ได้โดยอัตโนมัติ ทำให้ `npx @thai-qr-payment/cli 0812345678` ล้มเหลวด้วยข้อความ `command not found` ต้องระบุชื่อไบนารีอย่างชัดเจนผ่าน `--package`:
 
 ```bash
 # Wrong — npx looks for a `@thai-qr-payment/cli` binary, finds none
@@ -33,9 +33,9 @@ npx --package=@thai-qr-payment/cli thai-qr-payment 0812345678 --amount 50
 npx --package=@thai-qr-payment/cli tqp 0812345678 --amount 50
 ```
 
-แนะนำให้ใช้ umbrella มากกว่า (มี tarball เดียว รวม deps ทั้งหมดไว้แล้ว) ใช้ scoped CLI เฉพาะกรณีที่ต้อง pin เวอร์ชันของแพ็กเกจในสคริปต์ automation เท่านั้น
+แนะนำให้ใช้ umbrella เป็นหลัก (มี tarball เดียว รวม dependency ทั้งหมดไว้แล้ว) ใช้ scoped CLI เฉพาะกรณีที่ต้องการ pin เวอร์ชันของแพ็กเกจในสคริปต์ automation เท่านั้น
 
-## โหมดต่าง ๆ
+## โหมดการใช้งาน
 
 ### Card (default)
 
@@ -51,7 +51,7 @@ thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
 thai-qr-payment 0812345678 --amount 50 --format matrix --size 512 -o qr.svg
 ```
 
-เฉพาะ QR matrix เป็น SVG สี่เหลี่ยมจัตุรัส ผู้เรียกควบคุมขนาดเองได้
+เฉพาะ QR matrix ในรูปแบบ SVG สี่เหลี่ยมจัตุรัส ผู้เรียกควบคุมขนาดได้เอง
 
 ### Payload
 
@@ -68,7 +68,7 @@ thai-qr-payment 0812345678 --amount 50 --format payload
 | ------------------- | ----- | ------------------------------------------------------------------ |
 | `--recipient <id>`  | `-r`  | phone, nationalId, eWallet                                         |
 | `--amount <thb>`    | `-a`  | ละไว้สำหรับ QR แบบ static                                          |
-| `--satang`          | —     | ให้มอง `--amount` เป็นจำนวนเต็มหน่วยสตางค์                         |
+| `--satang`          | —     | กำหนดให้มอง `--amount` เป็นจำนวนเต็มหน่วยสตางค์                    |
 | `--type <kind>`     | —     | `mobile` / `nationalId` / `eWallet` — override การตรวจจับอัตโนมัติ |
 | `--ecc <level>`     | —     | `L` / `M` / `Q` / `H` (default `M`)                                |
 | `--format <kind>`   | `-f`  | `card` (default) / `matrix` / `payload`                            |

@@ -1,19 +1,19 @@
 ---
 title: Edge runtimes
-description: thai-qr-payment รันได้บน Cloudflare Workers, Vercel Edge, Deno, Bun โดยไม่ต้องแก้อะไรเลย
+description: thai-qr-payment ทำงานได้บน Cloudflare Workers, Vercel Edge, Deno และ Bun โดยไม่ต้องปรับแก้ใด ๆ
 ---
 
-umbrella เต็ม (และทุก scoped package) หลีกเลี่ยง API ที่มีเฉพาะใน Node ข้อยกเว้นเดียวคือ `@thai-qr-payment/cli` ซึ่งเป็น binary ของ CLI — ตัวนั้นใช้ `node:fs/promises` สำหรับเขียนไฟล์ output
+umbrella เต็ม (และทุก scoped package) หลีกเลี่ยง API ที่มีเฉพาะใน Node ข้อยกเว้นเดียวคือ `@thai-qr-payment/cli` ซึ่งเป็น binary ของ CLI — ใช้ `node:fs/promises` สำหรับเขียนไฟล์ output
 
 ## ตารางความเข้ากันได้
 
 | Runtime                                                  | สถานะ | หมายเหตุ                                               |
 | -------------------------------------------------------- | ----- | ------------------------------------------------------ |
 | Browsers (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) | ✓     | ESM ผ่าน `<script type="module">` หรือ bundler ใดก็ได้ |
-| Node ≥ 18                                                | ✓     | มาทั้ง ESM + CJS                                       |
+| Node ≥ 18                                                | ✓     | มีทั้ง ESM + CJS                                       |
 | Bun 1.x                                                  | ✓     | ทดสอบด้วยมือแล้ว                                       |
-| Deno                                                     | ✓     | ใช้ได้ผ่าน specifier `npm:thai-qr-payment`             |
-| Cloudflare Workers                                       | ✓     | import ได้สะอาด ไม่ต้องเปิด flag `nodejs_compat`       |
+| Deno                                                     | ✓     | ใช้งานผ่าน specifier `npm:thai-qr-payment`             |
+| Cloudflare Workers                                       | ✓     | import ได้โดยไม่ต้องเปิด flag `nodejs_compat`          |
 | Vercel Edge Functions                                    | ✓     | เหมือนกัน                                              |
 | Netlify Edge / Deno Deploy                               | ✓     | เหมือนกัน                                              |
 
@@ -48,7 +48,7 @@ export default {
 };
 ```
 
-`pnpm wrangler deploy` deploy ออกมาประมาณ ~5 KB หลังจากที่ Wrangler ทำ minification เองอีกชั้น
+`pnpm wrangler deploy` deploy ได้ขนาดประมาณ ~5 KB หลังจากที่ Wrangler ทำ minification อีกชั้น
 
 ## ตัวอย่าง Vercel Edge
 
@@ -79,15 +79,15 @@ const wire = payloadFor({ recipient: '0812345678', amount: 50 });
 console.log(wire);
 ```
 
-`deno run --allow-net script.ts` — ไม่ต้องใช้ flag `--allow-read` หรือ `--allow-write` เพราะไลบรารีไม่ไปยุ่งกับ filesystem
+`deno run --allow-net script.ts` — ไม่ต้องใช้ flag `--allow-read` หรือ `--allow-write` เพราะไลบรารีไม่ได้เข้าถึง filesystem
 
-## สิ่งที่เรา **ไม่** ใช้
+## API ที่ **ไม่ได้** ใช้
 
 - `node:fs` — มีเฉพาะใน `@thai-qr-payment/cli`
 - `node:path` — มีเฉพาะใน `@thai-qr-payment/cli`
-- `node:crypto` — CRC-16 + Reed-Solomon เป็น pure-JS, ไม่ใช้ Web Crypto ด้วย
-- `Buffer` — เราใช้ `Uint8Array` ล้วน
+- `node:crypto` — CRC-16 + Reed-Solomon เป็น pure-JS และไม่ใช้ Web Crypto ด้วย
+- `Buffer` — ใช้ `Uint8Array` ทั้งหมด
 - `eval` — ไม่ใช้เด็ดขาด
 - WASM — ไม่ใช้เด็ดขาด
 
-สิ่งเหล่านี้คือสิ่งที่มักจะทำให้ portability บน edge-runtime พัง การไม่มีพวกนี้คือหัวใจของคำกล่าวอ้างว่า "zero-dependency, universal" ทั้งหมด
+API เหล่านี้คือสาเหตุที่มักทำให้ portability บน edge runtime พัง การไม่ใช้สิ่งเหล่านี้คือหัวใจของคำกล่าวอ้าง "zero-dependency, universal" ทั้งหมด
