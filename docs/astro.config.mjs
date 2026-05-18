@@ -80,6 +80,7 @@ export default defineConfig({
       ],
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/uunw/thai-qr-payment' },
+        { icon: 'npm', label: 'npm', href: 'https://www.npmjs.com/package/thai-qr-payment' },
       ],
       editLink: {
         baseUrl: 'https://github.com/uunw/thai-qr-payment/edit/main/docs/',

@@ -102,16 +102,9 @@ pre.expressive-code {
   border-radius: 6px;
 }
 
-/* Site header — thin bottom border picks up brand */
+/* Site header — clean bottom border, no decorative strip */
 header.header {
   border-bottom: 1px solid var(--sl-color-gray-5);
-}
-header.header::after {
-  content: '';
-  display: block;
-  height: 2px;
-  background: linear-gradient(90deg, var(--tqr-blue-500), var(--tqr-teal-500));
-  opacity: 0.85;
 }
 
 /* Tables — alternating rows, less visual weight */
@@ -145,4 +138,17 @@ table tr:nth-child(even) {
    from astro.config so the docs stay style-tag-free here. */
 :lang(th) {
   font-family: 'Noto Sans Thai Looped', 'IBM Plex Sans Thai', var(--sl-font);
+}
+
+/* Live demo page — give the playground the full width of the splash
+   template instead of the narrow prose column. Targets the page slug
+   so other splash pages (the homepage) keep their tighter centred
+   layout. */
+body[data-page='demo'] .main-frame,
+body[data-page='th/demo'] .main-frame {
+  max-width: none;
+}
+body[data-page='demo'] .sl-container,
+body[data-page='th/demo'] .sl-container {
+  max-width: min(100%, 1400px);
 }
