@@ -121,8 +121,8 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0(@astrojs/starlight@0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))(typescript@6.0.3))
       starlight-image-zoom:
-        specifier: ^0.14.1
-        version: 0.14.1(@astrojs/starlight@0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))(typescript@6.0.3))
+        specifier: ^0.14.2
+        version: 0.14.2(@astrojs/starlight@0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))(typescript@6.0.3))
       starlight-ion-theme:
         specifier: ^2.4.0
         version: 2.4.0(@astrojs/starlight@0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))(typescript@6.0.3))(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))
@@ -3992,8 +3992,8 @@ packages:
     peerDependencies:
       '@astrojs/starlight': '>=0.38.0'
 
-  starlight-image-zoom@0.14.1:
-    resolution: {integrity: sha512-HFY+/779bq65tiEgiQVk8XIH6HPP34PTxWDmdlIo9pwidLyJUUrSH030/1Iu/r+KjAD7W/jpPWjC8Nkn7+uPhw==}
+  starlight-image-zoom@0.14.2:
+    resolution: {integrity: sha512-YBvE724gFMiVjObGtXmfIDi3zAxVBsvGukeRXOiWLNnESFOBZFfO9DpC/reHohrCxFrO+5ot0XR8EimbE0LpsA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@astrojs/starlight': '>=0.38.0'
@@ -8937,7 +8937,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  starlight-image-zoom@0.14.1(@astrojs/starlight@0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))(typescript@6.0.3)):
+  starlight-image-zoom@0.14.2(@astrojs/starlight@0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))(typescript@6.0.3)):
     dependencies:
       '@astrojs/starlight': 0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.9.0))(typescript@6.0.3)
       mdast-util-mdx-jsx: 3.2.0
