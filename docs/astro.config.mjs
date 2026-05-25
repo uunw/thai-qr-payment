@@ -1,6 +1,7 @@
 // @ts-check
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel';
 import react from '@astrojs/react';
 import starlightLinksValidator from 'starlight-links-validator';
 import starlightLlmsTxt from 'starlight-llms-txt';
@@ -59,6 +60,11 @@ const typeDocInstances = packages.map(({ name, dir }) => {
 
 export default defineConfig({
   site: 'https://thai-qr-payment.js.org',
+  // Output stays `static` (default) — every Starlight page prerenders at
+  // build time. The Vercel adapter only kicks in for routes that opt out
+  // with `export const prerender = false` (just `/api/promptpay/*`), which
+  // ship as serverless functions. Docs perf/SEO unchanged.
+  adapter: vercel(),
   integrations: [
     react(),
     starlight({
@@ -163,6 +169,7 @@ export default defineConfig({
                     { label: 'Brand assets', slug: 'guide/assets' },
                     { label: 'React component', slug: 'guide/react' },
                     { label: 'CLI', slug: 'guide/cli' },
+                    { label: 'HTTP API', slug: 'guide/api' },
                   ],
                 },
               ],
