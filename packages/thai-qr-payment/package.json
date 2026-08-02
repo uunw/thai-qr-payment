@@ -115,7 +115,7 @@
     "@thai-qr-payment/render": "workspace:^"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "pnpm": ">=8"
   }
 }

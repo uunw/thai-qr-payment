@@ -93,7 +93,7 @@
     "@thai-qr-payment/qr": "workspace:^"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "pnpm": ">=8"
   }
 }

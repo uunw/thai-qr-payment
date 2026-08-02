@@ -90,7 +90,7 @@
     "prepublishOnly": "pnpm build && pnpm test"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "pnpm": ">=8"
   }
 }

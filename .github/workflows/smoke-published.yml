@@ -20,7 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['20', '22']
+        # Matches `engines.node` (>= 22): oldest supported LTS + next LTS.
+        node: ['22', '24']
     steps:
       - uses: actions/setup-node@v6
         with:
@@ -36,12 +37,12 @@ jobs:
         run: |
           cd smoke
           cat > smoke.mjs <<'JS'
-          import { payloadFor, parsePayload, renderThaiQrPayment } from 'thai-qr-payment';
+          import { payloadFor, parsePayload, renderThaiQRPayment } from 'thai-qr-payment';
           const wire = payloadFor({ recipient: '0812345678', amount: 50 });
           if (!wire.startsWith('000201')) throw new Error('Bad payload prefix');
           const parsed = parsePayload(wire);
           if (parsed.amount !== 50) throw new Error('Bad parsed amount');
-          const svg = renderThaiQrPayment({ recipient: '0812345678', amount: 50 });
+          const svg = renderThaiQRPayment({ recipient: '0812345678', amount: 50 });
           if (!svg.startsWith('<svg')) throw new Error('Bad SVG output');
           console.log('OK: payload', wire);
           JS
