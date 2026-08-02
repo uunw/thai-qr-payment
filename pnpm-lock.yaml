@@ -195,7 +195,7 @@ importers:
   packages/qr: {}
 
   packages/react:
-    dependencies:
+    devDependencies:
       '@thai-qr-payment/payload':
         specifier: workspace:^
         version: link:../payload
@@ -205,7 +205,6 @@ importers:
       '@thai-qr-payment/render':
         specifier: workspace:^
         version: link:../render
-    devDependencies:
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18
