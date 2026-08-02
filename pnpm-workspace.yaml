@@ -4,10 +4,10 @@ packages:
   - 'examples/node'
 
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
 
 catalog:
-  typescript: ^6.0.3
-  vitest: ^4.1.6
-  '@rspack/core': ^2.0.3
-  '@rspack/cli': ^2.0.3
+  typescript: ^7.0.2
+  vitest: ^4.1.10
+  '@rspack/core': ^2.1.7
+  '@rspack/cli': ^2.1.7
