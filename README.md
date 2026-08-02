@@ -147,7 +147,7 @@ Following the **Bank of Thailand / Thai Bankers' Association / KASIKORN BANK Tha
 
 Tested on:
 
-- Node 20 + 22 (CI matrix)
+- Node 22 + 24 (CI matrix)
 - Bun 1.x (manual)
 - Cloudflare Workers
 - Vercel Edge

@@ -84,8 +84,8 @@
 
     <script type="module">
       import {
-        renderThaiQrPayment,
-        renderThaiQrPaymentMatrix,
+        renderThaiQRPayment,
+        renderThaiQRPaymentMatrix,
       } from '../../packages/render/dist/index.js';
 
       const recipient = document.getElementById('recipient');
@@ -96,14 +96,14 @@
 
       function render() {
         const amt = Number.parseFloat(amount.value);
-        out.innerHTML = renderThaiQrPayment({
+        out.innerHTML = renderThaiQRPayment({
           recipient: recipient.value,
           amount: Number.isFinite(amt) && amt > 0 ? amt : undefined,
           merchantName: merchant.value,
           amountLabel: Number.isFinite(amt) && amt > 0 ? `฿ ${amt.toFixed(2)}` : undefined,
           errorCorrectionLevel: 'M',
         });
-        matrixOut.innerHTML = renderThaiQrPaymentMatrix({
+        matrixOut.innerHTML = renderThaiQRPaymentMatrix({
           recipient: recipient.value,
           amount: Number.isFinite(amt) && amt > 0 ? amt : undefined,
           errorCorrectionLevel: 'M',

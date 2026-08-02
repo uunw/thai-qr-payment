@@ -6,9 +6,9 @@
     "limit": "25 KB"
   },
   {
-    "name": "thai-qr-payment (renderThaiQrPayment, incl. logo assets)",
+    "name": "thai-qr-payment (renderThaiQRPayment, incl. logo assets)",
     "path": "packages/thai-qr-payment/dist/index.js",
-    "import": "{ renderThaiQrPayment }",
+    "import": "{ renderThaiQRPayment }",
     "limit": "25 KB"
   },
   {
