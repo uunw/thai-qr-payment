@@ -1,5 +1,17 @@
 # @thai-qr-payment/react
 
+## 1.2.0
+
+### Minor Changes
+
+- [`69897d2`](https://github.com/uunw/thai-qr-payment/commit/69897d2a11bc13d7de43d98c699d9b898266fad2) Thanks [@uunw](https://github.com/uunw)! - **Make the card caption opt-in, and centre the logo overlay evenly.** `renderCard` / `renderThaiQRPayment` gain `showCaption` (default `false`). `merchantName` and `amountLabel` now only draw when it is set, so a card built from a payload that carries a merchant name stays clean unless you ask for the text. The CLI exposes the same switch as `--caption`.
+
+  **Breaking-ish:** passing `merchantName` / `amountLabel` alone no longer renders them — add `showCaption: true` (or `--caption`) to restore the old output.
+
+  The centre logo also sat off-centre: its box was square while the glyph is 325 × 376, so `xMidYMid meet` letterboxed it and left the side padding ~2× the top and bottom. The box now carries the icon's aspect ratio, giving equal white padding on all four sides. The glyph itself is unchanged in size.
+
+- [`adb262c`](https://github.com/uunw/thai-qr-payment/commit/adb262c069674c0d508449144bca913ed803677a) Thanks [@uunw](https://github.com/uunw)! - **Raise the Node floor to `>= 22`.** `engines.node` moves from `>= 18` to `>= 22`. Node 18 and 20 both reached end-of-life, and 22 is the oldest LTS still receiving security fixes — it is also what the build and CI matrices already target. No runtime API in these packages changed; installs on Node < 22 will now warn (or fail under `engine-strict`).
+
 ## 1.1.0
 
 ### Minor Changes
