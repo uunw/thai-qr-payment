@@ -13,6 +13,7 @@ import starlightScrollToTop from 'starlight-scroll-to-top';
 import starlightGitHubAlerts from 'starlight-github-alerts';
 import { ion } from 'starlight-ion-theme';
 import { createStarlightTypeDocPlugin } from 'starlight-typedoc';
+import { unified } from '@astrojs/markdown-remark';
 
 // Custom domain via js.org — Pages serves at root of `thai-qr-payment.js.org`.
 // CNAME file in `public/` pins the domain across deploys.
@@ -65,6 +66,12 @@ export default defineConfig({
   // with `export const prerender = false` (just `/api/promptpay/*`), which
   // ship as serverless functions. Docs perf/SEO unchanged.
   adapter: vercel(),
+  // Astro 7 defaults to the Sätteri markdown processor; the Starlight plugin
+  // ecosystem (image-zoom, links-validator, …) still hooks the unified
+  // pipeline, so pin the processor back to unified until they catch up.
+  markdown: {
+    processor: unified(),
+  },
   integrations: [
     react(),
     starlight({
