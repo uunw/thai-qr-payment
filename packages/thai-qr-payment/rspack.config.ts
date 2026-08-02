@@ -4,6 +4,22 @@ import { type Configuration, rspack } from '@rspack/core';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 
+// Point every `@thai-qr-payment/*` specifier at the sibling's *source*.
+//
+// This entry's own re-exports already use relative source paths, but the
+// siblings reach for each other by package name — `render/src` imports
+// `@thai-qr-payment/qr`, which resolves through the workspace symlink
+// into `dist/`. Without this alias rspack would inline the qr encoder
+// twice: once as source via our relative path, once as built output via
+// render's specifier. That duplication is what pushed the bundle from
+// 23.2 KB to 25.4 KB and blew the 25 KB budget.
+const siblingSource = {
+  '@thai-qr-payment/payload': resolve(here, '../payload/src/index.ts'),
+  '@thai-qr-payment/qr': resolve(here, '../qr/src/index.ts'),
+  '@thai-qr-payment/render': resolve(here, '../render/src/index.ts'),
+  '@thai-qr-payment/assets': resolve(here, '../assets/src/index.ts'),
+} as const;
+
 const libConfig = (format: 'esm' | 'cjs'): Configuration => ({
   mode: 'production',
   devtool: 'source-map',
@@ -27,6 +43,7 @@ const libConfig = (format: 'esm' | 'cjs'): Configuration => ({
   resolve: {
     extensions: ['.ts', '.js'],
     extensionAlias: { '.js': ['.ts', '.js'] },
+    alias: siblingSource,
   },
   module: {
     rules: [
@@ -76,6 +93,7 @@ const cliConfig: Configuration = {
   resolve: {
     extensions: ['.ts', '.js'],
     extensionAlias: { '.js': ['.ts', '.js'] },
+    alias: siblingSource,
   },
   module: {
     rules: [

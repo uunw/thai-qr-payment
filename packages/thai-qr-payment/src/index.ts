@@ -28,6 +28,12 @@
  * runtimes).
  */
 
-export * from '@thai-qr-payment/payload';
-export * from '@thai-qr-payment/qr';
-export * from '@thai-qr-payment/render';
+// Siblings are pulled in by relative *source* path, matching every
+// sub-path entry beside this one. A bare `@thai-qr-payment/*` specifier
+// resolves through the workspace symlink into `dist/`, which only exists
+// after a build — fine locally, but on a clean checkout lint runs first
+// and every re-export dangles. Relative paths also let rspack inline the
+// sibling source, which is what keeps the published tarball at zero deps.
+export * from '../../payload/src/index.js';
+export * from '../../qr/src/index.js';
+export * from '../../render/src/index.js';
