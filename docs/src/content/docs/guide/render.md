@@ -15,6 +15,7 @@ import { renderThaiQRPayment } from 'thai-qr-payment';
 const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
+  showCaption: true,
   merchantName: 'Acme Coffee',
   amountLabel: '฿ 50.00',
   errorCorrectionLevel: 'H',
@@ -43,8 +44,9 @@ const svg = renderThaiQRPaymentMatrix({
 | Option          | Default                   | Notes                                                  |
 | --------------- | ------------------------- | ------------------------------------------------------ |
 | `theme`         | `color`                   | `'silhouette'` swaps brand artwork to monochrome paths |
-| `merchantName`  | —                         | rendered above the QR                                  |
-| `amountLabel`   | —                         | rendered below the QR                                  |
+| `showCaption`   | `false`                   | opt in to the caption block under the QR               |
+| `merchantName`  | —                         | caption line 1 — needs `showCaption`                   |
+| `amountLabel`   | —                         | caption line 2 — needs `showCaption`                   |
 | `background`    | `#fff`                    | card backdrop                                          |
 | `accent`        | `#0a2540`                 | text + silhouette fill colour                          |
 | `headerLogo`    | `Thai_QR_Payment_Logo-01` | override via `@thai-qr-payment/assets` registry name   |
@@ -57,7 +59,7 @@ import { encodeQR } from 'thai-qr-payment';
 import { renderCard, renderQRSvg, matrixToPath } from 'thai-qr-payment';
 
 const matrix = encodeQR(wireString, { errorCorrectionLevel: 'H' });
-const svg = renderCard(matrix, { merchantName: 'Acme', amountLabel: '฿ 50' });
+const svg = renderCard(matrix, { showCaption: true, merchantName: 'Acme', amountLabel: '฿ 50' });
 
 // Or even lower:
 const justTheQr = renderQRSvg(matrix, { size: 512, quietZone: 4 });

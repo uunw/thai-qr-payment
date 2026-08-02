@@ -52,6 +52,7 @@ import { renderThaiQRPayment } from 'thai-qr-payment';
 const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
+  showCaption: true,
   merchantName: 'Acme Coffee',
   amountLabel: '฿ 50.00',
   errorCorrectionLevel: 'H',
@@ -111,7 +112,7 @@ npx tqp 0812345678 --amount 50 -o qr.svg
 
 # Global install
 pnpm add -g thai-qr-payment
-thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
+thai-qr-payment 0812345678 --amount 50 --caption --merchant "Acme Coffee" -o qr.svg
 tqp 0812345678 --format payload
 ```
 

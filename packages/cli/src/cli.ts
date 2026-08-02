@@ -58,6 +58,7 @@ async function main(): Promise<number> {
     } else {
       output = renderCard(matrix, {
         theme: parsed.theme,
+        showCaption: parsed.caption,
         merchantName: parsed.merchantName,
         amountLabel: parsed.amount != null ? `฿ ${parsed.amount.toFixed(2)}` : undefined,
       });

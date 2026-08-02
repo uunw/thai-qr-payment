@@ -42,9 +42,15 @@ export type CardTheme = 'color' | 'silhouette';
 export interface CardOptions {
   /** Brand artwork flavor. `color` keeps full fidelity, `silhouette` is monochrome. */
   theme?: CardTheme;
-  /** Optional amount label rendered below the QR. */
+  /**
+   * Render the caption block (merchant name + amount) below the QR.
+   * Defaults to `false` — opt in explicitly, then supply the text via
+   * `merchantName` / `amountLabel`.
+   */
+  showCaption?: boolean;
+  /** Optional amount label rendered below the QR. Requires `showCaption`. */
   amountLabel?: string;
-  /** Optional merchant name rendered below the QR (above the amount). */
+  /** Optional merchant name rendered below the QR (above the amount). Requires `showCaption`. */
   merchantName?: string;
   /** Background colour of the entire card. */
   background?: string;
@@ -104,7 +110,11 @@ const HEADER_VIEWBOX_CROP = '88 75 750 210';
 // Icon-only viewBox for the centre overlay. The icon glyph lives at
 // roughly x = 88..318 of the original 0..913 viewBox; we keep the full
 // vertical extent so the navy bg paints the centre overlay square.
-const ICON_VIEWBOX = '0 0 325 376';
+const ICON_WIDTH = 325;
+const ICON_HEIGHT = 376;
+const ICON_VIEWBOX = `0 0 ${ICON_WIDTH} ${ICON_HEIGHT}`;
+/** White breathing room between the centre logo and the QR modules. */
+const OVERLAY_PAD = 4;
 
 /** Strip the outer `<svg …>…</svg>` wrapper so the contents can be reused inside a `<symbol>`. */
 function unwrapSvg(svg: string): { viewBox: string; inner: string } {
@@ -187,25 +197,35 @@ export function renderCard(matrix: QRMatrix, options: CardOptions = {}): string 
   // artwork) inside a small white pad with rounded corners. 16 % of
   // the QR width — small enough that ECC-H recovers the obscured
   // modules cleanly.
-  const overlaySize = QR_BAND.width * 0.16;
-  const overlayX = QR_BAND.x + (QR_BAND.width - overlaySize) / 2;
-  const overlayY = QR_BAND.y + (QR_BAND.height - overlaySize) / 2;
+  // The icon is taller than it is wide, and `xMidYMid meet` letterboxes it
+  // inside its box — so a square box would leave the side gaps ~2× the top
+  // and bottom ones. Give the box the icon's own aspect ratio instead: the
+  // glyph draws at exactly the same size, and the white pad around it is
+  // then uniform on all four sides.
+  const overlayHeight = QR_BAND.width * 0.16;
+  const overlayWidth = overlayHeight * (ICON_WIDTH / ICON_HEIGHT);
+  const overlayX = QR_BAND.x + (QR_BAND.width - overlayWidth) / 2;
+  const overlayY = QR_BAND.y + (QR_BAND.height - overlayHeight) / 2;
   const overlayMarkup = overlay
     ? [
-        `<rect x="${overlayX - 4}" y="${overlayY - 4}" width="${overlaySize + 8}" height="${overlaySize + 8}" fill="#ffffff" rx="4"/>`,
-        `<use href="#tqp-icon" xlink:href="#tqp-icon" x="${overlayX}" y="${overlayY}" width="${overlaySize}" height="${overlaySize}" preserveAspectRatio="xMidYMid meet"/>`,
+        `<rect x="${overlayX - OVERLAY_PAD}" y="${overlayY - OVERLAY_PAD}" width="${overlayWidth + OVERLAY_PAD * 2}" height="${overlayHeight + OVERLAY_PAD * 2}" fill="#ffffff" rx="4"/>`,
+        `<use href="#tqp-icon" xlink:href="#tqp-icon" x="${overlayX}" y="${overlayY}" width="${overlayWidth}" height="${overlayHeight}" preserveAspectRatio="xMidYMid meet"/>`,
       ].join('')
     : '';
 
+  // Caption is opt-in: supplying the text alone is not enough, so a card
+  // built from a payload that happens to carry a merchant name stays clean
+  // unless the caller asks for it.
+  const showCaption = options.showCaption ?? false;
   const labelBaseY = QR_FRAME.y + QR_FRAME.height + 38;
   const merchantText =
-    options.merchantName != null
+    showCaption && options.merchantName != null
       ? `<text x="${CANVAS.width / 2}" y="${labelBaseY}" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600" fill="${escapeXmlAttribute(accent)}">${escapeXmlAttribute(options.merchantName)}</text>`
       : '';
 
   const amountY = options.merchantName != null ? labelBaseY + 36 : labelBaseY + 6;
   const amountText =
-    options.amountLabel != null
+    showCaption && options.amountLabel != null
       ? `<text x="${CANVAS.width / 2}" y="${amountY}" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="700" fill="${escapeXmlAttribute(accent)}">${escapeXmlAttribute(options.amountLabel)}</text>`
       : '';
 

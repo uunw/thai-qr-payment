@@ -12,7 +12,7 @@ npx tqp 0812345678 --amount 50 -o qr.svg
 
 # Global install
 pnpm add -g thai-qr-payment
-thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
+thai-qr-payment 0812345678 --amount 50 --caption --merchant "Acme Coffee" -o qr.svg
 tqp 0812345678 --format payload
 ```
 
@@ -40,7 +40,7 @@ The umbrella is preferred (one tarball, all deps inlined). Reach for the scoped 
 ### Card (default)
 
 ```bash
-thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
+thai-qr-payment 0812345678 --amount 50 --caption --merchant "Acme Coffee" -o qr.svg
 ```
 
 Full SVG card with Thai QR Payment + PromptPay headers, merchant name, and amount label.
@@ -73,7 +73,8 @@ Raw EMVCo wire string. Useful for piping into another tool.
 | `--ecc <level>`     | —     | `L` / `M` / `Q` / `H` (default `M`)                         |
 | `--format <kind>`   | `-f`  | `card` (default) / `matrix` / `payload`                     |
 | `--theme <kind>`    | —     | `color` (default) / `silhouette`                            |
-| `--merchant <name>` | `-m`  | rendered above the QR (card mode)                           |
+| `--caption`         | —     | print the caption under the QR (card mode, off by default)  |
+| `--merchant <name>` | `-m`  | caption merchant name — needs `--caption`                   |
 | `--size <px>`       | —     | matrix mode output size                                     |
 | `--output <path>`   | `-o`  | write to file (default stdout)                              |
 | `--help`            | `-h`  | show help                                                   |
@@ -83,7 +84,7 @@ Raw EMVCo wire string. Useful for piping into another tool.
 
 ```bash
 # Dynamic 50 THB card written to file
-thai-qr-payment 0812345678 --amount 50 --merchant "Acme" -o qr.svg
+thai-qr-payment 0812345678 --amount 50 --caption --merchant "Acme" -o qr.svg
 
 # Bare 512 px QR matrix with high error correction
 thai-qr-payment 0812345678 --amount 50 --format matrix --size 512 --ecc H -o qr.svg

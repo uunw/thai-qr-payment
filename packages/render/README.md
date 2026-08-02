@@ -14,6 +14,7 @@ import { renderThaiQRPayment } from '@thai-qr-payment/render';
 const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
+  showCaption: true,
   merchantName: 'Acme Coffee',
   amountLabel: '฿ 50.00',
   errorCorrectionLevel: 'H',
@@ -41,8 +42,9 @@ const svg = renderThaiQRPaymentMatrix({
 | Option          | Default                   | Notes                                                |
 | --------------- | ------------------------- | ---------------------------------------------------- |
 | `theme`         | `color`                   | `silhouette` swaps brand artwork to monochrome paths |
-| `merchantName`  | —                         | Rendered above the QR                                |
-| `amountLabel`   | —                         | Free-form THB string rendered below the QR           |
+| `showCaption`   | `false`                   | Opt in to the caption block under the QR             |
+| `merchantName`  | —                         | Caption line 1 — needs `showCaption`                 |
+| `amountLabel`   | —                         | Caption line 2, free-form THB — needs `showCaption`  |
 | `background`    | `#fff`                    | Card backdrop                                        |
 | `accent`        | `#0a2540`                 | Text + silhouette fill colour                        |
 | `headerLogo`    | `Thai_QR_Payment_Logo-01` | Override from `@thai-qr-payment/assets`              |

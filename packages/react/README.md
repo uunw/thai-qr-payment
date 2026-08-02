@@ -15,6 +15,7 @@ import { ThaiQRPayment, ThaiQRPaymentMatrix } from '@thai-qr-payment/react';
 <ThaiQRPayment
   recipient="0812345678"
   amount={50}
+  showCaption
   merchantName="Acme Coffee"
   amountLabel="฿ 50.00"
   errorCorrectionLevel="H"

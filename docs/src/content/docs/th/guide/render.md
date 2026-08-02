@@ -15,6 +15,7 @@ import { renderThaiQRPayment } from 'thai-qr-payment';
 const svg = renderThaiQRPayment({
   recipient: '0812345678',
   amount: 50,
+  showCaption: true,
   merchantName: 'Acme Coffee',
   amountLabel: '฿ 50.00',
   errorCorrectionLevel: 'H',
@@ -43,8 +44,9 @@ const svg = renderThaiQRPaymentMatrix({
 | Option          | Default                   | หมายเหตุ                                                   |
 | --------------- | ------------------------- | ---------------------------------------------------------- |
 | `theme`         | `color`                   | `'silhouette'` เปลี่ยน brand artwork เป็น path ขาวดำ       |
-| `merchantName`  | —                         | render อยู่เหนือ QR                                        |
-| `amountLabel`   | —                         | render อยู่ใต้ QR                                          |
+| `showCaption`   | `false`                   | เปิดบล็อกข้อความใต้ QR (ต้องสั่งเอง)                       |
+| `merchantName`  | —                         | ข้อความบรรทัดแรก — ต้องเปิด `showCaption`                  |
+| `amountLabel`   | —                         | ข้อความบรรทัดที่สอง — ต้องเปิด `showCaption`               |
 | `background`    | `#fff`                    | พื้นหลังของ card                                           |
 | `accent`        | `#0a2540`                 | สีของข้อความ + สี fill ของ silhouette                      |
 | `headerLogo`    | `Thai_QR_Payment_Logo-01` | override ผ่านชื่อใน registry ของ `@thai-qr-payment/assets` |
@@ -57,7 +59,7 @@ import { encodeQR } from 'thai-qr-payment';
 import { renderCard, renderQRSvg, matrixToPath } from 'thai-qr-payment';
 
 const matrix = encodeQR(wireString, { errorCorrectionLevel: 'H' });
-const svg = renderCard(matrix, { merchantName: 'Acme', amountLabel: '฿ 50' });
+const svg = renderCard(matrix, { showCaption: true, merchantName: 'Acme', amountLabel: '฿ 50' });
 
 // หรือลงลึกอีกระดับ:
 const justTheQr = renderQRSvg(matrix, { size: 512, quietZone: 4 });

@@ -103,6 +103,7 @@ describe('thai-qr-payment (umbrella) — end-to-end', () => {
     const svg = umbrella.renderThaiQRPayment({
       recipient: '0812345678',
       amount: 50,
+      showCaption: true,
       merchantName: 'Acme Coffee',
     });
     expect(svg).toContain('<svg');
@@ -133,6 +134,7 @@ describe('thai-qr-payment (umbrella) — end-to-end', () => {
       .build();
     const matrix = umbrella.encodeQR(wire, { errorCorrectionLevel: 'H' });
     const svg = umbrella.renderCard(matrix, {
+      showCaption: true,
       merchantName: 'Acme Coffee',
       amountLabel: '฿ 120.50',
     });

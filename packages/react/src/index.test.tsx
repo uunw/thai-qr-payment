@@ -61,6 +61,7 @@ describe('ThaiQRPayment component', () => {
       createElement(ThaiQRPayment, {
         recipient: '0812345678',
         amount: 50,
+        showCaption: true,
         merchantName: 'Acme Coffee',
       }),
     );
@@ -72,6 +73,7 @@ describe('ThaiQRPayment component', () => {
       createElement(ThaiQRPayment, {
         recipient: '0812345678',
         amount: 50,
+        showCaption: true,
         amountLabel: '฿ 50.00',
       }),
     );

@@ -13,6 +13,7 @@ description: โหลด thai-qr-payment ตรงจาก unpkg หรือ 
   document.body.innerHTML = renderThaiQRPayment({
     recipient: '0812345678',
     amount: 50,
+    showCaption: true,
     merchantName: 'Acme Coffee',
     amountLabel: '฿ 50.00',
   });

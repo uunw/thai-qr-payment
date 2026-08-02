@@ -132,7 +132,11 @@ describe('escapeXmlAttribute', () => {
 describe('renderCard', () => {
   it('produces a card SVG containing the QR + brand band', () => {
     const matrix = encodeQR('00020101021129');
-    const svg = renderCard(matrix, { merchantName: 'Acme Coffee', amountLabel: '฿ 50.00' });
+    const svg = renderCard(matrix, {
+      showCaption: true,
+      merchantName: 'Acme Coffee',
+      amountLabel: '฿ 50.00',
+    });
     expect(svg).toContain('symbol id="tqp-header"');
     expect(svg).toContain('symbol id="tqp-promptpay"');
     expect(svg).toContain('Acme Coffee');
@@ -147,8 +151,51 @@ describe('renderCard', () => {
 
   it('renders amountLabel when supplied', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderCard(matrix, { amountLabel: '฿ 100.00' });
+    const svg = renderCard(matrix, { showCaption: true, amountLabel: '฿ 100.00' });
     expect(svg).toContain('100.00');
+  });
+
+  it('hides the caption block by default even when labels are supplied', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix, {
+      showCaption: false,
+      merchantName: 'Acme Coffee',
+      amountLabel: '฿ 50.00',
+    });
+    expect(svg).not.toContain('<text');
+    expect(svg).not.toContain('Acme Coffee');
+    expect(svg).not.toContain('50.00');
+  });
+
+  it('centres the logo overlay with equal padding on all four sides', () => {
+    const matrix = encodeQR('HELLO');
+    const svg = renderCard(matrix);
+
+    const plate = svg.match(
+      /<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)" fill="#ffffff" rx="4"\/>/,
+    );
+    const icon = svg.match(
+      /<use href="#tqp-icon"[^>]*? x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/,
+    );
+    expect(plate).not.toBeNull();
+    expect(icon).not.toBeNull();
+
+    const [, plateX, plateY, plateW, plateH] = plate!.map(Number);
+    const [, iconX, iconY, iconW, iconH] = icon!.map(Number);
+
+    // `preserveAspectRatio="xMidYMid meet"` letterboxes the 325 × 376 icon
+    // inside its box, so equal gaps require the box itself to carry the
+    // icon's aspect ratio — a square box pads the sides ~2× the top/bottom.
+    expect(iconW / iconH).toBeCloseTo(325 / 376, 3);
+
+    const left = iconX - plateX;
+    const right = plateX + plateW - (iconX + iconW);
+    const top = iconY - plateY;
+    const bottom = plateY + plateH - (iconY + iconH);
+
+    expect(left).toBeCloseTo(right, 3);
+    expect(top).toBeCloseTo(bottom, 3);
+    expect(left).toBeCloseTo(top, 3);
   });
 
   it('switches to silhouette theme', () => {
@@ -212,6 +259,7 @@ describe('renderCard', () => {
     const matrix = encodeQR('HELLO');
     const svg = renderCard(matrix, {
       accent: '#ff0066',
+      showCaption: true,
       merchantName: 'Test',
       amountLabel: '100',
     });
@@ -235,14 +283,17 @@ describe('renderCard', () => {
 
   it('escapes HTML in merchantName (XSS prevention)', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderCard(matrix, { merchantName: '<script>alert(1)</script>' });
+    const svg = renderCard(matrix, {
+      showCaption: true,
+      merchantName: '<script>alert(1)</script>',
+    });
     expect(svg).not.toContain('<script>');
     expect(svg).toContain('&lt;script&gt;');
   });
 
   it('escapes HTML in amountLabel', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderCard(matrix, { amountLabel: 'A & B' });
+    const svg = renderCard(matrix, { showCaption: true, amountLabel: 'A & B' });
     expect(svg).toContain('A &amp; B');
   });
 
@@ -278,6 +329,7 @@ describe('renderThaiQRPayment (one-shot)', () => {
     const svg = renderThaiQRPayment({
       recipient: '0812345678',
       amount: 50,
+      showCaption: true,
       merchantName: 'Acme Coffee',
       amountLabel: '฿ 50.00',
     });
@@ -347,7 +399,11 @@ describe('renderThaiQRPaymentMatrix (bare QR helper)', () => {
 
 describe('SVG validity', () => {
   it('renderCard output round-trips through XML-ish heuristic', () => {
-    const svg = renderCard(encodeQR('HELLO'), { merchantName: 'Acme', amountLabel: '50' });
+    const svg = renderCard(encodeQR('HELLO'), {
+      showCaption: true,
+      merchantName: 'Acme',
+      amountLabel: '50',
+    });
     // Count <svg> tags should match </svg>
     expect((svg.match(/<svg/g) ?? []).length).toBe(1);
     expect((svg.match(/<\/svg>/g) ?? []).length).toBe(1);
@@ -371,19 +427,19 @@ describe('edge cases', () => {
   it('handles long merchant name (browser apps will overflow visually but SVG stays valid)', () => {
     const matrix = encodeQR('HELLO');
     const longName = 'X'.repeat(200);
-    const svg = renderCard(matrix, { merchantName: longName });
+    const svg = renderCard(matrix, { showCaption: true, merchantName: longName });
     expect(svg).toContain(longName);
   });
 
   it('handles Thai script in merchantName', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderCard(matrix, { merchantName: 'ร้านกาแฟ Acme' });
+    const svg = renderCard(matrix, { showCaption: true, merchantName: 'ร้านกาแฟ Acme' });
     expect(svg).toContain('ร้านกาแฟ Acme');
   });
 
   it('handles emoji in merchantName', () => {
     const matrix = encodeQR('HELLO');
-    const svg = renderCard(matrix, { merchantName: 'Coffee ☕ Shop' });
+    const svg = renderCard(matrix, { showCaption: true, merchantName: 'Coffee ☕ Shop' });
     expect(svg).toContain('☕');
   });
 

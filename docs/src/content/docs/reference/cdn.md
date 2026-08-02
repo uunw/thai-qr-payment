@@ -13,6 +13,7 @@ Every published `dist/*.js` ships with pre-compressed `.br` + `.gz` siblings. CD
   document.body.innerHTML = renderThaiQRPayment({
     recipient: '0812345678',
     amount: 50,
+    showCaption: true,
     merchantName: 'Acme Coffee',
     amountLabel: '฿ 50.00',
   });

@@ -11,6 +11,7 @@ export interface ParsedArgs {
   errorCorrection?: 'L' | 'M' | 'Q' | 'H';
   format?: 'card' | 'matrix' | 'payload';
   theme?: 'color' | 'silhouette';
+  caption?: boolean;
   merchantName?: string;
   output?: string;
   size?: number;
@@ -71,6 +72,11 @@ export function parseArgs(argv: readonly string[]): ParsedArgs {
     }
     if (arg === '--satang') {
       out.fromSatang = true;
+      i += 1;
+      continue;
+    }
+    if (arg === '--caption') {
+      out.caption = true;
       i += 1;
       continue;
     }
@@ -138,7 +144,8 @@ OPTIONS
       --ecc <level>          QR error correction: L | M | Q | H (default: M)
   -f, --format <kind>        card (default) | matrix | payload
       --theme <kind>         color (default) | silhouette
-  -m, --merchant <name>      Optional merchant name above the QR
+      --caption              Print the merchant + amount caption under the QR
+  -m, --merchant <name>      Caption merchant name (requires --caption)
       --size <px>            Output size in pixels (matrix format only)
   -o, --output <path>        Write output to file instead of stdout
   -h, --help                 Show this help

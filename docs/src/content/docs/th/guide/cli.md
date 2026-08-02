@@ -12,7 +12,7 @@ npx tqp 0812345678 --amount 50 -o qr.svg
 
 # Global install
 pnpm add -g thai-qr-payment
-thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
+thai-qr-payment 0812345678 --amount 50 --caption --merchant "Acme Coffee" -o qr.svg
 tqp 0812345678 --format payload
 ```
 
@@ -40,7 +40,7 @@ npx --package=@thai-qr-payment/cli tqp 0812345678 --amount 50
 ### Card (default)
 
 ```bash
-thai-qr-payment 0812345678 --amount 50 --merchant "Acme Coffee" -o qr.svg
+thai-qr-payment 0812345678 --amount 50 --caption --merchant "Acme Coffee" -o qr.svg
 ```
 
 การ์ด SVG เต็มรูปแบบ พร้อม header ของ Thai QR Payment + PromptPay ชื่อร้านค้า และป้ายแสดงยอดเงิน
@@ -73,7 +73,8 @@ thai-qr-payment 0812345678 --amount 50 --format payload
 | `--ecc <level>`     | —     | `L` / `M` / `Q` / `H` (default `M`)                                |
 | `--format <kind>`   | `-f`  | `card` (default) / `matrix` / `payload`                            |
 | `--theme <kind>`    | —     | `color` (default) / `silhouette`                                   |
-| `--merchant <name>` | `-m`  | render เหนือ QR (โหมด card)                                        |
+| `--caption`         | —     | แสดงข้อความใต้ QR (โหมด card, ปิดไว้เป็นค่าเริ่มต้น)               |
+| `--merchant <name>` | `-m`  | ชื่อร้านในข้อความใต้ QR — ต้องเปิด `--caption`                     |
 | `--size <px>`       | —     | ขนาด output ของโหมด matrix                                         |
 | `--output <path>`   | `-o`  | เขียนลงไฟล์ (default คือ stdout)                                   |
 | `--help`            | `-h`  | แสดงข้อความช่วยเหลือ                                               |
@@ -83,7 +84,7 @@ thai-qr-payment 0812345678 --amount 50 --format payload
 
 ```bash
 # Dynamic 50 THB card written to file
-thai-qr-payment 0812345678 --amount 50 --merchant "Acme" -o qr.svg
+thai-qr-payment 0812345678 --amount 50 --caption --merchant "Acme" -o qr.svg
 
 # Bare 512 px QR matrix with high error correction
 thai-qr-payment 0812345678 --amount 50 --format matrix --size 512 --ecc H -o qr.svg
