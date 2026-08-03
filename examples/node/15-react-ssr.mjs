@@ -4,10 +4,13 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { createElement } from 'react';
 import { ThaiQRPayment, ThaiQRPaymentMatrix } from '@thai-qr-payment/react';
 
+// `showCaption` is what draws merchantName / amountLabel. Without it the
+// card renders clean and both labels are ignored.
 const card = renderToStaticMarkup(
   createElement(ThaiQRPayment, {
     recipient: '0812345678',
     amount: 50,
+    showCaption: true,
     merchantName: 'Acme Coffee',
     amountLabel: '฿ 50.00',
   }),

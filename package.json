@@ -98,6 +98,9 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ]
+    ],
+    "overrides": {
+      "sharp": "^0.35.3"
+    }
   }
 }
