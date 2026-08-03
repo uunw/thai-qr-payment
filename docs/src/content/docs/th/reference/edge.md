@@ -10,7 +10,7 @@ umbrella เต็ม (และทุก scoped package) หลีกเลี�
 | Runtime                                                  | สถานะ | หมายเหตุ                                               |
 | -------------------------------------------------------- | ----- | ------------------------------------------------------ |
 | Browsers (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) | ✓     | ESM ผ่าน `<script type="module">` หรือ bundler ใดก็ได้ |
-| Node ≥ 18                                                | ✓     | มีทั้ง ESM + CJS                                       |
+| Node ≥ 22                                                | ✓     | มีทั้ง ESM + CJS                                       |
 | Bun 1.x                                                  | ✓     | ทดสอบด้วยมือแล้ว                                       |
 | Deno                                                     | ✓     | ใช้งานผ่าน specifier `npm:thai-qr-payment`             |
 | Cloudflare Workers                                       | ✓     | import ได้โดยไม่ต้องเปิด flag `nodejs_compat`          |

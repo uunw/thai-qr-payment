@@ -1,6 +1,6 @@
 /*
  * Brand-spec theme overrides. Uses the Bank of Thailand Thai QR Payment
- * palette as documented in AGENT.md — TQR Maximum Blue (#00427A) as the
+ * palette as documented in AGENTS.md — TQR Maximum Blue (#00427A) as the
  * primary accent + #00A796 as the secondary green. Variable names follow
  * Starlight's exported CSS custom properties so future Starlight upgrades
  * only need a swap of token names if any.

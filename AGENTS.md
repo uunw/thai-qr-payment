@@ -1,10 +1,10 @@
-# AGENT.md
+# AGENTS.md
 
 Project context for AI coding agents (Claude Code, Cursor, Continue, Cline, …). Read this first before touching anything.
 
 ## TL;DR
 
-Zero-dependency Thai QR Payment / EMVCo MPM toolkit. Monorepo with **7 packages** (`packages/*`) plus 1 umbrella + 5 scoped libs + 1 CLI + 1 React adapter. Browser + Node ≥ 18 + edge-runtime compatible.
+Zero-dependency Thai QR Payment / EMVCo MPM toolkit. Monorepo with **7 packages** (`packages/*`) plus 1 umbrella + 5 scoped libs + 1 CLI + 1 React adapter. Browser + Node ≥ 22 + edge-runtime compatible.
 
 ```bash
 pnpm install

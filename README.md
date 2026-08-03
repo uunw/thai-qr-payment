@@ -85,7 +85,7 @@ Self-hosting? Serve the `.br` / `.gz` variants directly when the request's `Acce
 ## Highlights
 
 - **Zero runtime dependencies** — no `qrcode`, no `canvas`, no `crc16`. Everything is in-house TypeScript.
-- **Universal** — browsers, Node ≥ 18, Bun, Deno, Cloudflare Workers, Vercel Edge.
+- **Universal** — browsers, Node ≥ 22, Bun, Deno, Cloudflare Workers, Vercel Edge.
 - **Type-safe & tree-shakable** — ESM + CJS dual output, sideEffects: false, every public API typed.
 - **Bundled small** — payload ≈ 8 KB, QR encoder ≈ 13 KB, render ≈ 3.6 KB (ESM, minified).
 - **EMVCo compliant** — implements ISO/IEC 18004 QR Model 2 + EMVCo MPM 1.1 + Bank of Thailand Thai QR Payment supplement.

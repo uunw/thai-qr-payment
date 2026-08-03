@@ -10,7 +10,7 @@ The full umbrella (and every scoped package) avoids Node-only APIs. The only exc
 | Runtime                                                  | Status | Notes                                           |
 | -------------------------------------------------------- | ------ | ----------------------------------------------- |
 | Browsers (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) | ✓      | ESM via `<script type="module">` or any bundler |
-| Node ≥ 18                                                | ✓      | ESM + CJS both shipped                          |
+| Node ≥ 22                                                | ✓      | ESM + CJS both shipped                          |
 | Bun 1.x                                                  | ✓      | tested manually                                 |
 | Deno                                                     | ✓      | works via `npm:thai-qr-payment` specifier       |
 | Cloudflare Workers                                       | ✓      | imports cleanly; no `nodejs_compat` flag needed |

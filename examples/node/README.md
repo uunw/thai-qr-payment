@@ -12,7 +12,7 @@ relevant block, paste into your app.
 pnpm install
 pnpm build
 
-# Run any example directly (Node ≥ 18, native ESM).
+# Run any example directly (Node ≥ 22, native ESM).
 node examples/node/01-payload-shortcut.mjs
 node examples/node/04-builder-truemoney.mjs
 # …

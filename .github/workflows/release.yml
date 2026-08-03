@@ -2,7 +2,7 @@ name: Release
 
 # Disabled — version + publish moved to local `scripts/release.mjs` after
 # the changesets `fixed`-config cascade pushed every package to 4.0.0. See
-# AGENT.md "linked cascade" landmine. Re-enable only if a future release
+# AGENTS.md "linked cascade" landmine. Re-enable only if a future release
 # strategy proves drift-resistant.
 #
 # Manual flow: `pnpm release:minor` (or :patch) — bumps every package.json
