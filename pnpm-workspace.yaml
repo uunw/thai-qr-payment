@@ -9,5 +9,5 @@ allowBuilds:
 catalog:
   typescript: ^7.0.2
   vitest: ^4.1.10
-  '@rspack/core': ^2.1.7
-  '@rspack/cli': ^2.1.7
+  '@rspack/core': ^2.1.8
+  '@rspack/cli': ^2.1.8
