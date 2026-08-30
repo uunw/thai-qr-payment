@@ -81,7 +81,7 @@
     "@types/node": "^22.20.1",
     "@vitest/coverage-v8": "^4.1.11",
     "husky": "^9.1.7",
-    "lint-staged": "^17.3.0",
+    "lint-staged": "^17.4.1",
     "oxfmt": "^0.64.0",
     "oxlint": "^1.80.0",
     "size-limit": "^13.0.3",
