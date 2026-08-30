@@ -142,8 +142,8 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0(@astrojs/starlight@0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3))
       starlight-scroll-to-top:
-        specifier: ^1.0.1
-        version: 1.0.1(@astrojs/starlight@0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3))
+        specifier: ^2.0.0
+        version: 2.0.0(@astrojs/starlight@0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3))
       starlight-sidebar-topics:
         specifier: ^0.8.0
         version: 0.8.0(@astrojs/starlight@0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3))
@@ -4118,11 +4118,11 @@ packages:
     peerDependencies:
       '@astrojs/starlight': '>=0.22.0'
 
-  starlight-scroll-to-top@1.0.1:
-    resolution: {integrity: sha512-OkSVwEQBzHkYPgBYL/O9xSiFn75j6HvrmjvdL8+3Kk0oxgt4sNmkOwhB0bGjB/T7M7SAJ4AFk1Ojza1HVxOeHQ==}
+  starlight-scroll-to-top@2.0.0:
+    resolution: {integrity: sha512-KXvghfBr7nGLDhmWCP5/BXQOgZ60J4NSXsqbvWryZ5hUXeonSXR0Zl45j/+bZh1L9eWf3AYTV6YZT1HXXNdSlA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      '@astrojs/starlight': '>=0.38.0'
+      '@astrojs/starlight': '>=0.41.0'
 
   starlight-sidebar-topics@0.8.0:
     resolution: {integrity: sha512-hE8+w2vNL13h6cq3UJGl05milJQ3+1BSlhaV5V4a993YzYczU6uLAj6jfUDKQ2mmgkdVWp8/UNDF4Je/rQXNQw==}
@@ -9185,7 +9185,7 @@ snapshots:
     dependencies:
       '@astrojs/starlight': 0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3)
 
-  starlight-scroll-to-top@1.0.1(@astrojs/starlight@0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3)):
+  starlight-scroll-to-top@2.0.0(@astrojs/starlight@0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3)):
     dependencies:
       '@astrojs/starlight': 0.41.9(@astrojs/markdown-remark@7.2.4)(astro@7.2.9(@astrojs/markdown-remark@7.2.4)(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@26.4.0)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.0))(typescript@6.0.3)
 
