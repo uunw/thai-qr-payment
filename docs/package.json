@@ -16,7 +16,7 @@
     "@astrojs/react": "^6.0.4",
     "@astrojs/starlight": "^0.41.7",
     "@thai-qr-payment/react": "workspace:*",
-    "astro": "^7.2.4",
+    "astro": "^7.2.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "sharp": "^0.35.3",
