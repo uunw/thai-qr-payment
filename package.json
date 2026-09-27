@@ -74,7 +74,7 @@
     "@changesets/cli": "^2.31.1",
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
-    "@rspack/cli": "^2.2.6",
+    "@rspack/cli": "^2.2.7",
     "@rspack/core": "catalog:",
     "@size-limit/esbuild": "^13.0.3",
     "@size-limit/preset-small-lib": "^13.0.3",
