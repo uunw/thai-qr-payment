@@ -82,7 +82,7 @@
     "@vitest/coverage-v8": "^5.0.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
-    "oxfmt": "^0.70.0",
+    "oxfmt": "^0.71.0",
     "oxlint": "^1.86.0",
     "size-limit": "^13.0.3",
     "svgo": "^4.1.0",
