@@ -133,8 +133,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.1)(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))
       starlight-image-zoom:
-        specifier: ^0.16.0
-        version: 0.16.0(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.1)(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))
+        specifier: ^0.16.1
+        version: 0.16.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.1)(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))
       starlight-ion-theme:
         specifier: ^2.4.1
         version: 2.4.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.1)(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))
@@ -4258,11 +4258,11 @@ packages:
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
 
-  starlight-image-zoom@0.16.0:
-    resolution: {integrity: sha512-N/mZ1Jwu+1JRQ9MqJjdj69UXiVpfDd3k6i78ZIuht1aZGceVC0wOcqCPASZ6VNmUoELlMXLz9n0xtAyBIfmA8A==}
-    engines: {node: '>=22.12.0'}
+  starlight-image-zoom@0.16.1:
+    resolution: {integrity: sha512-CbP5T4GBjyS6IwUnk13N37eK1zqrtIdCGxi8QpJX8WOOjF5WkwNNHIW2WVgVp6KS5TiNbOswqdlb0eWWH0jEVg==}
     peerDependencies:
       '@astrojs/starlight': '>=0.42.0'
+      astro: '>=7.2.10'
 
   starlight-ion-theme@2.4.1:
     resolution: {integrity: sha512-IM5pPc8tRklj6AQt5EluqZ2a084lJRZ/Qg8kdnpkwnp0ZV3prcF9e4sGwvfev9iEfZhQYp6G3hjrdWkIeDhH2w==}
@@ -8340,7 +8340,7 @@ snapshots:
       '@types/unist': 3.0.3
       ccount: 2.0.1
       devlop: 1.1.0
-      mdast-util-from-markdown: 2.0.3
+      mdast-util-from-markdown: 2.1.0
       mdast-util-to-markdown: 2.2.0
       parse-entities: 4.0.2
       stringify-entities: 4.0.4
@@ -9490,9 +9490,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  starlight-image-zoom@0.16.0(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.1)(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3)):
+  starlight-image-zoom@0.16.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.1)(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1)):
     dependencies:
       '@astrojs/starlight': 0.42.6(@astrojs/markdown-remark@7.3.1)(astro@7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3)
+      astro: 7.3.5(@astrojs/markdown-remark@7.3.1)(@types/node@26.6.4)(@vercel/functions@3.7.6)(jiti@2.6.1)(yaml@2.9.1)
       mdast-util-mdx-jsx: 3.2.0
       rehype-raw: 7.0.0
       satteri: 0.10.5
