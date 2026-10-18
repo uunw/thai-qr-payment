@@ -18,7 +18,7 @@
     "@thai-qr-payment/react": "workspace:*",
     "astro": "^7.3.8",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react-dom": "^19.3.1",
     "sharp": "^0.35.5",
     "thai-qr-payment": "workspace:*"
   },
