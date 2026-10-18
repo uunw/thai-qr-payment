@@ -133,8 +133,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))
       starlight-image-zoom:
-        specifier: ^0.16.1
-        version: 0.16.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))
+        specifier: ^0.16.2
+        version: 0.16.2(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))
       starlight-ion-theme:
         specifier: ^2.4.1
         version: 2.4.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))
@@ -4119,8 +4119,8 @@ packages:
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
 
-  starlight-image-zoom@0.16.1:
-    resolution: {integrity: sha512-CbP5T4GBjyS6IwUnk13N37eK1zqrtIdCGxi8QpJX8WOOjF5WkwNNHIW2WVgVp6KS5TiNbOswqdlb0eWWH0jEVg==}
+  starlight-image-zoom@0.16.2:
+    resolution: {integrity: sha512-TF3TGjkb3d8hsYE5Hr09vTVAG0SsozNGQRy0Xy29zHqxNZVorrnE7CsddO98M6NA1KbKg4p2sNrCq59COLL80A==}
     peerDependencies:
       '@astrojs/starlight': '>=0.42.0'
       astro: '>=7.2.10'
@@ -9228,7 +9228,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  starlight-image-zoom@0.16.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1)):
+  starlight-image-zoom@0.16.2(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1)):
     dependencies:
       '@astrojs/starlight': 0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3)
       astro: 7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1)
