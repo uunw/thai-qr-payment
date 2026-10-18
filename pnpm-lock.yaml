@@ -155,13 +155,13 @@ importers:
         version: 0.9.0(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))
       starlight-typedoc:
         specifier: ^0.23.1
-        version: 0.23.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typedoc-plugin-markdown@4.13.1(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3))
+        version: 0.23.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typedoc-plugin-markdown@4.14.0(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3))
       typedoc:
         specifier: ^0.28.20
         version: 0.28.20(typescript@6.0.3)
       typedoc-plugin-markdown:
-        specifier: ^4.13.1
-        version: 4.13.1(typedoc@0.28.20(typescript@6.0.3))
+        specifier: ^4.14.0
+        version: 4.14.0(typedoc@0.28.20(typescript@6.0.3))
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -4295,8 +4295,8 @@ packages:
     resolution: {integrity: sha512-RhXHbqfvY6o3xt/zSHCwSNwLrZlXiqHzewi4eAj9PtZ1T1CqgMJ2yIDb7SKPTG9IikTm925mfzL6hldQVdyNWw==}
     hasBin: true
 
-  typedoc-plugin-markdown@4.13.1:
-    resolution: {integrity: sha512-d3jchJ4CyIrV9w9uozTSkfMYG8IEM1RvvGOaybJ/3rRporzoX7p0lprffo95GOGUviQqP0phjHJE3bY8PQbilA==}
+  typedoc-plugin-markdown@4.14.0:
+    resolution: {integrity: sha512-Y2a3oDV9ekrbkk6RBSGH8GyNkh0xIdemIOOTr3tiRN/33nvFGStOs9nw+6Q84gF1XFkcVZrgM4Ckcsf6e/YpKQ==}
     engines: {node: '>= 18'}
     peerDependencies:
       typedoc: 0.28.x
@@ -9306,13 +9306,13 @@ snapshots:
       astro: 7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1)
       picomatch: 4.0.7
 
-  starlight-typedoc@0.23.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typedoc-plugin-markdown@4.13.1(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3)):
+  starlight-typedoc@0.23.1(@astrojs/starlight@0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3))(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typedoc-plugin-markdown@4.14.0(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3)):
     dependencies:
       '@astrojs/starlight': 0.42.6(@astrojs/markdown-remark@7.3.2)(astro@7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1))(typescript@6.0.3)
       astro: 7.3.8(@astrojs/markdown-remark@7.3.2)(@types/node@26.6.4)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.6.1)(yaml@2.9.1)
       github-slugger: 2.0.0
       typedoc: 0.28.20(typescript@6.0.3)
-      typedoc-plugin-markdown: 4.13.1(typedoc@0.28.20(typescript@6.0.3))
+      typedoc-plugin-markdown: 4.14.0(typedoc@0.28.20(typescript@6.0.3))
 
   std-env@4.2.0: {}
 
@@ -9443,7 +9443,7 @@ snapshots:
       '@turbo/windows-64': 2.11.7
       '@turbo/windows-arm64': 2.11.7
 
-  typedoc-plugin-markdown@4.13.1(typedoc@0.28.20(typescript@6.0.3)):
+  typedoc-plugin-markdown@4.14.0(typedoc@0.28.20(typescript@6.0.3)):
     dependencies:
       typedoc: 0.28.20(typescript@6.0.3)
 
