@@ -154,8 +154,8 @@ importers:
         specifier: ^0.9.0
         version: 0.9.0(@astrojs/starlight@0.42.9(@astrojs/markdown-remark@7.3.6)(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       starlight-typedoc:
-        specifier: ^0.23.1
-        version: 0.23.1(@astrojs/starlight@0.42.9(@astrojs/markdown-remark@7.3.6)(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typedoc-plugin-markdown@4.14.1(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3))
+        specifier: ^0.23.2
+        version: 0.23.2(@astrojs/starlight@0.42.9(@astrojs/markdown-remark@7.3.6)(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typedoc-plugin-markdown@4.14.1(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3))
       typedoc:
         specifier: ^0.28.20
         version: 0.28.20(typescript@6.0.3)
@@ -4259,9 +4259,8 @@ packages:
       '@astrojs/starlight': '>=0.42.0'
       astro: ^7.2.10
 
-  starlight-typedoc@0.23.1:
-    resolution: {integrity: sha512-H45Mxv4mZ1xUMhUNjTR4CwKDgKKHZboQA5v5+vTVMdjlCX02Xo7veTB7+F/ivmMHPmQ7SV5auF2BTlU/EpQIoQ==}
-    engines: {node: '>=22.12.0'}
+  starlight-typedoc@0.23.2:
+    resolution: {integrity: sha512-aErehRvL12eAhRAL8n68A6HgEOTd1+loT+tRfeq5UxECzMsThvqdFZaKyCam8b01uhMUDcOcEnqJGh5VnPzxyA==}
     peerDependencies:
       '@astrojs/starlight': '>=0.39.0'
       astro: '>=6.0.0'
@@ -9480,7 +9479,7 @@ snapshots:
       astro: 7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
       picomatch: 4.0.7
 
-  starlight-typedoc@0.23.1(@astrojs/starlight@0.42.9(@astrojs/markdown-remark@7.3.6)(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typedoc-plugin-markdown@4.14.1(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3)):
+  starlight-typedoc@0.23.2(@astrojs/starlight@0.42.9(@astrojs/markdown-remark@7.3.6)(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typedoc-plugin-markdown@4.14.1(typedoc@0.28.20(typescript@6.0.3)))(typedoc@0.28.20(typescript@6.0.3)):
     dependencies:
       '@astrojs/starlight': 0.42.9(@astrojs/markdown-remark@7.3.6)(astro@7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3)
       astro: 7.4.4(@astrojs/markdown-remark@7.3.6)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
