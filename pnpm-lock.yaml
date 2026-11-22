@@ -133,8 +133,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(@astrojs/starlight@0.43.1(@astrojs/markdown-remark@7.3.10)(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))
       starlight-image-zoom:
-        specifier: ^0.16.2
-        version: 0.16.2(@astrojs/starlight@0.43.1(@astrojs/markdown-remark@7.3.10)(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
+        specifier: ^0.16.3
+        version: 0.16.3(@astrojs/starlight@0.43.1(@astrojs/markdown-remark@7.3.10)(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       starlight-ion-theme:
         specifier: ^2.4.1
         version: 2.4.1(@astrojs/starlight@0.43.1(@astrojs/markdown-remark@7.3.10)(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
@@ -4222,8 +4222,8 @@ packages:
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
 
-  starlight-image-zoom@0.16.2:
-    resolution: {integrity: sha512-TF3TGjkb3d8hsYE5Hr09vTVAG0SsozNGQRy0Xy29zHqxNZVorrnE7CsddO98M6NA1KbKg4p2sNrCq59COLL80A==}
+  starlight-image-zoom@0.16.3:
+    resolution: {integrity: sha512-Bvpb+ybxeWsIGU9QilpguiokjctzMNjiEbAvQMyQakEzcjzB7t2q8EMu4k1aIjVaRfrchD1rdbe3Nq40iLCjkA==}
     peerDependencies:
       '@astrojs/starlight': '>=0.42.0'
       astro: '>=7.2.10'
@@ -4482,9 +4482,6 @@ packages:
 
   unist-util-visit-children@3.0.0:
     resolution: {integrity: sha512-RgmdTfSBOg04sdPcpTSD1jzoNBjt9a80/ZCzp5cI9n1qPzLZWF9YdvWGN2zmTumP1HWhXKdUWexjy/Wy/lJ7tA==}
-
-  unist-util-visit-parents@6.0.2:
-    resolution: {integrity: sha512-goh1s1TBrqSqukSc8wrjwWhL0hiJxgA8m4kFxGlQ+8FYQ3C/m11FcTs4YYem7V664AhHVvgoQLk890Ssdsr2IQ==}
 
   unist-util-visit-parents@6.1.0:
     resolution: {integrity: sha512-vKXxz6O38sKDj1mtx/k2cWvkkFBuYGx6uGrlzBkVeWCRF/F8sdI0j3Wbkz/5rVNRRuVc8UrgRdbCxNhmYXgP3w==}
@@ -9431,15 +9428,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  starlight-image-zoom@0.16.2(@astrojs/starlight@0.43.1(@astrojs/markdown-remark@7.3.10)(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)):
+  starlight-image-zoom@0.16.3(@astrojs/starlight@0.43.1(@astrojs/markdown-remark@7.3.10)(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3))(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)):
     dependencies:
       '@astrojs/starlight': 0.43.1(@astrojs/markdown-remark@7.3.10)(astro@7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(typescript@6.0.3)
       astro: 7.4.11(@astrojs/markdown-remark@7.3.10)(@types/node@26.6.6)(@vercel/functions@3.7.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
-      mdast-util-mdx-jsx: 3.2.0
+      mdast-util-mdx-jsx: 3.2.1
       rehype-raw: 7.0.0
       satteri: 0.10.5
-      unist-util-visit: 5.1.0
-      unist-util-visit-parents: 6.0.2
+      unist-util-visit: 5.2.0
+      unist-util-visit-parents: 6.1.0
     transitivePeerDependencies:
       - supports-color
 
@@ -9758,11 +9755,6 @@ snapshots:
   unist-util-visit-children@3.0.0:
     dependencies:
       '@types/unist': 3.0.3
-
-  unist-util-visit-parents@6.0.2:
-    dependencies:
-      '@types/unist': 3.0.3
-      unist-util-is: 6.0.1
 
   unist-util-visit-parents@6.1.0:
     dependencies:
