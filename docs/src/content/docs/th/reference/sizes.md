@@ -7,18 +7,18 @@ description: ขีดจำกัดของ size-limit สำหรับท�
 
 ## ขนาดปัจจุบัน (brotli + minified)
 
-| Entry                                              | ขีดจำกัด | ขนาดปัจจุบัน |
-| -------------------------------------------------- | -------: | -----------: |
-| `thai-qr-payment` (umbrella เต็ม)                  |    25 KB |  **13.7 KB** |
-| `thai-qr-payment` (`renderThaiQRPayment` เท่านั้น) |    25 KB |      13.6 KB |
-| `thai-qr-payment/payload` sub-path                 |     5 KB |      3.09 KB |
-| `thai-qr-payment/qr` sub-path                      |     6 KB |      4.74 KB |
-| `@thai-qr-payment/payload` (เต็ม)                  |     5 KB |      3.09 KB |
-| `@thai-qr-payment/payload` (`payloadFor` เท่านั้น) |     4 KB |      2.98 KB |
-| `@thai-qr-payment/qr`                              |     6 KB |      4.75 KB |
-| `@thai-qr-payment/render`                          |     2 KB |      1.24 KB |
-| `@thai-qr-payment/react`                           |     1 KB |        256 B |
-| `@thai-qr-payment/assets`                          |    20 KB |      4.83 KB |
+| Entry                                           | ขีดจำกัด |   ขนาดปัจจุบัน |
+| ----------------------------------------------- | -----: | ----------: |
+| `thai-qr-payment` (umbrella เต็ม)                |  25 KB | **13.7 KB** |
+| `thai-qr-payment` (`renderThaiQRPayment` เท่านั้น) |  25 KB |     13.6 KB |
+| `thai-qr-payment/payload` sub-path              |   5 KB |     3.09 KB |
+| `thai-qr-payment/qr` sub-path                   |   6 KB |     4.74 KB |
+| `@thai-qr-payment/payload` (เต็ม)                |   5 KB |     3.09 KB |
+| `@thai-qr-payment/payload` (`payloadFor` เท่านั้น) |   4 KB |     2.98 KB |
+| `@thai-qr-payment/qr`                           |   6 KB |     4.75 KB |
+| `@thai-qr-payment/render`                       |   2 KB |     1.24 KB |
+| `@thai-qr-payment/react`                        |   1 KB |       256 B |
+| `@thai-qr-payment/assets`                       |  20 KB |     4.83 KB |
 
 ## ประวัติการลดขนาด bundle
 
@@ -33,7 +33,7 @@ description: ขีดจำกัดของ size-limit สำหรับท�
 
 bundle JS ที่เผยแพร่ทั้งหมดบีบอัดได้ดี — อัตรา brotli โดยทั่วไปอยู่ที่ 35-45%:
 
-| ไฟล์                    |    raw |  Brotli |   Gzip |
+| ไฟล์                     |    raw |  Brotli |   Gzip |
 | ----------------------- | -----: | ------: | -----: |
 | `payload/dist/index.js` | 8.3 KB | 2.98 KB | 3.5 KB |
 | `qr/dist/index.js`      |  13 KB |  4.5 KB | 5.2 KB |

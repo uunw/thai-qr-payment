@@ -41,16 +41,16 @@ const svg = renderThaiQRPaymentMatrix({
 
 ## Option ของ card
 
-| Option          | Default                   | หมายเหตุ                                                   |
-| --------------- | ------------------------- | ---------------------------------------------------------- |
+| Option          | Default                   | หมายเหตุ                                                 |
+| --------------- | ------------------------- | ------------------------------------------------------- |
 | `theme`         | `color`                   | `'silhouette'` เปลี่ยน brand artwork เป็น path ขาวดำ       |
-| `showCaption`   | `false`                   | เปิดบล็อกข้อความใต้ QR (ต้องสั่งเอง)                       |
-| `merchantName`  | —                         | ข้อความบรรทัดแรก — ต้องเปิด `showCaption`                  |
-| `amountLabel`   | —                         | ข้อความบรรทัดที่สอง — ต้องเปิด `showCaption`               |
+| `showCaption`   | `false`                   | เปิดบล็อกข้อความใต้ QR (ต้องสั่งเอง)                           |
+| `merchantName`  | —                         | ข้อความบรรทัดแรก — ต้องเปิด `showCaption`                   |
+| `amountLabel`   | —                         | ข้อความบรรทัดที่สอง — ต้องเปิด `showCaption`                  |
 | `background`    | `#fff`                    | พื้นหลังของ card                                           |
 | `accent`        | `#0a2540`                 | สีของข้อความ + สี fill ของ silhouette                      |
 | `headerLogo`    | `Thai_QR_Payment_Logo-01` | override ผ่านชื่อใน registry ของ `@thai-qr-payment/assets` |
-| `promptpayLogo` | `PromptPay1`              | override                                                   |
+| `promptpayLogo` | `PromptPay1`              | override                                                |
 
 ## Building block ระดับล่าง
 

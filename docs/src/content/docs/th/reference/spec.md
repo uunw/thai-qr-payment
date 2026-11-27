@@ -7,28 +7,28 @@ description: สถานะการ implement ราย tag ของ EMVCo + 
 
 ## Root TLV tags
 
-| Tag | ฟิลด์                                  | สถานะ           | หมายเหตุ                                                                               |
-| --- | -------------------------------------- | --------------- | -------------------------------------------------------------------------------------- |
-| 00  | Payload Format Indicator               | ✓               | เป็น `01` เสมอ                                                                         |
-| 01  | Point of Initiation                    | ✓               | `11` static / `12` dynamic, สลับอัตโนมัติตามการมี amount                               |
-| 29  | Merchant Account Info — PromptPay      | ✓               | GUID `…0111` (มาตรฐาน), `…0114` (OTA); ใช้ร่วมกับ TrueMoney Wallet QR                  |
-| 30  | Merchant Account Info — BillPayment    | ✓               | GUID `…0112` (ในประเทศ), `…012006` (ข้ามประเทศ)                                        |
-| 31  | Merchant Account Info — KShop          | reserved        | export constant ไว้แล้ว; ยังไม่มี builder helper                                       |
-| 52  | Merchant Category Code                 | ✓               | 4 หลักตาม ISO 18245                                                                    |
-| 53  | Transaction Currency                   | ✓               | เป็น `764` (THB) เสมอ                                                                  |
-| 54  | Transaction Amount                     | ✓               | สูงสุด 9,999,999,999.99 — ทศนิยม 2 ตำแหน่ง — รับ input เป็นสตางค์ก็ได้                 |
-| 55  | Tip / Convenience Indicator            | ✓               | `01` prompt / `02` ค่าคงที่ / `03` เปอร์เซ็นต์                                         |
-| 56  | Tip Fixed                              | ✓               | THB                                                                                    |
-| 57  | Tip Percentage                         | ✓               | ทศนิยม 2 ตำแหน่ง                                                                       |
-| 58  | Country Code                           | ✓               | เป็น `TH` เสมอ                                                                         |
-| 59  | Merchant Name                          | ✓               | สูงสุด 25 ตัวอักษร (ตัดท้ายอัตโนมัติ)                                                  |
-| 60  | Merchant City                          | ✓               | สูงสุด 15 ตัวอักษร                                                                     |
-| 61  | Postal Code                            | ✓               | สูงสุด 10 ตัวอักษร                                                                     |
-| 62  | Additional Data Field Template         | ✓               | ครบทั้ง 9 sub-fields                                                                   |
-| 63  | CRC-16/CCITT-FALSE                     | ✓               | poly `0x1021`, init `0xFFFF`, ไม่ reflect, ไม่ XOR out                                 |
-| 64  | Merchant Information Language Template | not implemented | เปิด issue ได้หากต้องใช้                                                               |
+| Tag | ฟิลด์                                    | สถานะ           | หมายเหตุ                                                                      |
+| --- | -------------------------------------- | --------------- | ---------------------------------------------------------------------------- |
+| 00  | Payload Format Indicator               | ✓               | เป็น `01` เสมอ                                                                |
+| 01  | Point of Initiation                    | ✓               | `11` static / `12` dynamic, สลับอัตโนมัติตามการมี amount                          |
+| 29  | Merchant Account Info — PromptPay      | ✓               | GUID `…0111` (มาตรฐาน), `…0114` (OTA); ใช้ร่วมกับ TrueMoney Wallet QR           |
+| 30  | Merchant Account Info — BillPayment    | ✓               | GUID `…0112` (ในประเทศ), `…012006` (ข้ามประเทศ)                               |
+| 31  | Merchant Account Info — KShop          | reserved        | export constant ไว้แล้ว; ยังไม่มี builder helper                                  |
+| 52  | Merchant Category Code                 | ✓               | 4 หลักตาม ISO 18245                                                           |
+| 53  | Transaction Currency                   | ✓               | เป็น `764` (THB) เสมอ                                                         |
+| 54  | Transaction Amount                     | ✓               | สูงสุด 9,999,999,999.99 — ทศนิยม 2 ตำแหน่ง — รับ input เป็นสตางค์ก็ได้                |
+| 55  | Tip / Convenience Indicator            | ✓               | `01` prompt / `02` ค่าคงที่ / `03` เปอร์เซ็นต์                                     |
+| 56  | Tip Fixed                              | ✓               | THB                                                                          |
+| 57  | Tip Percentage                         | ✓               | ทศนิยม 2 ตำแหน่ง                                                               |
+| 58  | Country Code                           | ✓               | เป็น `TH` เสมอ                                                                |
+| 59  | Merchant Name                          | ✓               | สูงสุด 25 ตัวอักษร (ตัดท้ายอัตโนมัติ)                                                 |
+| 60  | Merchant City                          | ✓               | สูงสุด 15 ตัวอักษร                                                               |
+| 61  | Postal Code                            | ✓               | สูงสุด 10 ตัวอักษร                                                               |
+| 62  | Additional Data Field Template         | ✓               | ครบทั้ง 9 sub-fields                                                           |
+| 63  | CRC-16/CCITT-FALSE                     | ✓               | poly `0x1021`, init `0xFFFF`, ไม่ reflect, ไม่ XOR out                         |
+| 64  | Merchant Information Language Template | not implemented | เปิด issue ได้หากต้องใช้                                                         |
 | 80  | VAT TQRC (BoT tax-qualified extension) | ✓               | 3 sub-fields — ยกระดับ payment QR ให้กลายเป็นแหล่งของใบกำกับภาษีอิเล็กทรอนิกส์ (e-tax) |
-| 81  | Personal message                       | ✓               | เป็น UTF-16BE-as-hex; พกพาโดย TrueMoney Wallet QR                                      |
+| 81  | Personal message                       | ✓               | เป็น UTF-16BE-as-hex; พกพาโดย TrueMoney Wallet QR                             |
 
 ## PromptPay merchant template (ภายใต้ tag 29)
 
@@ -39,13 +39,13 @@ Sub-tag 00 บรรจุ AID หนึ่งในสองค่า:
 
 AID แบบ OTA จะถูกเลือกอัตโนมัติเมื่อเรียก `.ota(code)` บน builder เครื่องสแกนจะส่ง payload ไปยัง flow แบบใช้ครั้งเดียว
 
-| Sub-tag | ฟิลด์                                                      | สถานะ |
-| ------- | ---------------------------------------------------------- | ----- |
-| 00      | GUID — `A000000677010111` หรือ `A000000677010114` (OTA)    | ✓     |
-| 01      | Mobile Number — 13 ตัวอักษร `0066xxxxxxxxxx`               | ✓     |
-| 02      | National ID — 13 ตัวอักษร                                  | ✓     |
-| 03      | e-Wallet ID — 15 ตัวอักษร                                  | ✓     |
-| 04      | Bank Account — รหัสธนาคาร 3 หลัก + เลขที่บัญชี, 1–43 chars | ✓     |
+| Sub-tag | ฟิลด์                                                    | สถานะ |
+| ------- | ------------------------------------------------------ | ----- |
+| 00      | GUID — `A000000677010111` หรือ `A000000677010114` (OTA) | ✓     |
+| 01      | Mobile Number — 13 ตัวอักษร `0066xxxxxxxxxx`             | ✓     |
+| 02      | National ID — 13 ตัวอักษร                                | ✓     |
+| 03      | e-Wallet ID — 15 ตัวอักษร                                | ✓     |
+| 04      | Bank Account — รหัสธนาคาร 3 หลัก + เลขที่บัญชี, 1–43 chars   | ✓     |
 | 05      | OTA code — ความยาวคงที่ 10 ตัวอักษร                        | ✓     |
 
 ### TrueMoney Wallet layout (อยู่ภายใต้ tag 29 เช่นกัน)
@@ -62,25 +62,25 @@ Sub-tag 00 บรรจุ AID หนึ่งในสองค่า:
 เมื่อใช้ AID แบบข้ามประเทศ ฟิลด์ `purposeOfTransaction` ใน additional-data (tag 62 sub-tag 08) จะบรรจุ triple แบบ opaque ความยาว 18 ตัวอักษร — currencyCode (3) + localAmount (13) + countryCode (2) builder จัดการกับค่านี้เป็น string ดิบ ให้ประกอบและ parse เองที่ฝั่งผู้เรียก
 
 | Sub-tag | ฟิลด์                                                          | สถานะ |
-| ------- | -------------------------------------------------------------- | ----- |
+| ------- | ------------------------------------------------------------ | ----- |
 | 00      | GUID — `A000000677010112` หรือ `A000000677012006` (ข้ามประเทศ) | ✓     |
-| 01      | Biller ID                                                      | ✓     |
-| 02      | Reference 1                                                    | ✓     |
-| 03      | Reference 2                                                    | ✓     |
+| 01      | Biller ID                                                    | ✓     |
+| 02      | Reference 1                                                  | ✓     |
+| 03      | Reference 2                                                  | ✓     |
 
 ## VAT TQRC template (ภายใต้ tag 80)
 
 ส่วนขยาย tax-qualified ของ Bank of Thailand ยกระดับ payment QR โดยรอบให้กลายเป็นแหล่งของใบกำกับภาษีอิเล็กทรอนิกส์ (e-tax-receipt) ลำดับ sub-tag บน wire คือ 00 → 01 → 02
 
-| Sub-tag | ฟิลด์             | หมายเหตุ             |
+| Sub-tag | ฟิลด์               | หมายเหตุ              |
 | ------- | ----------------- | -------------------- |
-| 00      | sellerTaxBranchId | 4 ตัวอักษรพอดี       |
+| 00      | sellerTaxBranchId | 4 ตัวอักษรพอดี          |
 | 01      | vatRate           | 1–5 chars (optional) |
 | 02      | vatAmount         | 1–13 chars           |
 
 ## Additional Data Field Template (ภายใต้ tag 62)
 
-| Sub-tag | ฟิลด์                            | Builder method                             |
+| Sub-tag | ฟิลด์                              | Builder method                             |
 | ------- | -------------------------------- | ------------------------------------------ |
 | 01      | Bill Number                      | `additionalData({ billNumber })`           |
 | 02      | Mobile Number                    | `additionalData({ mobileNumber })`         |
@@ -94,17 +94,17 @@ Sub-tag 00 บรรจุ AID หนึ่งในสองค่า:
 
 ## สเปก QR Code (ISO/IEC 18004 Model 2)
 
-| รายการ                                         | สถานะ                                            |
-| ---------------------------------------------- | ------------------------------------------------ |
+| รายการ                                         | สถานะ                                         |
+| ---------------------------------------------- | --------------------------------------------- |
 | Versions 1-40                                  | ✓ ครบทุกเวอร์ชัน                                 |
-| Error correction L / M / Q / H                 | ✓ ครบทุกระดับ                                    |
-| Encoding modes (numeric / alphanumeric / byte) | ✓ ครบทุกโหมด + auto-detect                       |
-| Reed-Solomon บน GF(2^8) ด้วย primitive `0x11D` | ✓                                                |
-| Mask patterns 0-7 + penalty scoring            | ✓                                                |
-| Format info (BCH 15,5)                         | ✓                                                |
-| Version info (BCH 18,6) สำหรับ v7+             | ✓                                                |
+| Error correction L / M / Q / H                 | ✓ ครบทุกระดับ                                   |
+| Encoding modes (numeric / alphanumeric / byte) | ✓ ครบทุกโหมด + auto-detect                     |
+| Reed-Solomon บน GF(2^8) ด้วย primitive `0x11D`  | ✓                                             |
+| Mask patterns 0-7 + penalty scoring            | ✓                                             |
+| Format info (BCH 15,5)                         | ✓                                             |
+| Version info (BCH 18,6) สำหรับ v7+              | ✓                                             |
 | Alignment patterns ตาม Annex E                 | ✓ ล็อกด้วย regression test หลังจาก bug ใน v0.1.0 |
-| Quiet zone                                     | ปรับได้ (default 4 modules)                      |
+| Quiet zone                                     | ปรับได้ (default 4 modules)                     |
 
 ## Envelope ที่ไม่ใช่ EMVCo
 
@@ -114,11 +114,11 @@ wire format เหล่านี้ไม่ได้ใช้ tag space ร่
 
 พิมพ์อยู่บนสลิปโอนเงินของธนาคาร ใช้ resolve transaction ผ่าน bank Open API หลังจาก OCR สลิป ใช้ grammar TLV ของ EMVCo เหมือนกัน แต่ root tag ต่างกัน
 
-| Tag | ฟิลด์                  | หมายเหตุ                                                        |
-| --- | ---------------------- | --------------------------------------------------------------- |
+| Tag | ฟิลด์                    | หมายเหตุ                                                       |
+| --- | ---------------------- | ------------------------------------------------------------- |
 | 00  | Root template (nested) | บรรจุ sub-field `00` API type, `01` ธนาคารต้นทาง, `02` transRef |
-| 51  | Country code           | เป็น `TH` เสมอ                                                  |
-| 91  | CRC-16/CCITT-FALSE     | อัลกอริทึมเดียวกับ tag 63 แต่อยู่ที่ตำแหน่ง tag 91              |
+| 51  | Country code           | เป็น `TH` เสมอ                                                 |
+| 91  | CRC-16/CCITT-FALSE     | อัลกอริทึมเดียวกับ tag 63 แต่อยู่ที่ตำแหน่ง tag 91                       |
 
 variant ของ TrueMoney ใช้ layout sub-field ภายใต้ tag 00 ต่างออกไป และ emit hex CRC เป็น **ตัวพิมพ์เล็ก** ดู [Slip Verify](/guide/slip-verify/) สำหรับ API ของ builder / parser
 

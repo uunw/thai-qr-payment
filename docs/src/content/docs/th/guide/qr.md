@@ -29,11 +29,11 @@ Output เป็น data structure ล้วน ใช้ร่วมกับ `
 
 ### `encodeQR(text, options?)`
 
-| Option                 | Default | หมายเหตุ                                             |
-| ---------------------- | ------- | ---------------------------------------------------- |
-| `errorCorrectionLevel` | `'M'`   | `'L'` / `'M'` / `'Q'` / `'H'`                        |
-| `minVersion`           | `1`     | floor สำหรับการเลือก version                         |
-| `maxVersion`           | `40`    | ceiling — throw หาก input ไม่พอดี                    |
+| Option                 | Default | หมายเหตุ                                         |
+| ---------------------- | ------- | ----------------------------------------------- |
+| `errorCorrectionLevel` | `'M'`   | `'L'` / `'M'` / `'Q'` / `'H'`                   |
+| `minVersion`           | `1`     | floor สำหรับการเลือก version                      |
+| `maxVersion`           | `40`    | ceiling — throw หาก input ไม่พอดี                 |
 | `forceMask`            | auto    | `0..7` — หากไม่กำหนด เลือกอัตโนมัติจาก penalty score |
 
 ### `detectMode(text)`
@@ -57,11 +57,11 @@ Payload ของ EMVCo เข้าโหมด `alphanumeric` ได้เส�
 
 ## Property test
 
-| Invariant                                                              | สถานะ                |
-| ---------------------------------------------------------------------- | -------------------- |
-| RS linearity: `enc(a) ⊕ enc(b) === enc(a ⊕ b)`                         | ✓ verified           |
-| GF(2^8) distributivity: `a · (b ⊕ c) === (a·b) ⊕ (a·c)`                | ✓ verified           |
-| CRC-16/CCITT-FALSE determinism บน input สุ่ม 200 ตัว                   | ✓                    |
+| Invariant                                                          | สถานะ               |
+| ------------------------------------------------------------------ | ------------------- |
+| RS linearity: `enc(a) ⊕ enc(b) === enc(a ⊕ b)`                     | ✓ verified          |
+| GF(2^8) distributivity: `a · (b ⊕ c) === (a·b) ⊕ (a·c)`            | ✓ verified          |
+| CRC-16/CCITT-FALSE determinism บน input สุ่ม 200 ตัว                  | ✓                   |
 | ศูนย์กลาง alignment-pattern ตรงกับ ISO/IEC 18004 Annex E สำหรับ v2-v40 | ✓ pin ไว้ 10 version |
 
 ## v0.1.0 → v0.1.1 fix

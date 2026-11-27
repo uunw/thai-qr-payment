@@ -51,7 +51,7 @@ sub-path export ของ umbrella (`payload`, `qr`, `render`, `assets`) ก็�
 
 หาก self-host ให้ serve variant ต่าง ๆ โดยตรง พร้อมตั้ง header `Content-Encoding` ให้ถูกต้อง:
 
-| ไฟล์               | Content-Encoding |
+| ไฟล์                | Content-Encoding |
 | ------------------ | ---------------- |
 | `dist/index.js`    | identity         |
 | `dist/index.js.br` | `br`             |

@@ -7,15 +7,15 @@ umbrella เต็ม (และทุก scoped package) หลีกเลี�
 
 ## ตารางความเข้ากันได้
 
-| Runtime                                                  | สถานะ | หมายเหตุ                                               |
-| -------------------------------------------------------- | ----- | ------------------------------------------------------ |
+| Runtime                                                  | สถานะ | หมายเหตุ                                            |
+| -------------------------------------------------------- | ----- | -------------------------------------------------- |
 | Browsers (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) | ✓     | ESM ผ่าน `<script type="module">` หรือ bundler ใดก็ได้ |
-| Node ≥ 22                                                | ✓     | มีทั้ง ESM + CJS                                       |
-| Bun 1.x                                                  | ✓     | ทดสอบด้วยมือแล้ว                                       |
-| Deno                                                     | ✓     | ใช้งานผ่าน specifier `npm:thai-qr-payment`             |
+| Node ≥ 22                                                | ✓     | มีทั้ง ESM + CJS                                      |
+| Bun 1.x                                                  | ✓     | ทดสอบด้วยมือแล้ว                                      |
+| Deno                                                     | ✓     | ใช้งานผ่าน specifier `npm:thai-qr-payment`           |
 | Cloudflare Workers                                       | ✓     | import ได้โดยไม่ต้องเปิด flag `nodejs_compat`          |
-| Vercel Edge Functions                                    | ✓     | เหมือนกัน                                              |
-| Netlify Edge / Deno Deploy                               | ✓     | เหมือนกัน                                              |
+| Vercel Edge Functions                                    | ✓     | เหมือนกัน                                            |
+| Netlify Edge / Deno Deploy                               | ✓     | เหมือนกัน                                            |
 
 ## ตัวอย่าง Cloudflare Worker
 

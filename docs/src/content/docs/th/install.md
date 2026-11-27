@@ -21,13 +21,13 @@ bun add thai-qr-payment
 
 สำหรับผู้ใช้งานที่ต้องการเฉพาะบางส่วน (เช่น ใช้เพียง payload บน edge runtime):
 
-| ต้องการ                               | ติดตั้ง                    |
-| ------------------------------------- | -------------------------- |
-| Wire payload builder + parser         | `@thai-qr-payment/payload` |
-| QR Code encoder                       | `@thai-qr-payment/qr`      |
-| SVG renderer                          | `@thai-qr-payment/render`  |
-| Thai QR Payment + PromptPay SVGs      | `@thai-qr-payment/assets`  |
-| เฉพาะ CLI                             | `@thai-qr-payment/cli`     |
+| ต้องการ                               | ติดตั้ง                       |
+| ------------------------------------ | -------------------------- |
+| Wire payload builder + parser        | `@thai-qr-payment/payload` |
+| QR Code encoder                      | `@thai-qr-payment/qr`      |
+| SVG renderer                         | `@thai-qr-payment/render`  |
+| Thai QR Payment + PromptPay SVGs     | `@thai-qr-payment/assets`  |
+| เฉพาะ CLI                            | `@thai-qr-payment/cli`     |
 | React component (React เป็น peer-dep) | `@thai-qr-payment/react`   |
 
 หรือจะ import จาก sub-path ของ umbrella ก็ได้ — ขนาด byte เท่ากันและรองรับ tree-shake เช่นเดียวกัน:
@@ -57,11 +57,11 @@ import { COLOR_LOGOS } from 'thai-qr-payment/assets';
 ## ข้อกำหนดของ engine
 
 | Runtime       | ขั้นต่ำ                                                                  |
-| ------------- | ------------------------------------------------------------------------ |
-| Node          | ≥ 18                                                                     |
-| pnpm          | ≥ 8 (แนะนำ 10.x)                                                         |
+| ------------- | --------------------------------------------------------------------- |
+| Node          | ≥ 18                                                                  |
+| pnpm          | ≥ 8 (แนะนำ 10.x)                                                      |
 | Browser       | browser ที่รองรับ module (Chrome 80+, Safari 14+, Firefox 78+, Edge 80+) |
-| Edge runtimes | ทดสอบบน Cloudflare Workers, Vercel Edge                                  |
+| Edge runtimes | ทดสอบบน Cloudflare Workers, Vercel Edge                               |
 
 ## ตรวจสอบว่าติดตั้งสำเร็จ
 

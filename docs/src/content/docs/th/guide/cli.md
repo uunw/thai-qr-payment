@@ -64,21 +64,21 @@ thai-qr-payment 0812345678 --amount 50 --format payload
 
 ## Flags
 
-| Flag                | Short | Notes                                                              |
-| ------------------- | ----- | ------------------------------------------------------------------ |
-| `--recipient <id>`  | `-r`  | phone, nationalId, eWallet                                         |
-| `--amount <thb>`    | `-a`  | ละไว้สำหรับ QR แบบ static                                          |
-| `--satang`          | —     | กำหนดให้มอง `--amount` เป็นจำนวนเต็มหน่วยสตางค์                    |
+| Flag                | Short | Notes                                                          |
+| ------------------- | ----- | -------------------------------------------------------------- |
+| `--recipient <id>`  | `-r`  | phone, nationalId, eWallet                                     |
+| `--amount <thb>`    | `-a`  | ละไว้สำหรับ QR แบบ static                                        |
+| `--satang`          | —     | กำหนดให้มอง `--amount` เป็นจำนวนเต็มหน่วยสตางค์                     |
 | `--type <kind>`     | —     | `mobile` / `nationalId` / `eWallet` — override การตรวจจับอัตโนมัติ |
-| `--ecc <level>`     | —     | `L` / `M` / `Q` / `H` (default `M`)                                |
-| `--format <kind>`   | `-f`  | `card` (default) / `matrix` / `payload`                            |
-| `--theme <kind>`    | —     | `color` (default) / `silhouette`                                   |
-| `--caption`         | —     | แสดงข้อความใต้ QR (โหมด card, ปิดไว้เป็นค่าเริ่มต้น)               |
-| `--merchant <name>` | `-m`  | ชื่อร้านในข้อความใต้ QR — ต้องเปิด `--caption`                     |
-| `--size <px>`       | —     | ขนาด output ของโหมด matrix                                         |
-| `--output <path>`   | `-o`  | เขียนลงไฟล์ (default คือ stdout)                                   |
-| `--help`            | `-h`  | แสดงข้อความช่วยเหลือ                                               |
-| `--version`         | `-v`  | แสดงเวอร์ชันของ CLI                                                |
+| `--ecc <level>`     | —     | `L` / `M` / `Q` / `H` (default `M`)                            |
+| `--format <kind>`   | `-f`  | `card` (default) / `matrix` / `payload`                        |
+| `--theme <kind>`    | —     | `color` (default) / `silhouette`                               |
+| `--caption`         | —     | แสดงข้อความใต้ QR (โหมด card, ปิดไว้เป็นค่าเริ่มต้น)                    |
+| `--merchant <name>` | `-m`  | ชื่อร้านในข้อความใต้ QR — ต้องเปิด `--caption`                        |
+| `--size <px>`       | —     | ขนาด output ของโหมด matrix                                     |
+| `--output <path>`   | `-o`  | เขียนลงไฟล์ (default คือ stdout)                                  |
+| `--help`            | `-h`  | แสดงข้อความช่วยเหลือ                                              |
+| `--version`         | `-v`  | แสดงเวอร์ชันของ CLI                                              |
 
 ## ตัวอย่าง
 

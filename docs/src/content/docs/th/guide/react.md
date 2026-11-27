@@ -69,17 +69,17 @@ export default function Page() {
 
 ## Props ทั้งหมด
 
-| Prop                              | Type                                    | Notes                                         |
-| --------------------------------- | --------------------------------------- | --------------------------------------------- |
-| `recipient`                       | `string`                                | phone / nationalId / eWallet — จำเป็น         |
-| `amount`                          | `number`                                | THB ละไว้สำหรับ QR แบบ static                 |
-| `recipientType`                   | `'mobile' \| 'nationalId' \| 'eWallet'` | override การตรวจจับประเภทอัตโนมัติ            |
+| Prop                              | Type                                    | Notes                                    |
+| --------------------------------- | --------------------------------------- | ---------------------------------------- |
+| `recipient`                       | `string`                                | phone / nationalId / eWallet — จำเป็น     |
+| `amount`                          | `number`                                | THB ละไว้สำหรับ QR แบบ static              |
+| `recipientType`                   | `'mobile' \| 'nationalId' \| 'eWallet'` | override การตรวจจับประเภทอัตโนมัติ           |
 | `fromSatang`                      | `boolean`                               | กำหนดให้มอง `amount` เป็นจำนวนเต็มหน่วยสตางค์ |
-| `errorCorrectionLevel`            | `'L' \| 'M' \| 'Q' \| 'H'`              | ค่า default คือ `'M'`                         |
-| `merchantName`                    | `string`                                | render อยู่เหนือ QR (เฉพาะโหมดการ์ด)          |
-| `amountLabel`                     | `string`                                | render อยู่ใต้ QR (เฉพาะโหมดการ์ด)            |
-| `theme`                           | `'color' \| 'silhouette'`               | สไตล์ของงานออกแบบแบรนด์                       |
-| `className`, `style`, `ariaLabel` | DOM pass-through                        |                                               |
+| `errorCorrectionLevel`            | `'L' \| 'M' \| 'Q' \| 'H'`              | ค่า default คือ `'M'`                      |
+| `merchantName`                    | `string`                                | render อยู่เหนือ QR (เฉพาะโหมดการ์ด)         |
+| `amountLabel`                     | `string`                                | render อยู่ใต้ QR (เฉพาะโหมดการ์ด)           |
+| `theme`                           | `'color' \| 'silhouette'`               | สไตล์ของงานออกแบบแบรนด์                    |
+| `className`, `style`, `ariaLabel` | DOM pass-through                        |                                          |
 
 ## รองรับ React 19
 
